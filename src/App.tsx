@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import CompanyRegistration from "./pages/CompanyRegistration";
 import ConsumerUnitRegistration from "./pages/ConsumerUnitRegistration";
 import UserRegistration from "./pages/UserRegistration";
+import InvoiceRegistration from "./pages/InvoiceRegistration";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/empresa" element={<CompanyRegistration />} />
           <Route path="/unidade" element={<ConsumerUnitRegistration />} />
           <Route path="/usuario" element={<UserRegistration />} />
+          <Route path="/faturas" element={<InvoiceRegistration />} />
           <Route path="/" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>

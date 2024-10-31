@@ -17,19 +17,19 @@ interface DemandChartProps {
 
 const DemandChart = ({ selectedMonth }: DemandChartProps) => {
   const mockData = [
-    { mes: "Jan", medida: 350, contratada: 400, ultrapassagem: 0 },
-    { mes: "Fev", medida: 420, contratada: 400, ultrapassagem: 20 },
-    { mes: "Mar", medida: 380, contratada: 400, ultrapassagem: 0 },
-    { mes: "Abr", medida: 390, contratada: 400, ultrapassagem: 0 },
-    { mes: "Mai", medida: 450, contratada: 400, ultrapassagem: 50 },
-    { mes: "Jun", medida: 370, contratada: 400, ultrapassagem: 0 },
-    { mes: "Jul", medida: 360, contratada: 400, ultrapassagem: 0 },
-    { mes: "Ago", medida: 430, contratada: 400, ultrapassagem: 30 },
-    { mes: "Set", medida: 400, contratada: 400, ultrapassagem: 0 },
-    { mes: "Out", medida: 410, contratada: 400, ultrapassagem: 10 },
-    { mes: "Nov", medida: 385, contratada: 400, ultrapassagem: 0 },
-    { mes: "Dez", medida: 395, contratada: 400, ultrapassagem: 0 },
-  ];
+    { mes: "Jan/24", medida: 350, contratada: 400, ultrapassagem: 0 },
+    { mes: "Fev/24", medida: 420, contratada: 400, ultrapassagem: 20 },
+    { mes: "Mar/24", medida: 380, contratada: 400, ultrapassagem: 0 },
+    { mes: "Abr/24", medida: 390, contratada: 400, ultrapassagem: 0 },
+    { mes: "Mai/24", medida: 450, contratada: 400, ultrapassagem: 50 },
+    { mes: "Jun/24", medida: 370, contratada: 400, ultrapassagem: 0 },
+    { mes: "Jul/24", medida: 360, contratada: 400, ultrapassagem: 0 },
+    { mes: "Ago/24", medida: 430, contratada: 400, ultrapassagem: 30 },
+    { mes: "Set/24", medida: 400, contratada: 400, ultrapassagem: 0 },
+    { mes: "Out/24", medida: 410, contratada: 400, ultrapassagem: 10 },
+    { mes: "Nov/24", medida: 385, contratada: 400, ultrapassagem: 0 },
+    { mes: "Dez/24", medida: 395, contratada: 400, ultrapassagem: 0 },
+  ].slice(0, parseInt(selectedMonth));
 
   return (
     <Card>

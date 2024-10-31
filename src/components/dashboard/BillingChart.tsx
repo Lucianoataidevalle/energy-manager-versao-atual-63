@@ -16,19 +16,19 @@ interface BillingChartProps {
 
 const BillingChart = ({ selectedMonth }: BillingChartProps) => {
   const mockData = [
-    { mes: "Jan", valor: 50000 },
-    { mes: "Fev", valor: 52000 },
-    { mes: "Mar", valor: 48000 },
-    { mes: "Abr", valor: 51000 },
-    { mes: "Mai", valor: 53000 },
-    { mes: "Jun", valor: 49000 },
-    { mes: "Jul", valor: 47000 },
-    { mes: "Ago", valor: 54000 },
-    { mes: "Set", valor: 50500 },
-    { mes: "Out", valor: 51500 },
-    { mes: "Nov", valor: 49500 },
-    { mes: "Dez", valor: 52500 },
-  ];
+    { mes: "Jan/24", valor: 50000 },
+    { mes: "Fev/24", valor: 52000 },
+    { mes: "Mar/24", valor: 48000 },
+    { mes: "Abr/24", valor: 51000 },
+    { mes: "Mai/24", valor: 53000 },
+    { mes: "Jun/24", valor: 49000 },
+    { mes: "Jul/24", valor: 47000 },
+    { mes: "Ago/24", valor: 54000 },
+    { mes: "Set/24", valor: 50500 },
+    { mes: "Out/24", valor: 51500 },
+    { mes: "Nov/24", valor: 49500 },
+    { mes: "Dez/24", valor: 52500 },
+  ].slice(0, parseInt(selectedMonth));
 
   return (
     <Card>

@@ -31,12 +31,18 @@ interface DataContextType {
   companies: Company[];
   consumerUnits: ConsumerUnit[];
   users: User[];
+  editingCompany: Company | null;
+  editingConsumerUnit: ConsumerUnit | null;
+  editingUser: User | null;
   deleteCompany: (id: number) => void;
   deleteConsumerUnit: (id: number) => void;
   deleteUser: (id: number) => void;
   editCompany: (id: number, data: Partial<Company>) => void;
   editConsumerUnit: (id: number, data: Partial<ConsumerUnit>) => void;
   editUser: (id: number, data: Partial<User>) => void;
+  setEditingCompany: (company: Company | null) => void;
+  setEditingConsumerUnit: (unit: ConsumerUnit | null) => void;
+  setEditingUser: (user: User | null) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -97,6 +103,10 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     },
   ]);
 
+  const [editingCompany, setEditingCompany] = useState<Company | null>(null);
+  const [editingConsumerUnit, setEditingConsumerUnit] = useState<ConsumerUnit | null>(null);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+
   const deleteCompany = (id: number) => {
     setCompanies((prev) => prev.filter((company) => company.id !== id));
     toast.success("Empresa excluída com sucesso!");
@@ -118,6 +128,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         company.id === id ? { ...company, ...data } : company
       )
     );
+    setEditingCompany(null);
     toast.success("Empresa atualizada com sucesso!");
   };
 
@@ -125,6 +136,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     setConsumerUnits((prev) =>
       prev.map((unit) => (unit.id === id ? { ...unit, ...data } : unit))
     );
+    setEditingConsumerUnit(null);
     toast.success("Unidade Consumidora atualizada com sucesso!");
   };
 
@@ -132,6 +144,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     setUsers((prev) =>
       prev.map((user) => (user.id === id ? { ...user, ...data } : user))
     );
+    setEditingUser(null);
     toast.success("Usuário atualizado com sucesso!");
   };
 
@@ -141,12 +154,18 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         companies,
         consumerUnits,
         users,
+        editingCompany,
+        editingConsumerUnit,
+        editingUser,
         deleteCompany,
         deleteConsumerUnit,
         deleteUser,
         editCompany,
         editConsumerUnit,
         editUser,
+        setEditingCompany,
+        setEditingConsumerUnit,
+        setEditingUser,
       }}
     >
       {children}

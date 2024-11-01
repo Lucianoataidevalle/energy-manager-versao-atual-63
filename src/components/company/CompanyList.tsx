@@ -23,14 +23,13 @@ import {
 import { useData } from "@/contexts/DataContext";
 
 const CompanyList = () => {
-  const { companies, deleteCompany, editCompany } = useData();
+  const { companies, deleteCompany, setEditingCompany } = useData();
 
   const handleEdit = (id: number) => {
-    // Simulando uma edição com dados mockados
-    editCompany(id, {
-      razaoSocial: "Empresa Atualizada",
-      endereco: "Novo Endereço",
-    });
+    const company = companies.find((c) => c.id === id);
+    if (company) {
+      setEditingCompany(company);
+    }
   };
 
   return (

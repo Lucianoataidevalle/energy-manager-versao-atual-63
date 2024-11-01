@@ -1,20 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { useData } from "@/contexts/DataContext";
 
 const CompanyForm = () => {
+  const { editingCompany, editCompany } = useData();
   const [formData, setFormData] = useState({
     razaoSocial: "",
     cnpj: "",
     endereco: "",
   });
 
+  useEffect(() => {
+    if (editingCompany) {
+      setFormData({
+        razaoSocial: editingCompany.razaoSocial,
+        cnpj: editingCompany.cnpj,
+        endereco: editingCompany.endereco,
+      });
+    }
+  }, [editingCompany]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement company registration logic
-    toast.success("Empresa cadastrada com sucesso!");
+    if (editingCompany) {
+      editCompany(editingCompany.id, formData);
+    }
     setFormData({ razaoSocial: "", cnpj: "", endereco: "" });
   };
 
@@ -57,7 +69,7 @@ const CompanyForm = () => {
             />
           </div>
           <Button type="submit" className="w-full">
-            Cadastrar Empresa
+            {editingCompany ? "Atualizar Empresa" : "Cadastrar Empresa"}
           </Button>
         </form>
       </CardContent>

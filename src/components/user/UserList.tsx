@@ -9,6 +9,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 const mockUsers = [
   {
@@ -31,13 +43,13 @@ const mockUsers = [
 
 const UserList = () => {
   const handleEdit = (id: number) => {
-    // TODO: Implement edit logic
-    console.log("Edit user", id);
+    // TODO: Implement edit logic with API integration
+    toast.success("Usuário editado com sucesso!");
   };
 
   const handleDelete = (id: number) => {
-    // TODO: Implement delete logic
-    console.log("Delete user", id);
+    // TODO: Implement delete logic with API integration
+    toast.success("Usuário excluído com sucesso!");
   };
 
   return (
@@ -66,20 +78,49 @@ const UserList = () => {
                 <TableCell>{user.fone}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell className="space-x-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleEdit(user.id)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleDelete(user.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Editar Usuário</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Deseja realmente editar este usuário?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleEdit(user.id)}>
+                          Confirmar
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Excluir Usuário</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Deseja realmente excluir este usuário? Esta ação não pode ser desfeita.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDelete(user.id)}>
+                          Confirmar
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </TableCell>
               </TableRow>
             ))}

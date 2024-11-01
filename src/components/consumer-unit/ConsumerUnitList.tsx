@@ -9,6 +9,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 const mockUnits = [
   {
@@ -31,13 +43,13 @@ const mockUnits = [
 
 const ConsumerUnitList = () => {
   const handleEdit = (id: number) => {
-    // TODO: Implement edit logic
-    console.log("Edit unit", id);
+    // TODO: Implement edit logic with API integration
+    toast.success("Unidade Consumidora editada com sucesso!");
   };
 
   const handleDelete = (id: number) => {
-    // TODO: Implement delete logic
-    console.log("Delete unit", id);
+    // TODO: Implement delete logic with API integration
+    toast.success("Unidade Consumidora excluída com sucesso!");
   };
 
   return (
@@ -66,20 +78,49 @@ const ConsumerUnitList = () => {
                 <TableCell>{unit.endereco}</TableCell>
                 <TableCell>{unit.distribuidora}</TableCell>
                 <TableCell className="space-x-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleEdit(unit.id)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleDelete(unit.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Editar Unidade Consumidora</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Deseja realmente editar esta unidade consumidora?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleEdit(unit.id)}>
+                          Confirmar
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Excluir Unidade Consumidora</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Deseja realmente excluir esta unidade consumidora? Esta ação não pode ser desfeita.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDelete(unit.id)}>
+                          Confirmar
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </TableCell>
               </TableRow>
             ))}

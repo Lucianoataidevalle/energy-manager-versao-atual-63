@@ -20,36 +20,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
-
-const mockUnits = [
-  {
-    id: 1,
-    empresa: "Empresa Exemplo 1",
-    nome: "Matriz",
-    numero: "123456789",
-    endereco: "Rua Principal, 100",
-    distribuidora: "Energia SA",
-  },
-  {
-    id: 2,
-    empresa: "Empresa Exemplo 1",
-    nome: "Filial 1",
-    numero: "987654321",
-    endereco: "Avenida Secundária, 200",
-    distribuidora: "Energia SA",
-  },
-];
+import { useData } from "@/contexts/DataContext";
 
 const ConsumerUnitList = () => {
-  const handleEdit = (id: number) => {
-    // TODO: Implement edit logic with API integration
-    toast.success("Unidade Consumidora editada com sucesso!");
-  };
+  const { consumerUnits, deleteConsumerUnit, editConsumerUnit } = useData();
 
-  const handleDelete = (id: number) => {
-    // TODO: Implement delete logic with API integration
-    toast.success("Unidade Consumidora excluída com sucesso!");
+  const handleEdit = (id: number) => {
+    // Simulando uma edição com dados mockados
+    editConsumerUnit(id, {
+      nome: "UC Atualizada",
+      endereco: "Novo Endereço UC",
+    });
   };
 
   return (
@@ -70,7 +51,7 @@ const ConsumerUnitList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockUnits.map((unit) => (
+            {consumerUnits.map((unit) => (
               <TableRow key={unit.id}>
                 <TableCell>{unit.empresa}</TableCell>
                 <TableCell>{unit.nome}</TableCell>
@@ -115,7 +96,7 @@ const ConsumerUnitList = () => {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDelete(unit.id)}>
+                        <AlertDialogAction onClick={() => deleteConsumerUnit(unit.id)}>
                           Confirmar
                         </AlertDialogAction>
                       </AlertDialogFooter>

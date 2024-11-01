@@ -20,34 +20,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
-
-const mockCompanies = [
-  {
-    id: 1,
-    razaoSocial: "Empresa Exemplo 1",
-    cnpj: "12.345.678/0001-90",
-    endereco: "Rua Exemplo, 123",
-    unidades: ["UC-001", "UC-002"],
-  },
-  {
-    id: 2,
-    razaoSocial: "Empresa Exemplo 2",
-    cnpj: "98.765.432/0001-10",
-    endereco: "Avenida Teste, 456",
-    unidades: ["UC-003"],
-  },
-];
+import { useData } from "@/contexts/DataContext";
 
 const CompanyList = () => {
-  const handleEdit = (id: number) => {
-    // TODO: Implement edit logic with API integration
-    toast.success("Empresa editada com sucesso!");
-  };
+  const { companies, deleteCompany, editCompany } = useData();
 
-  const handleDelete = (id: number) => {
-    // TODO: Implement delete logic with API integration
-    toast.success("Empresa excluída com sucesso!");
+  const handleEdit = (id: number) => {
+    // Simulando uma edição com dados mockados
+    editCompany(id, {
+      razaoSocial: "Empresa Atualizada",
+      endereco: "Novo Endereço",
+    });
   };
 
   return (
@@ -67,7 +50,7 @@ const CompanyList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockCompanies.map((company) => (
+            {companies.map((company) => (
               <TableRow key={company.id}>
                 <TableCell>{company.razaoSocial}</TableCell>
                 <TableCell>{company.cnpj}</TableCell>
@@ -111,7 +94,7 @@ const CompanyList = () => {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDelete(company.id)}>
+                        <AlertDialogAction onClick={() => deleteCompany(company.id)}>
                           Confirmar
                         </AlertDialogAction>
                       </AlertDialogFooter>

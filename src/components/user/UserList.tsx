@@ -20,36 +20,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
-
-const mockUsers = [
-  {
-    id: 1,
-    empresa: "Empresa Exemplo 1",
-    nome: "João Silva",
-    funcao: "Gerente",
-    fone: "(11) 99999-9999",
-    email: "joao@exemplo.com",
-  },
-  {
-    id: 2,
-    empresa: "Empresa Exemplo 2",
-    nome: "Maria Santos",
-    funcao: "Analista",
-    fone: "(11) 88888-8888",
-    email: "maria@exemplo.com",
-  },
-];
+import { useData } from "@/contexts/DataContext";
 
 const UserList = () => {
-  const handleEdit = (id: number) => {
-    // TODO: Implement edit logic with API integration
-    toast.success("Usuário editado com sucesso!");
-  };
+  const { users, deleteUser, editUser } = useData();
 
-  const handleDelete = (id: number) => {
-    // TODO: Implement delete logic with API integration
-    toast.success("Usuário excluído com sucesso!");
+  const handleEdit = (id: number) => {
+    // Simulando uma edição com dados mockados
+    editUser(id, {
+      nome: "Usuário Atualizado",
+      funcao: "Nova Função",
+    });
   };
 
   return (
@@ -70,7 +51,7 @@ const UserList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockUsers.map((user) => (
+            {users.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>{user.empresa}</TableCell>
                 <TableCell>{user.nome}</TableCell>
@@ -115,7 +96,7 @@ const UserList = () => {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDelete(user.id)}>
+                        <AlertDialogAction onClick={() => deleteUser(user.id)}>
                           Confirmar
                         </AlertDialogAction>
                       </AlertDialogFooter>

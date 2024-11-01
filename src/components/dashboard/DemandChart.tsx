@@ -2,12 +2,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ComposedChart,
   Bar,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
-  Line,
   ResponsiveContainer,
 } from "recharts";
 
@@ -78,10 +78,15 @@ const DemandChart = ({ selectedMonth }: DemandChartProps) => {
               stackId="a" 
               fill="#8884d8" 
               name="Demanda Medida"
-              label={{ 
-                position: 'top', 
-                formatter: (value: number, entry: any) => 
-                  `${value + entry.payload.ultrapassagem}`
+              label={(props) => {
+                const { x, y, value, payload } = props;
+                if (!payload) return null;
+                const total = (payload.medida || 0) + (payload.ultrapassagem || 0);
+                return (
+                  <text x={x} y={y} dy={-10} fill="#666" textAnchor="middle">
+                    {total}
+                  </text>
+                );
               }}
             />
             <Bar

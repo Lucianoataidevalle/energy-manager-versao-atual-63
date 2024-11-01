@@ -77,8 +77,15 @@ const ConsumptionChart = ({ selectedMonth }: ConsumptionChartProps) => {
               stackId="a" 
               fill="#8884d8" 
               name="Ponta"
-              label={{ position: 'top', formatter: (value: number, entry: any) => 
-                `${value + entry.payload.foraPonta}`
+              label={(props) => {
+                const { x, y, value, payload } = props;
+                if (!payload) return null;
+                const total = (payload.ponta || 0) + (payload.foraPonta || 0);
+                return (
+                  <text x={x} y={y} dy={-10} fill="#666" textAnchor="middle">
+                    {total}
+                  </text>
+                );
               }}
             />
             <Bar

@@ -15,6 +15,30 @@ interface ConsumptionChartProps {
 }
 
 const ConsumptionChart = ({ selectedMonth }: ConsumptionChartProps) => {
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+  
+  const generateLastTwelveMonths = () => {
+    const months = [];
+    for (let i = 11; i >= 0; i--) {
+      let month = currentMonth - i;
+      let year = currentYear;
+      if (month < 0) {
+        month += 12;
+        year -= 1;
+      }
+      const yearSuffix = year.toString().slice(-2);
+      months.push({
+        mes: `${['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'][month]}/${yearSuffix}`,
+        ponta: 0,
+        foraPonta: 0,
+        total: 0,
+      });
+    }
+    return months;
+  };
+
+  const baseData = generateLastTwelveMonths();
   const mockData = [
     { mes: "Jan/24", ponta: 100, foraPonta: 300, total: 400 },
     { mes: "Fev/24", ponta: 120, foraPonta: 280, total: 400 },
@@ -28,7 +52,12 @@ const ConsumptionChart = ({ selectedMonth }: ConsumptionChartProps) => {
     { mes: "Out/24", ponta: 135, foraPonta: 265, total: 400 },
     { mes: "Nov/24", ponta: 145, foraPonta: 255, total: 400 },
     { mes: "Dez/24", ponta: 105, foraPonta: 295, total: 400 },
-  ].slice(0, parseInt(selectedMonth));
+  ];
+
+  const mergedData = baseData.map(baseMonth => {
+    const mockMonth = mockData.find(m => m.mes === baseMonth.mes);
+    return mockMonth || baseMonth;
+  }).slice(0, parseInt(selectedMonth));
 
   return (
     <Card>
@@ -37,13 +66,21 @@ const ConsumptionChart = ({ selectedMonth }: ConsumptionChartProps) => {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={mockData}>
+          <BarChart data={mergedData} barSize={30}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="ponta" stackId="a" fill="#8884d8" name="Ponta" />
+            <Bar 
+              dataKey="ponta" 
+              stackId="a" 
+              fill="#8884d8" 
+              name="Ponta"
+              label={{ position: 'top', formatter: (value: number, entry: any) => 
+                `${value + entry.payload.foraPonta}`
+              }}
+            />
             <Bar
               dataKey="foraPonta"
               stackId="a"

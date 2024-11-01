@@ -7,8 +7,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface InvoiceListProps {
   selectedCompany: string;
@@ -47,6 +58,40 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
     console.log("Delete invoice", id);
   };
 
+  const exportToCSV = () => {
+    const headers = [
+      "Mês de Referência",
+      "Consumo Fora Ponta (kWh)",
+      "Consumo Ponta (kWh)",
+      "Demanda Medida (kW)",
+      "Demanda Ultrapassagem (kW)",
+      "Valor (R$)",
+    ];
+
+    const csvData = mockInvoices.map((invoice) => [
+      invoice.mes,
+      invoice.consumoForaPonta,
+      invoice.consumoPonta,
+      invoice.demandaMedida,
+      invoice.demandaUltrapassagem,
+      invoice.valorFatura,
+    ]);
+
+    const csvContent =
+      [headers, ...csvData]
+        .map((row) => row.join(","))
+        .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "historico_faturas.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const companyName = "Empresa Exemplo 1";
   const unitName = "Matriz";
   const unitNumber = "123456789";
@@ -54,10 +99,18 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Histórico de Faturas</CardTitle>
-        <p className="text-sm text-muted-foreground">
-          {companyName} - {unitName} (UC: {unitNumber})
-        </p>
+        <div className="flex justify-between items-center">
+          <div>
+            <CardTitle>Histórico de Faturas</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {companyName} - {unitName} (UC: {unitNumber})
+            </p>
+          </div>
+          <Button onClick={exportToCSV} variant="outline" size="sm">
+            <Download className="h-4 w-4 mr-2" />
+            Exportar CSV
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <Table>
@@ -87,20 +140,49 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
                   })}
                 </TableCell>
                 <TableCell className="space-x-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleEdit(invoice.id)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleDelete(invoice.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Editar Fatura</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Deseja realmente editar esta fatura?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleEdit(invoice.id)}>
+                          Confirmar
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Excluir Fatura</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Deseja realmente excluir esta fatura? Esta ação não pode ser desfeita.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDelete(invoice.id)}>
+                          Confirmar
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </TableCell>
               </TableRow>
             ))}

@@ -4,7 +4,6 @@ import {
   FileText,
   ClipboardList,
   BarChart3,
-  ChevronDown,
   Building2,
   Zap,
   User,
@@ -18,7 +17,7 @@ import {
 
 const Sidebar = () => {
   return (
-    <div className="min-h-screen w-64 bg-gray-900 text-white p-4">
+    <div className="fixed left-0 top-0 min-h-screen w-64 bg-gray-900 text-white p-4 overflow-y-auto">
       <h1 className="text-xl font-bold mb-8">Sistema de Gestão de Energia</h1>
       <nav className="space-y-2">
         <Link

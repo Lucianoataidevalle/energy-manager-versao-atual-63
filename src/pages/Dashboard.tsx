@@ -14,7 +14,7 @@ const Dashboard = () => {
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-8 ml-64">
         <DashboardHeader
           selectedCompany={selectedCompany}
           selectedUnit={selectedUnit}

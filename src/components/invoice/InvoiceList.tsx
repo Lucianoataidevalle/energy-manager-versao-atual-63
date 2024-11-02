@@ -20,43 +20,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useData } from "@/contexts/DataContext";
 
 interface InvoiceListProps {
   selectedCompany: string;
   selectedUnit: string;
 }
 
-const mockInvoices = [
-  {
-    id: 1,
-    mes: "Janeiro/2024",
-    consumoForaPonta: 3000,
-    consumoPonta: 1000,
-    demandaMedida: 400,
-    demandaUltrapassagem: 0,
-    valorFatura: 5000.0,
-  },
-  {
-    id: 2,
-    mes: "Fevereiro/2024",
-    consumoForaPonta: 2800,
-    consumoPonta: 900,
-    demandaMedida: 380,
-    demandaUltrapassagem: 0,
-    valorFatura: 4800.0,
-  },
-];
-
 const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
-  const handleEdit = (id: number) => {
-    // TODO: Implement edit logic
-    console.log("Edit invoice", id);
-  };
-
-  const handleDelete = (id: number) => {
-    // TODO: Implement delete logic
-    console.log("Delete invoice", id);
-  };
+  const { invoices, deleteInvoice, setEditingInvoice } = useData();
 
   const exportToCSV = () => {
     const headers = [
@@ -68,7 +40,7 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
       "Valor (R$)",
     ];
 
-    const csvData = mockInvoices.map((invoice) => [
+    const csvData = invoices.map((invoice) => [
       invoice.mes,
       invoice.consumoForaPonta,
       invoice.consumoPonta,
@@ -92,18 +64,14 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
     document.body.removeChild(link);
   };
 
-  const companyName = "Empresa Exemplo 1";
-  const unitName = "Matriz";
-  const unitNumber = "123456789";
-
   return (
     <Card>
       <CardHeader>
         <div className="flex justify-between items-center">
           <div>
             <CardTitle>Histórico de Faturas</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              {companyName} - {unitName} (UC: {unitNumber})
+            <p className="text-lg text-muted-foreground mt-1">
+              {selectedCompany} - {selectedUnit}
             </p>
           </div>
           <Button onClick={exportToCSV} variant="outline" size="sm">
@@ -126,7 +94,7 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockInvoices.map((invoice) => (
+            {invoices.map((invoice) => (
               <TableRow key={invoice.id}>
                 <TableCell>{invoice.mes}</TableCell>
                 <TableCell>{invoice.consumoForaPonta}</TableCell>
@@ -140,27 +108,13 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
                   })}
                 </TableCell>
                 <TableCell className="space-x-2">
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="outline" size="icon">
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Editar Fatura</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Deseja realmente editar esta fatura?
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleEdit(invoice.id)}>
-                          Confirmar
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={() => setEditingInvoice(invoice)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
 
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
@@ -177,7 +131,7 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDelete(invoice.id)}>
+                        <AlertDialogAction onClick={() => deleteInvoice(invoice.id)}>
                           Confirmar
                         </AlertDialogAction>
                       </AlertDialogFooter>

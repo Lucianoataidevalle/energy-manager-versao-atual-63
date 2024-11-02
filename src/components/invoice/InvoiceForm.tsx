@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useData } from "@/contexts/DataContext";
+import { format, subMonths } from "date-fns";
 
 interface InvoiceFormProps {
   onCompanyChange: (company: string) => void;
@@ -17,10 +19,11 @@ interface InvoiceFormProps {
 }
 
 const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
+  const { companies, consumerUnits, addInvoice, editingInvoice, editInvoice } = useData();
   const [formData, setFormData] = useState({
     empresa: "",
     unidade: "",
-    mes: "",
+    mes: format(subMonths(new Date(), 1), "yyyy-MM"),
     consumoForaPonta: "",
     consumoPonta: "",
     demandaMedida: "",
@@ -28,14 +31,47 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
     valorFatura: "",
   });
 
+  useEffect(() => {
+    if (editingInvoice) {
+      setFormData({
+        empresa: editingInvoice.empresa,
+        unidade: editingInvoice.unidade,
+        mes: editingInvoice.mes,
+        consumoForaPonta: editingInvoice.consumoForaPonta.toString(),
+        consumoPonta: editingInvoice.consumoPonta.toString(),
+        demandaMedida: editingInvoice.demandaMedida.toString(),
+        demandaUltrapassagem: editingInvoice.demandaUltrapassagem.toString(),
+        valorFatura: editingInvoice.valorFatura.toString(),
+      });
+    }
+  }, [editingInvoice]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement invoice registration logic
-    toast.success("Fatura cadastrada com sucesso!");
+    const invoiceData = {
+      ...formData,
+      consumoForaPonta: Number(formData.consumoForaPonta),
+      consumoPonta: Number(formData.consumoPonta),
+      demandaMedida: Number(formData.demandaMedida),
+      demandaUltrapassagem: Number(formData.demandaUltrapassagem),
+      valorFatura: Number(formData.valorFatura),
+    };
+
+    if (!editingInvoice) {
+      addInvoice({
+        ...invoiceData,
+        id: Date.now(),
+      });
+      toast.success("Fatura cadastrada com sucesso!");
+    } else {
+      editInvoice(editingInvoice.id, invoiceData);
+      toast.success("Fatura atualizada com sucesso!");
+    }
+
     setFormData({
       empresa: "",
       unidade: "",
-      mes: "",
+      mes: format(subMonths(new Date(), 1), "yyyy-MM"),
       consumoForaPonta: "",
       consumoPonta: "",
       demandaMedida: "",
@@ -43,6 +79,10 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
       valorFatura: "",
     });
   };
+
+  const availableUnits = consumerUnits.filter(
+    (unit) => unit.empresa === formData.empresa
+  );
 
   return (
     <Card className="mb-8">
@@ -57,7 +97,7 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
               <Select
                 value={formData.empresa}
                 onValueChange={(value) => {
-                  setFormData({ ...formData, empresa: value });
+                  setFormData({ ...formData, empresa: value, unidade: "" });
                   onCompanyChange(value);
                 }}
               >
@@ -65,8 +105,11 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
                   <SelectValue placeholder="Selecione a empresa" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">Empresa Exemplo 1</SelectItem>
-                  <SelectItem value="2">Empresa Exemplo 2</SelectItem>
+                  {companies.map((company) => (
+                    <SelectItem key={company.id} value={company.razaoSocial}>
+                      {company.razaoSocial}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -83,28 +126,22 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
                   <SelectValue placeholder="Selecione a UC" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">Matriz</SelectItem>
-                  <SelectItem value="2">Filial 1</SelectItem>
+                  {availableUnits.map((unit) => (
+                    <SelectItem key={unit.id} value={unit.nome}>
+                      {unit.nome}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
               <label>Mês de Referência</label>
-              <Select
+              <Input
+                type="month"
                 value={formData.mes}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, mes: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o mês" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="2024-01">Janeiro/2024</SelectItem>
-                  <SelectItem value="2024-02">Fevereiro/2024</SelectItem>
-                  <SelectItem value="2024-03">Março/2024</SelectItem>
-                </SelectContent>
-              </Select>
+                onChange={(e) => setFormData({ ...formData, mes: e.target.value })}
+                required
+              />
             </div>
           </div>
 
@@ -178,7 +215,7 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
           </div>
 
           <Button type="submit" className="w-full">
-            Inserir Fatura
+            {editingInvoice ? "Atualizar Fatura" : "Inserir Fatura"}
           </Button>
         </form>
       </CardContent>

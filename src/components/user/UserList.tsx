@@ -23,15 +23,7 @@ import {
 import { useData } from "@/contexts/DataContext";
 
 const UserList = () => {
-  const { users, deleteUser, editUser } = useData();
-
-  const handleEdit = (id: number) => {
-    // Simulando uma edição com dados mockados
-    editUser(id, {
-      nome: "Usuário Atualizado",
-      funcao: "Nova Função",
-    });
-  };
+  const { users, deleteUser, setEditingUser } = useData();
 
   return (
     <Card>
@@ -59,27 +51,13 @@ const UserList = () => {
                 <TableCell>{user.fone}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell className="space-x-2">
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="outline" size="icon">
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Editar Usuário</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Deseja realmente editar este usuário?
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleEdit(user.id)}>
-                          Confirmar
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={() => setEditingUser(user)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
 
                   <AlertDialog>
                     <AlertDialogTrigger asChild>

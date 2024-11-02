@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
 
 const ConsumerUnitForm = () => {
-  const { companies, addConsumerUnit } = useData();
+  const { companies, addConsumerUnit, editingConsumerUnit, editConsumerUnit } = useData();
   const [formData, setFormData] = useState({
     empresa: "",
     nome: "",
@@ -22,13 +22,30 @@ const ConsumerUnitForm = () => {
     distribuidora: "",
   });
 
+  useEffect(() => {
+    if (editingConsumerUnit) {
+      setFormData({
+        empresa: editingConsumerUnit.empresa,
+        nome: editingConsumerUnit.nome,
+        numero: editingConsumerUnit.numero,
+        endereco: editingConsumerUnit.endereco,
+        distribuidora: editingConsumerUnit.distribuidora,
+      });
+    }
+  }, [editingConsumerUnit]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addConsumerUnit({
-      ...formData,
-      id: Date.now(),
-    });
-    toast.success("Unidade Consumidora cadastrada com sucesso!");
+    if (!editingConsumerUnit) {
+      addConsumerUnit({
+        ...formData,
+        id: Date.now(),
+      });
+      toast.success("Unidade Consumidora cadastrada com sucesso!");
+    } else {
+      editConsumerUnit(editingConsumerUnit.id, formData);
+      toast.success("Unidade Consumidora atualizada com sucesso!");
+    }
     setFormData({
       empresa: "",
       nome: "",
@@ -108,7 +125,7 @@ const ConsumerUnitForm = () => {
             />
           </div>
           <Button type="submit" className="w-full">
-            Cadastrar UC
+            {editingConsumerUnit ? "Atualizar UC" : "Cadastrar UC"}
           </Button>
         </form>
       </CardContent>

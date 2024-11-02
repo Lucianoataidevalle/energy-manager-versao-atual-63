@@ -23,15 +23,7 @@ import {
 import { useData } from "@/contexts/DataContext";
 
 const ConsumerUnitList = () => {
-  const { consumerUnits, deleteConsumerUnit, editConsumerUnit } = useData();
-
-  const handleEdit = (id: number) => {
-    // Simulando uma edição com dados mockados
-    editConsumerUnit(id, {
-      nome: "UC Atualizada",
-      endereco: "Novo Endereço UC",
-    });
-  };
+  const { consumerUnits, deleteConsumerUnit, setEditingConsumerUnit } = useData();
 
   return (
     <Card>
@@ -59,27 +51,13 @@ const ConsumerUnitList = () => {
                 <TableCell>{unit.endereco}</TableCell>
                 <TableCell>{unit.distribuidora}</TableCell>
                 <TableCell className="space-x-2">
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="outline" size="icon">
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Editar Unidade Consumidora</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Deseja realmente editar esta unidade consumidora?
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleEdit(unit.id)}>
-                          Confirmar
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={() => setEditingConsumerUnit(unit)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
 
                   <AlertDialog>
                     <AlertDialogTrigger asChild>

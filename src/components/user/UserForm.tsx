@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useData } from "@/contexts/DataContext";
 
 const UserForm = () => {
+  const { companies, addUser, editingUser, editUser } = useData();
   const [formData, setFormData] = useState({
     empresa: "",
     nome: "",
@@ -21,18 +23,39 @@ const UserForm = () => {
     senha: "",
   });
 
+  useEffect(() => {
+    if (editingUser) {
+      setFormData({
+        empresa: editingUser.empresa,
+        nome: editingUser.nome,
+        funcao: editingUser.funcao,
+        fone: editingUser.fone,
+        email: editingUser.email,
+        senha: "",
+      });
+    }
+  }, [editingUser]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement user registration logic
-    toast.success("Usuário cadastrado com sucesso!");
-    setFormData({
-      empresa: "",
-      nome: "",
-      funcao: "",
-      fone: "",
-      email: "",
-      senha: "",
-    });
+    if (!editingUser) {
+      addUser({
+        ...formData,
+        id: Date.now(),
+      });
+      toast.success("Usuário cadastrado com sucesso!");
+      setFormData({
+        empresa: "",
+        nome: "",
+        funcao: "",
+        fone: "",
+        email: "",
+        senha: "",
+      });
+    } else {
+      editUser(editingUser.id, formData);
+      toast.success("Usuário atualizado com sucesso!");
+    }
   };
 
   return (
@@ -54,8 +77,11 @@ const UserForm = () => {
                 <SelectValue placeholder="Selecione a empresa" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1">Empresa Exemplo 1</SelectItem>
-                <SelectItem value="2">Empresa Exemplo 2</SelectItem>
+                {companies.map((company) => (
+                  <SelectItem key={company.id} value={company.razaoSocial}>
+                    {company.razaoSocial}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -113,7 +139,7 @@ const UserForm = () => {
             />
           </div>
           <Button type="submit" className="w-full">
-            Cadastrar Usuário
+            {editingUser ? "Atualizar Usuário" : "Cadastrar Usuário"}
           </Button>
         </form>
       </CardContent>

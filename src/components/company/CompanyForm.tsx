@@ -2,6 +2,17 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useData } from "@/contexts/DataContext";
 
 const CompanyForm = () => {
@@ -24,6 +35,13 @@ const CompanyForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!editingCompany) {
+      // Lógica para cadastrar nova empresa
+      return;
+    }
+  };
+
+  const handleUpdate = () => {
     if (editingCompany) {
       editCompany(editingCompany.id, formData);
     }
@@ -68,9 +86,33 @@ const CompanyForm = () => {
               required
             />
           </div>
-          <Button type="submit" className="w-full">
-            {editingCompany ? "Atualizar Empresa" : "Cadastrar Empresa"}
-          </Button>
+          {editingCompany ? (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button type="button" className="w-full">
+                  Atualizar Empresa
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Atualizar Empresa</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Deseja realmente atualizar esta empresa?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleUpdate}>
+                    Confirmar
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          ) : (
+            <Button type="submit" className="w-full">
+              Cadastrar Empresa
+            </Button>
+          )}
         </form>
       </CardContent>
     </Card>

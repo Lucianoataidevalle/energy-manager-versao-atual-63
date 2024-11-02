@@ -25,13 +25,6 @@ import { useData } from "@/contexts/DataContext";
 const CompanyList = () => {
   const { companies, deleteCompany, setEditingCompany } = useData();
 
-  const handleEdit = (id: number) => {
-    const company = companies.find((c) => c.id === id);
-    if (company) {
-      setEditingCompany(company);
-    }
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -54,29 +47,15 @@ const CompanyList = () => {
                 <TableCell>{company.razaoSocial}</TableCell>
                 <TableCell>{company.cnpj}</TableCell>
                 <TableCell>{company.endereco}</TableCell>
-                <TableCell>{company.unidades.join(", ")}</TableCell>
+                <TableCell>{company.unidades.length}</TableCell>
                 <TableCell className="space-x-2">
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="outline" size="icon">
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Editar Empresa</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Deseja realmente editar esta empresa?
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleEdit(company.id)}>
-                          Confirmar
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={() => setEditingCompany(company)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
 
                   <AlertDialog>
                     <AlertDialogTrigger asChild>

@@ -34,6 +34,9 @@ interface DataContextType {
   editingCompany: Company | null;
   editingConsumerUnit: ConsumerUnit | null;
   editingUser: User | null;
+  addCompany: (company: Company) => void;
+  addConsumerUnit: (unit: ConsumerUnit) => void;
+  addUser: (user: User) => void;
   deleteCompany: (id: number) => void;
   deleteConsumerUnit: (id: number) => void;
   deleteUser: (id: number) => void;
@@ -48,64 +51,32 @@ interface DataContextType {
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
-  const [companies, setCompanies] = useState<Company[]>([
-    {
-      id: 1,
-      razaoSocial: "Empresa Exemplo 1",
-      cnpj: "12.345.678/0001-90",
-      endereco: "Rua Exemplo, 123",
-      unidades: ["UC-001", "UC-002"],
-    },
-    {
-      id: 2,
-      razaoSocial: "Empresa Exemplo 2",
-      cnpj: "98.765.432/0001-10",
-      endereco: "Avenida Teste, 456",
-      unidades: ["UC-003"],
-    },
-  ]);
-
-  const [consumerUnits, setConsumerUnits] = useState<ConsumerUnit[]>([
-    {
-      id: 1,
-      empresa: "Empresa Exemplo 1",
-      nome: "Matriz",
-      numero: "123456789",
-      endereco: "Rua Principal, 100",
-      distribuidora: "Energia SA",
-    },
-    {
-      id: 2,
-      empresa: "Empresa Exemplo 1",
-      nome: "Filial 1",
-      numero: "987654321",
-      endereco: "Avenida Secundária, 200",
-      distribuidora: "Energia SA",
-    },
-  ]);
-
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: 1,
-      empresa: "Empresa Exemplo 1",
-      nome: "João Silva",
-      funcao: "Gerente",
-      fone: "(11) 99999-9999",
-      email: "joao@exemplo.com",
-    },
-    {
-      id: 2,
-      empresa: "Empresa Exemplo 2",
-      nome: "Maria Santos",
-      funcao: "Analista",
-      fone: "(11) 88888-8888",
-      email: "maria@exemplo.com",
-    },
-  ]);
-
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [consumerUnits, setConsumerUnits] = useState<ConsumerUnit[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
   const [editingConsumerUnit, setEditingConsumerUnit] = useState<ConsumerUnit | null>(null);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+
+  const addCompany = (company: Company) => {
+    setCompanies((prev) => [...prev, company]);
+  };
+
+  const addConsumerUnit = (unit: ConsumerUnit) => {
+    setConsumerUnits((prev) => [...prev, unit]);
+    // Atualiza a lista de unidades da empresa
+    setCompanies((prev) =>
+      prev.map((company) =>
+        company.razaoSocial === unit.empresa
+          ? { ...company, unidades: [...company.unidades, unit.numero] }
+          : company
+      )
+    );
+  };
+
+  const addUser = (user: User) => {
+    setUsers((prev) => [...prev, user]);
+  };
 
   const deleteCompany = (id: number) => {
     setCompanies((prev) => prev.filter((company) => company.id !== id));
@@ -113,7 +84,21 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deleteConsumerUnit = (id: number) => {
-    setConsumerUnits((prev) => prev.filter((unit) => unit.id !== id));
+    const unit = consumerUnits.find((u) => u.id === id);
+    if (unit) {
+      setConsumerUnits((prev) => prev.filter((u) => u.id !== id));
+      // Remove a unidade da lista da empresa
+      setCompanies((prev) =>
+        prev.map((company) =>
+          company.razaoSocial === unit.empresa
+            ? {
+                ...company,
+                unidades: company.unidades.filter((u) => u !== unit.numero),
+              }
+            : company
+        )
+      );
+    }
     toast.success("Unidade Consumidora excluída com sucesso!");
   };
 
@@ -129,7 +114,6 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       )
     );
     setEditingCompany(null);
-    toast.success("Empresa atualizada com sucesso!");
   };
 
   const editConsumerUnit = (id: number, data: Partial<ConsumerUnit>) => {
@@ -137,7 +121,6 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       prev.map((unit) => (unit.id === id ? { ...unit, ...data } : unit))
     );
     setEditingConsumerUnit(null);
-    toast.success("Unidade Consumidora atualizada com sucesso!");
   };
 
   const editUser = (id: number, data: Partial<User>) => {
@@ -145,7 +128,6 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       prev.map((user) => (user.id === id ? { ...user, ...data } : user))
     );
     setEditingUser(null);
-    toast.success("Usuário atualizado com sucesso!");
   };
 
   return (
@@ -157,6 +139,9 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         editingCompany,
         editingConsumerUnit,
         editingUser,
+        addCompany,
+        addConsumerUnit,
+        addUser,
         deleteCompany,
         deleteConsumerUnit,
         deleteUser,

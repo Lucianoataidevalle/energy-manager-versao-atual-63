@@ -10,8 +10,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useData } from "@/contexts/DataContext";
 
 const ConsumerUnitForm = () => {
+  const { companies, addConsumerUnit } = useData();
   const [formData, setFormData] = useState({
     empresa: "",
     nome: "",
@@ -22,7 +24,10 @@ const ConsumerUnitForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement consumer unit registration logic
+    addConsumerUnit({
+      ...formData,
+      id: Date.now(),
+    });
     toast.success("Unidade Consumidora cadastrada com sucesso!");
     setFormData({
       empresa: "",
@@ -52,8 +57,11 @@ const ConsumerUnitForm = () => {
                 <SelectValue placeholder="Selecione a empresa" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1">Empresa Exemplo 1</SelectItem>
-                <SelectItem value="2">Empresa Exemplo 2</SelectItem>
+                {companies.map((company) => (
+                  <SelectItem key={company.id} value={company.razaoSocial}>
+                    {company.razaoSocial}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

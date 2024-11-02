@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,7 +17,7 @@ import {
 import { useData } from "@/contexts/DataContext";
 
 const CompanyForm = () => {
-  const { editingCompany, editCompany } = useData();
+  const { editingCompany, editCompany, addCompany } = useData();
   const [formData, setFormData] = useState({
     razaoSocial: "",
     cnpj: "",
@@ -36,14 +37,20 @@ const CompanyForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingCompany) {
-      // Lógica para cadastrar nova empresa
-      return;
+      addCompany({
+        ...formData,
+        id: Date.now(),
+        unidades: [],
+      });
+      toast.success("Empresa cadastrada com sucesso!");
+      setFormData({ razaoSocial: "", cnpj: "", endereco: "" });
     }
   };
 
   const handleUpdate = () => {
     if (editingCompany) {
       editCompany(editingCompany.id, formData);
+      toast.success("Empresa atualizada com sucesso!");
     }
     setFormData({ razaoSocial: "", cnpj: "", endereco: "" });
   };

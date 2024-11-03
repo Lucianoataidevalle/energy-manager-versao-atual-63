@@ -34,21 +34,21 @@ const CompanyList = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Razão Social</TableHead>
-              <TableHead>CNPJ</TableHead>
-              <TableHead>Endereço</TableHead>
-              <TableHead>Unidades Consumidoras</TableHead>
-              <TableHead>Ações</TableHead>
+              <TableHead className="text-center">Razão Social</TableHead>
+              <TableHead className="text-center">CNPJ</TableHead>
+              <TableHead className="text-center">Endereço</TableHead>
+              <TableHead className="text-center">Quantidade UC</TableHead>
+              <TableHead className="text-center">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {companies.map((company) => (
               <TableRow key={company.id}>
-                <TableCell>{company.razaoSocial}</TableCell>
-                <TableCell>{company.cnpj}</TableCell>
-                <TableCell>{company.endereco}</TableCell>
-                <TableCell>{company.unidades.length}</TableCell>
-                <TableCell className="space-x-2">
+                <TableCell className="text-center">{company.razaoSocial}</TableCell>
+                <TableCell className="text-center">{company.cnpj}</TableCell>
+                <TableCell className="text-center">{company.endereco}</TableCell>
+                <TableCell className="text-center">{company.unidades.length}</TableCell>
+                <TableCell className="text-center space-x-2">
                   <Button 
                     variant="outline" 
                     size="icon"

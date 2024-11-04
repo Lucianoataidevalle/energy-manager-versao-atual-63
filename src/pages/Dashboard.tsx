@@ -51,7 +51,10 @@ const Dashboard = () => {
           onMonthChange={setSelectedMonth}
         />
 
-        <DashboardSummary />
+        <DashboardSummary 
+          selectedCompany={selectedCompany}
+          selectedUnit={selectedUnit}
+        />
 
         <div className="space-y-8">
           <ConsumptionChart 

@@ -9,6 +9,7 @@ import { UnitSelect } from "./UnitSelect";
 import { ConsumptionInputs } from "./ConsumptionInputs";
 import { DemandInputs } from "./DemandInputs";
 import { BillingInputs } from "./BillingInputs";
+import { Button } from "@/components/ui/button"; // Ensure Button is imported
 
 interface InvoiceFormProps {
   onCompanyChange: (company: string) => void;

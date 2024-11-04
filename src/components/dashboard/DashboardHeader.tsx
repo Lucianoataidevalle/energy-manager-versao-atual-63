@@ -52,18 +52,6 @@ const DashboardHeader = ({
     }
   }, [selectedMonth, onMonthChange]);
 
-  const generateLastTwelveMonths = () => {
-    const months = [];
-    for (let i = 0; i < 12; i++) {
-      const date = subMonths(new Date(), i);
-      months.push({
-        value: format(date, "yyyy-MM"),
-        label: format(date, "MMM/yyyy", { locale: ptBR }),
-      });
-    }
-    return months;
-  };
-
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 space-y-4 md:space-y-0">
       <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -102,18 +90,12 @@ const DashboardHeader = ({
 
         <div className="space-y-2 w-full md:w-[200px]">
           <label className="text-sm font-medium">Mês de Referência</label>
-          <Select value={selectedMonth} onValueChange={onMonthChange}>
-            <SelectTrigger>
-              <SelectValue placeholder="Selecione o mês" />
-            </SelectTrigger>
-            <SelectContent>
-              {generateLastTwelveMonths().map((month) => (
-                <SelectItem key={month.value} value={month.value}>
-                  {month.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <input
+            type="month"
+            value={selectedMonth}
+            onChange={(e) => onMonthChange(e.target.value)}
+            className="w-full px-3 py-2 border rounded-md"
+          />
         </div>
       </div>
     </div>

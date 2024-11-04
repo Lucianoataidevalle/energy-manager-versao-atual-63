@@ -9,26 +9,30 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { useData } from "@/contexts/DataContext";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface BillingChartProps {
+  selectedCompany: string;
+  selectedUnit: string;
   selectedMonth: string;
 }
 
-const BillingChart = ({ selectedMonth }: BillingChartProps) => {
-  const mockData = [
-    { mes: "Jan/24", valor: 50000 },
-    { mes: "Fev/24", valor: 52000 },
-    { mes: "Mar/24", valor: 48000 },
-    { mes: "Abr/24", valor: 51000 },
-    { mes: "Mai/24", valor: 53000 },
-    { mes: "Jun/24", valor: 49000 },
-    { mes: "Jul/24", valor: 47000 },
-    { mes: "Ago/24", valor: 54000 },
-    { mes: "Set/24", valor: 50500 },
-    { mes: "Out/24", valor: 51500 },
-    { mes: "Nov/24", valor: 49500 },
-    { mes: "Dez/24", valor: 52500 },
-  ].slice(0, parseInt(selectedMonth));
+const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingChartProps) => {
+  const { invoices } = useData();
+
+  // Filtra as faturas pela empresa e UC selecionadas
+  const filteredInvoices = invoices
+    .filter(invoice => 
+      invoice.empresa === selectedCompany && 
+      invoice.unidade === selectedUnit
+    )
+    .sort((a, b) => new Date(a.mes).getTime() - new Date(b.mes).getTime())
+    .map(invoice => ({
+      mes: format(new Date(invoice.mes), "MMM/yy", { locale: ptBR }),
+      valor: invoice.valorFatura
+    }));
 
   return (
     <Card>
@@ -37,7 +41,7 @@ const BillingChart = ({ selectedMonth }: BillingChartProps) => {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={mockData}>
+          <BarChart data={filteredInvoices}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
             <YAxis />
@@ -50,7 +54,7 @@ const BillingChart = ({ selectedMonth }: BillingChartProps) => {
               label={{
                 position: "top",
                 formatter: (value: number) =>
-                  `R$ ${value.toLocaleString()}`,
+                  `R$ ${value.toLocaleString("pt-BR")}`,
               }}
             />
           </BarChart>

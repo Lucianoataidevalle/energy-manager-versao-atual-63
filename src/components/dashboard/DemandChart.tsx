@@ -10,55 +10,32 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { useData } from "@/contexts/DataContext";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface DemandChartProps {
+  selectedCompany: string;
+  selectedUnit: string;
   selectedMonth: string;
 }
 
-const DemandChart = ({ selectedMonth }: DemandChartProps) => {
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
-  
-  const generateLastTwelveMonths = () => {
-    const months = [];
-    for (let i = 11; i >= 0; i--) {
-      let month = currentMonth - i;
-      let year = currentYear;
-      if (month < 0) {
-        month += 12;
-        year -= 1;
-      }
-      const yearSuffix = year.toString().slice(-2);
-      months.push({
-        mes: `${['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'][month]}/${yearSuffix}`,
-        medida: 0,
-        contratada: 400,
-        ultrapassagem: 0,
-      });
-    }
-    return months;
-  };
+const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandChartProps) => {
+  const { invoices } = useData();
 
-  const baseData = generateLastTwelveMonths();
-  const mockData = [
-    { mes: "Jan/24", medida: 350, contratada: 400, ultrapassagem: 0 },
-    { mes: "Fev/24", medida: 420, contratada: 400, ultrapassagem: 20 },
-    { mes: "Mar/24", medida: 380, contratada: 400, ultrapassagem: 0 },
-    { mes: "Abr/24", medida: 390, contratada: 400, ultrapassagem: 0 },
-    { mes: "Mai/24", medida: 450, contratada: 400, ultrapassagem: 50 },
-    { mes: "Jun/24", medida: 370, contratada: 400, ultrapassagem: 0 },
-    { mes: "Jul/24", medida: 360, contratada: 400, ultrapassagem: 0 },
-    { mes: "Ago/24", medida: 430, contratada: 400, ultrapassagem: 30 },
-    { mes: "Set/24", medida: 400, contratada: 400, ultrapassagem: 0 },
-    { mes: "Out/24", medida: 410, contratada: 400, ultrapassagem: 10 },
-    { mes: "Nov/24", medida: 385, contratada: 400, ultrapassagem: 0 },
-    { mes: "Dez/24", medida: 395, contratada: 400, ultrapassagem: 0 },
-  ];
-
-  const mergedData = baseData.map(baseMonth => {
-    const mockMonth = mockData.find(m => m.mes === baseMonth.mes);
-    return mockMonth || baseMonth;
-  }).slice(0, parseInt(selectedMonth));
+  // Filtra as faturas pela empresa e UC selecionadas
+  const filteredInvoices = invoices
+    .filter(invoice => 
+      invoice.empresa === selectedCompany && 
+      invoice.unidade === selectedUnit
+    )
+    .sort((a, b) => new Date(a.mes).getTime() - new Date(b.mes).getTime())
+    .map(invoice => ({
+      mes: format(new Date(invoice.mes), "MMM/yy", { locale: ptBR }),
+      medida: invoice.demandaMedida,
+      ultrapassagem: invoice.demandaUltrapassagem,
+      contratada: 400 // Este valor deve vir do cadastro da UC
+    }));
 
   return (
     <Card>
@@ -67,7 +44,7 @@ const DemandChart = ({ selectedMonth }: DemandChartProps) => {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <ComposedChart data={mergedData} barSize={30}>
+          <ComposedChart data={filteredInvoices} barSize={30}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
             <YAxis />
@@ -78,16 +55,6 @@ const DemandChart = ({ selectedMonth }: DemandChartProps) => {
               stackId="a" 
               fill="#8884d8" 
               name="Demanda Medida"
-              label={(props) => {
-                const { x, y, value, payload } = props;
-                if (!payload) return null;
-                const total = (payload.medida || 0) + (payload.ultrapassagem || 0);
-                return (
-                  <text x={x} y={y} dy={-10} fill="#666" textAnchor="middle">
-                    {total}
-                  </text>
-                );
-              }}
             />
             <Bar
               dataKey="ultrapassagem"

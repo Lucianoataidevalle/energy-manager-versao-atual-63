@@ -54,9 +54,21 @@ const Dashboard = () => {
         <DashboardSummary />
 
         <div className="space-y-8">
-          <ConsumptionChart selectedMonth={selectedMonth} />
-          <DemandChart selectedMonth={selectedMonth} />
-          <BillingChart selectedMonth={selectedMonth} />
+          <ConsumptionChart 
+            selectedCompany={selectedCompany}
+            selectedUnit={selectedUnit}
+            selectedMonth={selectedMonth}
+          />
+          <DemandChart 
+            selectedCompany={selectedCompany}
+            selectedUnit={selectedUnit}
+            selectedMonth={selectedMonth}
+          />
+          <BillingChart 
+            selectedCompany={selectedCompany}
+            selectedUnit={selectedUnit}
+            selectedMonth={selectedMonth}
+          />
         </div>
       </div>
     </div>

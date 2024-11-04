@@ -39,10 +39,6 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
       (!selectedUnit || invoice.unidade === selectedUnit)
   );
 
-  const formatNumber = (value: number) => {
-    return value.toLocaleString('pt-BR');
-  };
-
   const handleEdit = (invoice: any) => {
     setEditingInvoice(invoice);
     toast.success("Editando fatura...", {
@@ -55,6 +51,10 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
     toast.success("Fatura excluída com sucesso!", {
       position: "top-right",
     });
+  };
+
+  const formatNumber = (value: number) => {
+    return value.toLocaleString('pt-BR');
   };
 
   const exportToCSV = () => {

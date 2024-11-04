@@ -4,15 +4,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
+import { useData } from "@/contexts/DataContext";
 
 const Login = () => {
-  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { users } = useData();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (login === "admin" && password === "admin") {
+    
+    const user = users.find(u => u.email === email);
+    
+    if (user || (email === "admin" && password === "admin")) {
       toast.success("Login realizado com sucesso!", {
         position: "top-right",
       });
@@ -33,12 +38,12 @@ const Login = () => {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label htmlFor="login">Login</label>
+              <label htmlFor="email">E-mail</label>
               <Input
-                id="login"
+                id="email"
                 type="text"
-                value={login}
-                onChange={(e) => setLogin(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>

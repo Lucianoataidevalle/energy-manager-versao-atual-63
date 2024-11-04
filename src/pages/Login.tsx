@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
 
 const Login = () => {
@@ -13,20 +13,22 @@ const Login = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (login === "admin" && password === "admin") {
-      toast.success("Login realizado com sucesso!");
+      toast.success("Login realizado com sucesso!", {
+        position: "top-right",
+      });
       navigate("/dashboard");
     } else {
-      toast.error("Credenciais inválidas!");
+      toast.error("Credenciais inválidas!", {
+        position: "top-right",
+      });
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <Card className="w-[400px]">
-        <CardHeader>
-          <CardTitle className="text-center text-2xl">
-            Seja Bem-vindo ao Sistema de Gestão de Energia
-          </CardTitle>
+        <CardHeader className="flex items-center justify-center">
+          <img src="/l2-logo.png" alt="L2 Engenharia" className="h-24 mb-4" />
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

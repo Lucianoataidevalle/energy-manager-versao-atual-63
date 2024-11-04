@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   FileText,
@@ -7,6 +7,8 @@ import {
   Building2,
   Zap,
   User,
+  LogOut,
+  Menu,
 } from "lucide-react";
 import {
   Accordion,
@@ -14,12 +16,27 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const Sidebar = () => {
-  return (
-    <div className="fixed left-0 top-0 min-h-screen w-64 bg-gray-900 text-white p-4 overflow-y-auto">
-      <h1 className="text-xl font-bold mb-8">Sistema de Gestão de Energia</h1>
-      <nav className="space-y-2">
+  const navigate = useNavigate();
+  const user = {
+    name: "Admin",
+    email: "admin@example.com"
+  };
+
+  const handleLogout = () => {
+    navigate('/login');
+  };
+
+  const SidebarContent = () => (
+    <>
+      <div className="flex flex-col items-center mb-8">
+        <img src="/l2-logo.png" alt="L2 Engenharia" className="h-16 mb-4" />
+        <h1 className="text-xl font-bold">Sistema de Gestão de Energia</h1>
+      </div>
+      <nav className="space-y-2 flex-1">
         <Link
           to="/dashboard"
           className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded"
@@ -78,7 +95,44 @@ const Sidebar = () => {
           <span>Relatórios</span>
         </Link>
       </nav>
-    </div>
+      <div className="mt-auto pt-4 border-t border-gray-700">
+        <div className="px-4 py-2">
+          <p className="text-sm font-medium">{user.name}</p>
+          <p className="text-xs text-gray-400">{user.email}</p>
+        </div>
+        <Button
+          variant="ghost"
+          className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-900/20"
+          onClick={handleLogout}
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Sair
+        </Button>
+      </div>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <div className="hidden md:fixed md:left-0 md:top-0 md:flex md:min-h-screen md:w-64 md:flex-col bg-gray-900 text-white p-4">
+        <SidebarContent />
+      </div>
+
+      {/* Mobile Menu */}
+      <div className="md:hidden fixed top-0 left-0 right-0 p-4 bg-gray-900 text-white z-50">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Menu className="h-6 w-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-64 bg-gray-900 text-white p-4">
+            <SidebarContent />
+          </SheetContent>
+        </Sheet>
+      </div>
+    </>
   );
 };
 

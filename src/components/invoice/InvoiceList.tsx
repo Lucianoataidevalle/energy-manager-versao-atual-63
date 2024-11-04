@@ -23,6 +23,7 @@ import {
 import { useData } from "@/contexts/DataContext";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { toast } from "sonner";
 
 interface InvoiceListProps {
   selectedCompany: string;
@@ -34,12 +35,26 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
 
   const filteredInvoices = invoices.filter(
     (invoice) => 
-      invoice.empresa === selectedCompany && 
-      invoice.unidade === selectedUnit
+      (!selectedCompany || invoice.empresa === selectedCompany) && 
+      (!selectedUnit || invoice.unidade === selectedUnit)
   );
 
   const formatNumber = (value: number) => {
     return value.toLocaleString('pt-BR');
+  };
+
+  const handleEdit = (invoice: any) => {
+    setEditingInvoice(invoice);
+    toast.success("Editando fatura...", {
+      position: "top-right",
+    });
+  };
+
+  const handleDelete = (id: number) => {
+    deleteInvoice(id);
+    toast.success("Fatura excluída com sucesso!", {
+      position: "top-right",
+    });
   };
 
   const exportToCSV = () => {
@@ -52,8 +67,8 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
       "Valor (R$)",
     ];
 
-    const csvData = invoices.map((invoice) => [
-      invoice.mes,
+    const csvData = filteredInvoices.map((invoice) => [
+      format(new Date(invoice.mes), "MMM/yyyy", { locale: ptBR }),
       invoice.consumoForaPonta,
       invoice.consumoPonta,
       invoice.demandaMedida,
@@ -86,7 +101,7 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
               {selectedCompany && selectedUnit ? `${selectedCompany} - ${selectedUnit}` : "Selecione uma empresa e unidade consumidora"}
             </p>
           </div>
-          {selectedCompany && selectedUnit && (
+          {filteredInvoices.length > 0 && (
             <Button onClick={exportToCSV} variant="outline" size="sm">
               <Download className="h-4 w-4 mr-2" />
               Exportar CSV
@@ -96,69 +111,71 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
       </CardHeader>
       <CardContent>
         {selectedCompany && selectedUnit ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-center">Mês de Referência</TableHead>
-                <TableHead className="text-center">Consumo Fora Ponta (kWh)</TableHead>
-                <TableHead className="text-center">Consumo Ponta (kWh)</TableHead>
-                <TableHead className="text-center">Demanda Medida (kW)</TableHead>
-                <TableHead className="text-center">Demanda Ultrapassagem (kW)</TableHead>
-                <TableHead className="text-center">Valor Fatura (R$)</TableHead>
-                <TableHead className="text-center">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredInvoices.map((invoice) => (
-                <TableRow key={invoice.id}>
-                  <TableCell className="text-center">
-                    {format(new Date(invoice.mes), "MMM/yyyy", { locale: ptBR })}
-                  </TableCell>
-                  <TableCell className="text-center">{formatNumber(invoice.consumoForaPonta)}</TableCell>
-                  <TableCell className="text-center">{formatNumber(invoice.consumoPonta)}</TableCell>
-                  <TableCell className="text-center">{formatNumber(invoice.demandaMedida)}</TableCell>
-                  <TableCell className="text-center">{formatNumber(invoice.demandaUltrapassagem)}</TableCell>
-                  <TableCell className="text-center">
-                    {invoice.valorFatura.toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
-                  </TableCell>
-                  <TableCell className="text-center space-x-2">
-                    <Button 
-                      variant="outline" 
-                      size="icon"
-                      onClick={() => setEditingInvoice(invoice)}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="outline" size="icon">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Excluir Fatura</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Deseja realmente excluir esta fatura? Esta ação não pode ser desfeita.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => deleteInvoice(invoice.id)}>
-                            Confirmar
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-center">Mês de Referência</TableHead>
+                  <TableHead className="text-center">Consumo Fora Ponta (kWh)</TableHead>
+                  <TableHead className="text-center">Consumo Ponta (kWh)</TableHead>
+                  <TableHead className="text-center">Demanda Medida (kW)</TableHead>
+                  <TableHead className="text-center">Demanda Ultrapassagem (kW)</TableHead>
+                  <TableHead className="text-center">Valor Fatura (R$)</TableHead>
+                  <TableHead className="text-center">Ações</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredInvoices.map((invoice) => (
+                  <TableRow key={invoice.id}>
+                    <TableCell className="text-center">
+                      {format(new Date(invoice.mes), "MMM/yyyy", { locale: ptBR })}
+                    </TableCell>
+                    <TableCell className="text-center">{formatNumber(invoice.consumoForaPonta)}</TableCell>
+                    <TableCell className="text-center">{formatNumber(invoice.consumoPonta)}</TableCell>
+                    <TableCell className="text-center">{formatNumber(invoice.demandaMedida)}</TableCell>
+                    <TableCell className="text-center">{formatNumber(invoice.demandaUltrapassagem)}</TableCell>
+                    <TableCell className="text-center">
+                      {invoice.valorFatura.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </TableCell>
+                    <TableCell className="text-center space-x-2">
+                      <Button 
+                        variant="outline" 
+                        size="icon"
+                        onClick={() => handleEdit(invoice)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="outline" size="icon">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Excluir Fatura</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Deseja realmente excluir esta fatura? Esta ação não pode ser desfeita.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDelete(invoice.id)}>
+                              Confirmar
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         ) : (
           <div className="text-center text-muted-foreground py-8">
             Selecione uma empresa e unidade consumidora para visualizar o histórico de faturas

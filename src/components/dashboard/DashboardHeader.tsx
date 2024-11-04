@@ -1,3 +1,5 @@
+import { format, subMonths } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import {
   Select,
   SelectContent,
@@ -5,6 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useData } from "@/contexts/DataContext";
+import { useEffect } from "react";
 
 interface DashboardHeaderProps {
   selectedCompany: string;
@@ -23,55 +27,91 @@ const DashboardHeader = ({
   onUnitChange,
   onMonthChange,
 }: DashboardHeaderProps) => {
+  const { companies, consumerUnits } = useData();
+  const availableUnits = consumerUnits.filter(
+    (unit) => unit.empresa === selectedCompany
+  );
+
+  // Set initial values on component mount
+  useEffect(() => {
+    if (!selectedCompany && companies.length > 0) {
+      onCompanyChange(companies[0].razaoSocial);
+    }
+  }, [companies, selectedCompany, onCompanyChange]);
+
+  useEffect(() => {
+    if (!selectedUnit && availableUnits.length > 0) {
+      onUnitChange(availableUnits[0].nome);
+    }
+  }, [availableUnits, selectedUnit, onUnitChange]);
+
+  useEffect(() => {
+    if (!selectedMonth) {
+      const previousMonth = format(subMonths(new Date(), 1), "yyyy-MM");
+      onMonthChange(previousMonth);
+    }
+  }, [selectedMonth, onMonthChange]);
+
+  const generateLastTwelveMonths = () => {
+    const months = [];
+    for (let i = 0; i < 12; i++) {
+      const date = subMonths(new Date(), i);
+      months.push({
+        value: format(date, "yyyy-MM"),
+        label: format(date, "MMM/yyyy", { locale: ptBR }),
+      });
+    }
+    return months;
+  };
+
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 space-y-4 md:space-y-0">
       <h1 className="text-2xl font-bold">Dashboard</h1>
-      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-        <div className="space-y-2">
+      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
+        <div className="space-y-2 w-full md:w-[200px]">
           <label className="text-sm font-medium">Empresa</label>
           <Select value={selectedCompany} onValueChange={onCompanyChange}>
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger>
               <SelectValue placeholder="Selecione a empresa" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1">Empresa Exemplo 1</SelectItem>
-              <SelectItem value="2">Empresa Exemplo 2</SelectItem>
+              {companies.map((company) => (
+                <SelectItem key={company.id} value={company.razaoSocial}>
+                  {company.razaoSocial}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 w-full md:w-[200px]">
           <label className="text-sm font-medium">UC</label>
           <Select value={selectedUnit} onValueChange={onUnitChange}>
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger>
               <SelectValue placeholder="Selecione a UC" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1">Matriz</SelectItem>
-              <SelectItem value="2">Filial 1</SelectItem>
+              {availableUnits.map((unit) => (
+                <SelectItem key={unit.id} value={unit.nome}>
+                  {unit.nome}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 w-full md:w-[200px]">
           <label className="text-sm font-medium">Mês de Referência</label>
           <Select value={selectedMonth} onValueChange={onMonthChange}>
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger>
               <SelectValue placeholder="Selecione o mês" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1">Janeiro/2024</SelectItem>
-              <SelectItem value="2">Fevereiro/2024</SelectItem>
-              <SelectItem value="3">Março/2024</SelectItem>
-              <SelectItem value="4">Abril/2024</SelectItem>
-              <SelectItem value="5">Maio/2024</SelectItem>
-              <SelectItem value="6">Junho/2024</SelectItem>
-              <SelectItem value="7">Julho/2024</SelectItem>
-              <SelectItem value="8">Agosto/2024</SelectItem>
-              <SelectItem value="9">Setembro/2024</SelectItem>
-              <SelectItem value="10">Outubro/2024</SelectItem>
-              <SelectItem value="11">Novembro/2024</SelectItem>
-              <SelectItem value="12">Dezembro/2024</SelectItem>
+              {generateLastTwelveMonths().map((month) => (
+                <SelectItem key={month.value} value={month.value}>
+                  {month.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

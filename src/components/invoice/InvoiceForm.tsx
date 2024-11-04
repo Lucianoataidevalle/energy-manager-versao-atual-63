@@ -9,9 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { format, subMonths } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
-import { format, subMonths } from "date-fns";
 
 interface InvoiceFormProps {
   onCompanyChange: (company: string) => void;
@@ -62,10 +63,14 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
         ...invoiceData,
         id: Date.now(),
       });
-      toast.success("Fatura cadastrada com sucesso!");
+      toast.success("Fatura cadastrada com sucesso!", {
+        position: "top-right",
+      });
     } else {
       editInvoice(editingInvoice.id, invoiceData);
-      toast.success("Fatura atualizada com sucesso!");
+      toast.success("Fatura atualizada com sucesso!", {
+        position: "top-right",
+      });
     }
 
     setFormData({

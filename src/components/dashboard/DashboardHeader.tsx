@@ -1,5 +1,5 @@
-import { format, subMonths } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { useData } from "@/contexts/DataContext";
+import { useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -7,8 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useData } from "@/contexts/DataContext";
-import { useEffect } from "react";
+import { MonthSelector } from "../shared/MonthSelector";
 
 interface DashboardHeaderProps {
   selectedCompany: string;
@@ -32,7 +31,6 @@ const DashboardHeader = ({
     (unit) => unit.empresa === selectedCompany
   );
 
-  // Set initial values on component mount
   useEffect(() => {
     if (!selectedCompany && companies.length > 0) {
       onCompanyChange(companies[0].razaoSocial);
@@ -44,13 +42,6 @@ const DashboardHeader = ({
       onUnitChange(availableUnits[0].nome);
     }
   }, [availableUnits, selectedUnit, onUnitChange]);
-
-  useEffect(() => {
-    if (!selectedMonth) {
-      const previousMonth = format(subMonths(new Date(), 1), "yyyy-MM");
-      onMonthChange(previousMonth);
-    }
-  }, [selectedMonth, onMonthChange]);
 
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 space-y-4 md:space-y-0">
@@ -88,14 +79,8 @@ const DashboardHeader = ({
           </Select>
         </div>
 
-        <div className="space-y-2 w-full md:w-[200px]">
-          <label className="text-sm font-medium">Mês de Referência</label>
-          <input
-            type="month"
-            value={selectedMonth}
-            onChange={(e) => onMonthChange(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md"
-          />
+        <div className="w-full md:w-[200px]">
+          <MonthSelector value={selectedMonth} onChange={onMonthChange} />
         </div>
       </div>
     </div>

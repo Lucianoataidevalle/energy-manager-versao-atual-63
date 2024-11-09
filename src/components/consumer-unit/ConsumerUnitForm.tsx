@@ -19,6 +19,7 @@ const ConsumerUnitForm = () => {
     nome: "",
     numero: "",
     endereco: "",
+    demandaContratada: "",
     distribuidora: "",
   });
 
@@ -29,6 +30,7 @@ const ConsumerUnitForm = () => {
         nome: editingConsumerUnit.nome,
         numero: editingConsumerUnit.numero,
         endereco: editingConsumerUnit.endereco,
+        demandaContratada: editingConsumerUnit.demandaContratada,
         distribuidora: editingConsumerUnit.distribuidora,
       });
     }
@@ -51,6 +53,7 @@ const ConsumerUnitForm = () => {
       nome: "",
       numero: "",
       endereco: "",
+      demandaContratada: "",
       distribuidora: "",
     });
   };
@@ -109,6 +112,18 @@ const ConsumerUnitForm = () => {
               value={formData.endereco}
               onChange={(e) =>
                 setFormData({ ...formData, endereco: e.target.value })
+              }
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="demandaContratada">Demanda Contratada</label>
+            <Input
+              id="demandaContratada"
+              type="number"
+              value={formData.demandaContratada}
+              onChange={(e) =>
+                setFormData({ ...formData, demandaContratada: e.target.value })
               }
               required
             />

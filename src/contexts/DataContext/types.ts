@@ -18,12 +18,13 @@ export interface ConsumerUnit {
 
 export interface User {
   id: number;
-  empresas: string[];  // Changed from 'empresa' to 'empresas' to support multiple companies
+  empresa?: string;  // Made optional since we're using empresas array
+  empresas: string[];  // Array of company names
   nome: string;
   funcao: string;
   fone: string;
   email: string;
-  senha?: string;  // Made optional since it's not always needed
+  senha?: string;
 }
 
 export interface Invoice {

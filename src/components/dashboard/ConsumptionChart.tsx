@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useData } from "@/contexts/DataContext";
-import { format, subMonths, parse } from "date-fns";
+import { format, subMonths, parse, isValid } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 interface ConsumptionChartProps {
@@ -23,7 +23,15 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
   const { invoices } = useData();
 
   const getLast12MonthsData = () => {
+    // Ensure we have a valid date from the selectedMonth
     const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
+    
+    if (!isValid(selectedDate)) {
+      console.error('Invalid selected date:', selectedMonth);
+      return [];
+    }
+
+    // Generate array of last 12 months
     const months = Array.from({ length: 12 }, (_, i) => {
       const date = subMonths(selectedDate, i);
       return format(date, 'yyyy-MM');
@@ -36,8 +44,12 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
         inv.mes === month
       );
 
+      const monthDate = parse(month, 'yyyy-MM', new Date());
+      
       return {
-        mes: format(parse(month, 'yyyy-MM', new Date()), "MMM/yy", { locale: ptBR }),
+        mes: isValid(monthDate) 
+          ? format(monthDate, "MMM/yy", { locale: ptBR })
+          : month,
         ponta: invoice?.consumoPonta || 0,
         foraPonta: invoice?.consumoForaPonta || 0,
         total: (invoice?.consumoPonta || 0) + (invoice?.consumoForaPonta || 0)

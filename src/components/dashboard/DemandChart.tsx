@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useData } from "@/contexts/DataContext";
-import { format, subMonths, parse } from "date-fns";
+import { format, subMonths, parse, isValid } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 interface DemandChartProps {
@@ -33,7 +33,13 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
 
   // Get data for the last 12 months up to selectedMonth
   const getLast12MonthsData = () => {
+    // Validate the selectedMonth format and parsing
     const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
+    if (!isValid(selectedDate)) {
+      console.error('Invalid date:', selectedMonth);
+      return [];
+    }
+
     const months = Array.from({ length: 12 }, (_, i) => {
       const date = subMonths(selectedDate, i);
       return format(date, 'yyyy-MM');
@@ -48,8 +54,19 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
         inv.mes === month
       );
 
+      const monthDate = parse(month, 'yyyy-MM', new Date());
+      if (!isValid(monthDate)) {
+        console.error('Invalid month date:', month);
+        return {
+          mes: month,
+          medida: 0,
+          ultrapassagem: 0,
+          contratada: contractedDemand
+        };
+      }
+
       return {
-        mes: format(parse(month, 'yyyy-MM', new Date()), "MMM/yy", { locale: ptBR }),
+        mes: format(monthDate, "MMM/yy", { locale: ptBR }),
         medida: invoice?.demandaMedida || 0,
         ultrapassagem: invoice?.demandaUltrapassagem || 0,
         contratada: contractedDemand

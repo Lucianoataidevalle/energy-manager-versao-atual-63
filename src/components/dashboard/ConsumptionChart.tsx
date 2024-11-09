@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useData } from "@/contexts/DataContext";
-import { format, subMonths, parse, isValid } from "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 interface ConsumptionChartProps {
@@ -22,42 +22,19 @@ interface ConsumptionChartProps {
 const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: ConsumptionChartProps) => {
   const { invoices } = useData();
 
-  const getLast12MonthsData = () => {
-    // Ensure we have a valid date from the selectedMonth
-    const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
-    
-    if (!isValid(selectedDate)) {
-      console.error('Invalid selected date:', selectedMonth);
-      return [];
-    }
-
-    // Generate array of last 12 months
-    const months = Array.from({ length: 12 }, (_, i) => {
-      const date = subMonths(selectedDate, i);
-      return format(date, 'yyyy-MM');
-    }).reverse();
-
-    return months.map(month => {
-      const invoice = invoices.find(inv => 
-        inv.empresa === selectedCompany && 
-        inv.unidade === selectedUnit &&
-        inv.mes === month
-      );
-
-      const monthDate = parse(month, 'yyyy-MM', new Date());
-      
-      return {
-        mes: isValid(monthDate) 
-          ? format(monthDate, "MMM/yy", { locale: ptBR })
-          : month,
-        ponta: invoice?.consumoPonta || 0,
-        foraPonta: invoice?.consumoForaPonta || 0,
-        total: (invoice?.consumoPonta || 0) + (invoice?.consumoForaPonta || 0)
-      };
-    });
-  };
-
-  const chartData = getLast12MonthsData();
+  // Filtra as faturas pela empresa e UC selecionadas
+  const filteredInvoices = invoices
+    .filter(invoice => 
+      invoice.empresa === selectedCompany && 
+      invoice.unidade === selectedUnit
+    )
+    .sort((a, b) => new Date(a.mes).getTime() - new Date(b.mes).getTime())
+    .map(invoice => ({
+      mes: format(new Date(invoice.mes), "MMM/yy", { locale: ptBR }),
+      ponta: invoice.consumoPonta,
+      foraPonta: invoice.consumoForaPonta,
+      total: invoice.consumoPonta + invoice.consumoForaPonta
+    }));
 
   return (
     <Card>
@@ -66,7 +43,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={chartData} barSize={30}>
+          <BarChart data={filteredInvoices} barSize={30}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
             <YAxis />

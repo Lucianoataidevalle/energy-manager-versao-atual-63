@@ -25,6 +25,13 @@ import { useData } from "@/contexts/DataContext";
 const UserList = () => {
   const { users, deleteUser, setEditingUser } = useData();
 
+  const expandedUsers = users.flatMap(user => 
+    user.empresas.map(empresa => ({
+      ...user,
+      empresa
+    }))
+  );
+
   return (
     <Card>
       <CardHeader>
@@ -43,8 +50,8 @@ const UserList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
+            {expandedUsers.map((user, index) => (
+              <TableRow key={`${user.id}-${index}`}>
                 <TableCell>{user.empresa}</TableCell>
                 <TableCell>{user.nome}</TableCell>
                 <TableCell>{user.funcao}</TableCell>
@@ -54,7 +61,7 @@ const UserList = () => {
                   <Button 
                     variant="outline" 
                     size="icon"
-                    onClick={() => setEditingUser(user)}
+                    onClick={() => setEditingUser(users.find(u => u.id === user.id)!)}
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>

@@ -21,7 +21,7 @@ interface ConsumerUnit {
 
 interface User {
   id: number;
-  empresa: string;
+  empresas: string[];
   nome: string;
   funcao: string;
   fone: string;

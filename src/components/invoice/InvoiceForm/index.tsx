@@ -8,7 +8,7 @@ import { UnitSelect } from "./UnitSelect";
 import { ConsumptionInputs } from "./ConsumptionInputs";
 import { DemandInputs } from "./DemandInputs";
 import { BillingInputs } from "./BillingInputs";
-import { Button } from "@/components/ui/button";
+import { UpdateConfirmDialog } from "./UpdateConfirmDialog";
 
 interface InvoiceFormProps {
   onCompanyChange: (company: string) => void;
@@ -45,6 +45,9 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+  };
+
+  const handleConfirmSubmit = () => {
     const invoiceData = {
       ...formData,
       consumoForaPonta: Number(formData.consumoForaPonta),
@@ -131,9 +134,10 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
             setFormData={setFormData}
           />
 
-          <Button type="submit" className="w-full">
-            {editingInvoice ? "Atualizar Fatura" : "Inserir Fatura"}
-          </Button>
+          <UpdateConfirmDialog 
+            onConfirm={handleConfirmSubmit}
+            isEditing={!!editingInvoice}
+          />
         </form>
       </CardContent>
     </Card>

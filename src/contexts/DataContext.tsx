@@ -23,7 +23,6 @@ interface User {
   id: number;
   empresas: string[];
   nome: string;
-  funcao: string;
   fone: string;
   email: string;
 }

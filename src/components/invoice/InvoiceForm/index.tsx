@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format, subMonths } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
 import { CompanySelect } from "./CompanySelect";
@@ -9,7 +8,7 @@ import { UnitSelect } from "./UnitSelect";
 import { ConsumptionInputs } from "./ConsumptionInputs";
 import { DemandInputs } from "./DemandInputs";
 import { BillingInputs } from "./BillingInputs";
-import { Button } from "@/components/ui/button"; // Ensure Button is imported
+import { Button } from "@/components/ui/button";
 
 interface InvoiceFormProps {
   onCompanyChange: (company: string) => void;
@@ -91,10 +90,10 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <CompanySelect
-              value={formData.empresa}
+              value={[formData.empresa]}
               onChange={(value) => {
-                setFormData({ ...formData, empresa: value, unidade: "" });
-                onCompanyChange(value);
+                setFormData({ ...formData, empresa: value[0], unidade: "" });
+                onCompanyChange(value[0]);
               }}
             />
             <UnitSelect

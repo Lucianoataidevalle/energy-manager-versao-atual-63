@@ -68,7 +68,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Consumo dos Últimos 12 Meses</CardTitle>
+        <CardTitle>Consumo (kWh)</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
@@ -82,11 +82,11 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
               dataKey="ponta" 
               stackId="a" 
               fill="#8884d8" 
-              name="Ponta"
+              name="Consumo Ponta"
               label={(props) => {
                 const { x, y, value, payload } = props;
                 if (!payload) return null;
-                const total = (payload.ponta || 0) + (payload.foraPonta || 0);
+                const total = payload.total;
                 return (
                   <text x={x} y={y} dy={-10} fill="#666" textAnchor="middle">
                     {total}
@@ -98,7 +98,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
               dataKey="foraPonta"
               stackId="a"
               fill="#82ca9d"
-              name="Fora Ponta"
+              name="Consumo Fora Ponta"
             />
           </BarChart>
         </ResponsiveContainer>

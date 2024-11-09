@@ -79,7 +79,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Demanda dos Últimos 12 Meses</CardTitle>
+        <CardTitle>Demanda (kW)</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>

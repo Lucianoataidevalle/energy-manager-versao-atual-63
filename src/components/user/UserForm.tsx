@@ -10,6 +10,7 @@ const UserForm = () => {
   const { companies, addUser, editingUser, editUser } = useData();
   const [formData, setFormData] = useState({
     empresas: [] as string[],
+    empresa: "",
     nome: "",
     funcao: "",
     fone: "",
@@ -20,7 +21,8 @@ const UserForm = () => {
   useEffect(() => {
     if (editingUser) {
       setFormData({
-        empresas: editingUser.empresas,
+        empresas: editingUser.empresas || [],
+        empresa: editingUser.empresa || "",
         nome: editingUser.nome,
         funcao: editingUser.funcao,
         fone: editingUser.fone,
@@ -32,14 +34,18 @@ const UserForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const userData = {
+      ...formData,
+      id: editingUser?.id || Date.now(),
+      empresa: formData.empresas[0] || "", // Set the primary company as the first selected company
+    };
+
     if (!editingUser) {
-      addUser({
-        ...formData,
-        id: Date.now(),
-      });
+      addUser(userData);
       toast.success("Usuário cadastrado com sucesso!");
       setFormData({
         empresas: [],
+        empresa: "",
         nome: "",
         funcao: "",
         fone: "",
@@ -47,7 +53,7 @@ const UserForm = () => {
         senha: "",
       });
     } else {
-      editUser(editingUser.id, formData);
+      editUser(editingUser.id, userData);
       toast.success("Usuário atualizado com sucesso!");
     }
   };
@@ -57,7 +63,8 @@ const UserForm = () => {
       ...prev,
       empresas: prev.empresas.includes(razaoSocial)
         ? prev.empresas.filter(e => e !== razaoSocial)
-        : [...prev.empresas, razaoSocial]
+        : [...prev.empresas, razaoSocial],
+      empresa: prev.empresas.length === 0 ? razaoSocial : prev.empresa
     }));
   };
 

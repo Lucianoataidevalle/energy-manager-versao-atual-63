@@ -18,8 +18,8 @@ export interface ConsumerUnit {
 
 export interface User {
   id: number;
-  empresa?: string;  // Made optional since we're using empresas array
-  empresas: string[];  // Array of company names
+  empresa: string;
+  empresas: string[];
   nome: string;
   funcao: string;
   fone: string;

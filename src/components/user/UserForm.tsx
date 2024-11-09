@@ -37,7 +37,7 @@ const UserForm = () => {
     const userData = {
       ...formData,
       id: editingUser?.id || Date.now(),
-      empresa: formData.empresas[0] || "", // Set the primary company as the first selected company
+      empresa: formData.empresas[0] || "",
     };
 
     if (!editingUser) {

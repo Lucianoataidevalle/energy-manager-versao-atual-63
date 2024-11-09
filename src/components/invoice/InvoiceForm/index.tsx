@@ -40,8 +40,11 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
         demandaUltrapassagem: editingInvoice.demandaUltrapassagem.toString(),
         valorFatura: editingInvoice.valorFatura.toString(),
       });
+      // Update parent components with company and unit
+      onCompanyChange(editingInvoice.empresa);
+      onUnitChange(editingInvoice.unidade);
     }
-  }, [editingInvoice]);
+  }, [editingInvoice, onCompanyChange, onUnitChange]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

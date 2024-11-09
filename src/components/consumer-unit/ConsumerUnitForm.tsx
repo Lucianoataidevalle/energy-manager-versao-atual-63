@@ -86,7 +86,7 @@ const ConsumerUnitForm = () => {
             </Select>
           </div>
           <div className="space-y-2">
-            <label htmlFor="nome">Nome (Apelido) da UC</label>
+            <label htmlFor="nome">Nome da UC</label>
             <Input
               id="nome"
               value={formData.nome}
@@ -117,7 +117,7 @@ const ConsumerUnitForm = () => {
             />
           </div>
           <div className="space-y-2">
-            <label htmlFor="demandaContratada">Demanda Contratada</label>
+            <label htmlFor="demandaContratada">Demanda Contratada (kW)</label>
             <Input
               id="demandaContratada"
               type="number"

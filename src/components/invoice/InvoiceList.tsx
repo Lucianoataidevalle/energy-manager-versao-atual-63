@@ -21,8 +21,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useData } from "@/contexts/DataContext";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 
 interface InvoiceListProps {
@@ -33,11 +31,13 @@ interface InvoiceListProps {
 const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
   const { invoices, deleteInvoice, setEditingInvoice } = useData();
 
-  const filteredInvoices = invoices.filter(
-    (invoice) => 
-      (!selectedCompany || invoice.empresa === selectedCompany) && 
-      (!selectedUnit || invoice.unidade === selectedUnit)
-  );
+  const filteredInvoices = invoices
+    .filter(
+      (invoice) => 
+        (!selectedCompany || invoice.empresa === selectedCompany) && 
+        (!selectedUnit || invoice.unidade === selectedUnit)
+    )
+    .sort((a, b) => new Date(b.mes).getTime() - new Date(a.mes).getTime());
 
   const handleEdit = (invoice: any) => {
     setEditingInvoice(invoice);
@@ -68,7 +68,7 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
     ];
 
     const csvData = filteredInvoices.map((invoice) => [
-      format(new Date(invoice.mes), "MMM/yyyy", { locale: ptBR }),
+      invoice.mes,
       invoice.consumoForaPonta,
       invoice.consumoPonta,
       invoice.demandaMedida,
@@ -128,7 +128,7 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
                 {filteredInvoices.map((invoice) => (
                   <TableRow key={invoice.id}>
                     <TableCell className="text-center">
-                      {format(new Date(invoice.mes), "MMM/yyyy", { locale: ptBR })}
+                      {invoice.mes}
                     </TableCell>
                     <TableCell className="text-center">{formatNumber(invoice.consumoForaPonta)}</TableCell>
                     <TableCell className="text-center">{formatNumber(invoice.consumoPonta)}</TableCell>

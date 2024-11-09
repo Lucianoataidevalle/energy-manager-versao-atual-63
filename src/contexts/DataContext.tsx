@@ -15,6 +15,7 @@ interface ConsumerUnit {
   nome: string;
   numero: string;
   endereco: string;
+  demandaContratada: string;
   distribuidora: string;
 }
 

@@ -34,7 +34,7 @@ const UserList = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Empresa</TableHead>
+              <TableHead>Empresas</TableHead>
               <TableHead>Nome</TableHead>
               <TableHead>Função/Cargo</TableHead>
               <TableHead>Fone</TableHead>
@@ -45,7 +45,7 @@ const UserList = () => {
           <TableBody>
             {users.map((user) => (
               <TableRow key={user.id}>
-                <TableCell>{user.empresa}</TableCell>
+                <TableCell>{user.empresas.join(", ")}</TableCell>
                 <TableCell>{user.nome}</TableCell>
                 <TableCell>{user.funcao}</TableCell>
                 <TableCell>{user.fone}</TableCell>

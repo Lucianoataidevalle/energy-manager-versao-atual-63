@@ -2,20 +2,14 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
 
 const UserForm = () => {
   const { companies, addUser, editingUser, editUser } = useData();
   const [formData, setFormData] = useState({
-    empresa: "",
+    empresas: [] as string[],
     nome: "",
     funcao: "",
     fone: "",
@@ -26,7 +20,7 @@ const UserForm = () => {
   useEffect(() => {
     if (editingUser) {
       setFormData({
-        empresa: editingUser.empresa,
+        empresas: editingUser.empresas,
         nome: editingUser.nome,
         funcao: editingUser.funcao,
         fone: editingUser.fone,
@@ -45,7 +39,7 @@ const UserForm = () => {
       });
       toast.success("Usuário cadastrado com sucesso!");
       setFormData({
-        empresa: "",
+        empresas: [],
         nome: "",
         funcao: "",
         fone: "",
@@ -58,6 +52,15 @@ const UserForm = () => {
     }
   };
 
+  const handleCompanyToggle = (razaoSocial: string) => {
+    setFormData(prev => ({
+      ...prev,
+      empresas: prev.empresas.includes(razaoSocial)
+        ? prev.empresas.filter(e => e !== razaoSocial)
+        : [...prev.empresas, razaoSocial]
+    }));
+  };
+
   return (
     <Card className="mb-8">
       <CardHeader>
@@ -66,24 +69,24 @@ const UserForm = () => {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label>Empresa</label>
-            <Select
-              value={formData.empresa}
-              onValueChange={(value) =>
-                setFormData({ ...formData, empresa: value })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione a empresa" />
-              </SelectTrigger>
-              <SelectContent>
-                {companies.map((company) => (
-                  <SelectItem key={company.id} value={company.razaoSocial}>
+            <label>Empresas</label>
+            <div className="space-y-2">
+              {companies.map((company) => (
+                <div key={company.id} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`company-${company.id}`}
+                    checked={formData.empresas.includes(company.razaoSocial)}
+                    onCheckedChange={() => handleCompanyToggle(company.razaoSocial)}
+                  />
+                  <label
+                    htmlFor={`company-${company.id}`}
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
                     {company.razaoSocial}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+                  </label>
+                </div>
+              ))}
+            </div>
           </div>
           <div className="space-y-2">
             <label htmlFor="nome">Nome completo</label>
@@ -99,9 +102,7 @@ const UserForm = () => {
             <Input
               id="funcao"
               value={formData.funcao}
-              onChange={(e) =>
-                setFormData({ ...formData, funcao: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, funcao: e.target.value })}
               required
             />
           </div>
@@ -120,9 +121,7 @@ const UserForm = () => {
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
             />
           </div>
@@ -132,9 +131,7 @@ const UserForm = () => {
               id="senha"
               type="password"
               value={formData.senha}
-              onChange={(e) =>
-                setFormData({ ...formData, senha: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
               required
             />
           </div>

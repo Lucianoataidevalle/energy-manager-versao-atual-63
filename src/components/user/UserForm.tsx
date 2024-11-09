@@ -2,14 +2,19 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
 
 const UserForm = () => {
   const { companies, addUser, editingUser, editUser } = useData();
   const [formData, setFormData] = useState({
-    empresas: [] as string[],
     empresa: "",
     nome: "",
     funcao: "",
@@ -21,8 +26,7 @@ const UserForm = () => {
   useEffect(() => {
     if (editingUser) {
       setFormData({
-        empresas: editingUser.empresas || [],
-        empresa: editingUser.empresa || "",
+        empresa: editingUser.empresa,
         nome: editingUser.nome,
         funcao: editingUser.funcao,
         fone: editingUser.fone,
@@ -34,17 +38,13 @@ const UserForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const userData = {
-      ...formData,
-      id: editingUser?.id || Date.now(),
-      empresa: formData.empresas[0] || "",
-    };
-
     if (!editingUser) {
-      addUser(userData);
+      addUser({
+        ...formData,
+        id: Date.now(),
+      });
       toast.success("Usuário cadastrado com sucesso!");
       setFormData({
-        empresas: [],
         empresa: "",
         nome: "",
         funcao: "",
@@ -53,19 +53,9 @@ const UserForm = () => {
         senha: "",
       });
     } else {
-      editUser(editingUser.id, userData);
+      editUser(editingUser.id, formData);
       toast.success("Usuário atualizado com sucesso!");
     }
-  };
-
-  const handleCompanyToggle = (razaoSocial: string) => {
-    setFormData(prev => ({
-      ...prev,
-      empresas: prev.empresas.includes(razaoSocial)
-        ? prev.empresas.filter(e => e !== razaoSocial)
-        : [...prev.empresas, razaoSocial],
-      empresa: prev.empresas.length === 0 ? razaoSocial : prev.empresa
-    }));
   };
 
   return (
@@ -76,24 +66,24 @@ const UserForm = () => {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label>Empresas</label>
-            <div className="space-y-2">
-              {companies.map((company) => (
-                <div key={company.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`company-${company.id}`}
-                    checked={formData.empresas.includes(company.razaoSocial)}
-                    onCheckedChange={() => handleCompanyToggle(company.razaoSocial)}
-                  />
-                  <label
-                    htmlFor={`company-${company.id}`}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
+            <label>Empresa</label>
+            <Select
+              value={formData.empresa}
+              onValueChange={(value) =>
+                setFormData({ ...formData, empresa: value })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione a empresa" />
+              </SelectTrigger>
+              <SelectContent>
+                {companies.map((company) => (
+                  <SelectItem key={company.id} value={company.razaoSocial}>
                     {company.razaoSocial}
-                  </label>
-                </div>
-              ))}
-            </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <label htmlFor="nome">Nome completo</label>
@@ -109,7 +99,9 @@ const UserForm = () => {
             <Input
               id="funcao"
               value={formData.funcao}
-              onChange={(e) => setFormData({ ...formData, funcao: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, funcao: e.target.value })
+              }
               required
             />
           </div>
@@ -128,7 +120,9 @@ const UserForm = () => {
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               required
             />
           </div>
@@ -138,7 +132,9 @@ const UserForm = () => {
               id="senha"
               type="password"
               value={formData.senha}
-              onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, senha: e.target.value })
+              }
               required
             />
           </div>

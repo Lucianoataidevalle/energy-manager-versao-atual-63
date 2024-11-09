@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useData } from "@/contexts/DataContext";
-import { format } from "date-fns";
+import { format, subMonths, parse } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 interface DemandChartProps {
@@ -21,21 +21,37 @@ interface DemandChartProps {
 }
 
 const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandChartProps) => {
-  const { invoices } = useData();
+  const { invoices, consumerUnits } = useData();
 
-  // Filtra as faturas pela empresa e UC selecionadas
-  const filteredInvoices = invoices
-    .filter(invoice => 
-      invoice.empresa === selectedCompany && 
-      invoice.unidade === selectedUnit
-    )
-    .sort((a, b) => new Date(a.mes).getTime() - new Date(b.mes).getTime())
-    .map(invoice => ({
-      mes: format(new Date(invoice.mes), "MMM/yy", { locale: ptBR }),
-      medida: invoice.demandaMedida,
-      ultrapassagem: invoice.demandaUltrapassagem,
-      contratada: 400 // Este valor deve vir do cadastro da UC
-    }));
+  const getLast12MonthsData = () => {
+    const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
+    const months = Array.from({ length: 12 }, (_, i) => {
+      const date = subMonths(selectedDate, i);
+      return format(date, 'yyyy-MM');
+    }).reverse();
+
+    const unit = consumerUnits.find(u => 
+      u.empresa === selectedCompany && u.nome === selectedUnit
+    );
+    const demandaContratada = unit ? Number(unit.demandaContratada) : 0;
+
+    return months.map(month => {
+      const invoice = invoices.find(inv => 
+        inv.empresa === selectedCompany && 
+        inv.unidade === selectedUnit &&
+        inv.mes === month
+      );
+
+      return {
+        mes: format(parse(month, 'yyyy-MM', new Date()), "MMM/yy", { locale: ptBR }),
+        medida: invoice?.demandaMedida || 0,
+        ultrapassagem: invoice?.demandaUltrapassagem || 0,
+        contratada: demandaContratada
+      };
+    });
+  };
+
+  const chartData = getLast12MonthsData();
 
   return (
     <Card>
@@ -44,7 +60,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <ComposedChart data={filteredInvoices} barSize={30}>
+          <ComposedChart data={chartData} barSize={30}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
             <YAxis />

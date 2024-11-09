@@ -25,13 +25,6 @@ import { useData } from "@/contexts/DataContext";
 const UserList = () => {
   const { users, deleteUser, setEditingUser } = useData();
 
-  const expandedUsers = users.flatMap(user => 
-    user.empresas.map(empresa => ({
-      ...user,
-      empresa
-    }))
-  );
-
   return (
     <Card>
       <CardHeader>
@@ -43,25 +36,23 @@ const UserList = () => {
             <TableRow>
               <TableHead>Empresa</TableHead>
               <TableHead>Nome</TableHead>
-              <TableHead>Função/Cargo</TableHead>
               <TableHead>Fone</TableHead>
               <TableHead>E-mail</TableHead>
               <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {expandedUsers.map((user, index) => (
-              <TableRow key={`${user.id}-${index}`}>
-                <TableCell>{user.empresa}</TableCell>
+            {users.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell>{user.empresas.join(", ")}</TableCell>
                 <TableCell>{user.nome}</TableCell>
-                <TableCell>{user.funcao}</TableCell>
                 <TableCell>{user.fone}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell className="space-x-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="icon"
-                    onClick={() => setEditingUser(users.find(u => u.id === user.id)!)}
+                    onClick={() => setEditingUser(user)}
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
@@ -76,7 +67,8 @@ const UserList = () => {
                       <AlertDialogHeader>
                         <AlertDialogTitle>Excluir Usuário</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Deseja realmente excluir este usuário? Esta ação não pode ser desfeita.
+                          Deseja realmente excluir este usuário? Esta ação não pode
+                          ser desfeita.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>

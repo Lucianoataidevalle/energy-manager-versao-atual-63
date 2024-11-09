@@ -2,16 +2,15 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
+import { CompanySelect } from "../invoice/InvoiceForm/CompanySelect";
 
 const UserForm = () => {
-  const { companies, addUser, editingUser, editUser } = useData();
+  const { addUser, editingUser, editUser } = useData();
   const [formData, setFormData] = useState({
     empresas: [] as string[],
     nome: "",
-    funcao: "",
     fone: "",
     email: "",
     senha: "",
@@ -22,7 +21,6 @@ const UserForm = () => {
       setFormData({
         empresas: editingUser.empresas,
         nome: editingUser.nome,
-        funcao: editingUser.funcao,
         fone: editingUser.fone,
         email: editingUser.email,
         senha: "",
@@ -41,7 +39,6 @@ const UserForm = () => {
       setFormData({
         empresas: [],
         nome: "",
-        funcao: "",
         fone: "",
         email: "",
         senha: "",
@@ -52,15 +49,6 @@ const UserForm = () => {
     }
   };
 
-  const handleCompanyToggle = (razaoSocial: string) => {
-    setFormData((prev) => {
-      const empresas = prev.empresas.includes(razaoSocial)
-        ? prev.empresas.filter((e) => e !== razaoSocial)
-        : [...prev.empresas, razaoSocial];
-      return { ...prev, empresas };
-    });
-  };
-
   return (
     <Card className="mb-8">
       <CardHeader>
@@ -68,41 +56,16 @@ const UserForm = () => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label>Empresas</label>
-            <div className="space-y-2">
-              {companies.map((company) => (
-                <div key={company.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`company-${company.id}`}
-                    checked={formData.empresas.includes(company.razaoSocial)}
-                    onCheckedChange={() => handleCompanyToggle(company.razaoSocial)}
-                  />
-                  <label
-                    htmlFor={`company-${company.id}`}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {company.razaoSocial}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
+          <CompanySelect
+            value={formData.empresas}
+            onChange={(empresas) => setFormData({ ...formData, empresas })}
+          />
           <div className="space-y-2">
             <label htmlFor="nome">Nome completo</label>
             <Input
               id="nome"
               value={formData.nome}
               onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="funcao">Função/Cargo</label>
-            <Input
-              id="funcao"
-              value={formData.funcao}
-              onChange={(e) => setFormData({ ...formData, funcao: e.target.value })}
               required
             />
           </div>

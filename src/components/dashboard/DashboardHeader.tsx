@@ -44,43 +44,47 @@ const DashboardHeader = ({
   }, [availableUnits, selectedUnit, onUnitChange]);
 
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 space-y-4 md:space-y-0">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
-      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
-        <div className="space-y-2 w-full md:w-[200px]">
-          <label className="text-sm font-medium">Empresa</label>
-          <Select value={selectedCompany} onValueChange={onCompanyChange}>
-            <SelectTrigger>
-              <SelectValue placeholder="Selecione a empresa" />
-            </SelectTrigger>
-            <SelectContent>
-              {companies.map((company) => (
-                <SelectItem key={company.id} value={company.razaoSocial}>
-                  {company.razaoSocial}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+    <div className="fixed top-0 right-0 left-0 md:left-64 bg-background z-50 border-b">
+      <div className="p-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
+            <div className="space-y-2 w-full md:w-[200px]">
+              <label className="text-sm font-medium">Empresa</label>
+              <Select value={selectedCompany} onValueChange={onCompanyChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a empresa" />
+                </SelectTrigger>
+                <SelectContent>
+                  {companies.map((company) => (
+                    <SelectItem key={company.id} value={company.razaoSocial}>
+                      {company.razaoSocial}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-        <div className="space-y-2 w-full md:w-[200px]">
-          <label className="text-sm font-medium">UC</label>
-          <Select value={selectedUnit} onValueChange={onUnitChange}>
-            <SelectTrigger>
-              <SelectValue placeholder="Selecione a UC" />
-            </SelectTrigger>
-            <SelectContent>
-              {availableUnits.map((unit) => (
-                <SelectItem key={unit.id} value={unit.nome}>
-                  {unit.nome}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+            <div className="space-y-2 w-full md:w-[200px]">
+              <label className="text-sm font-medium">UC</label>
+              <Select value={selectedUnit} onValueChange={onUnitChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a UC" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableUnits.map((unit) => (
+                    <SelectItem key={unit.id} value={unit.nome}>
+                      {unit.nome}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-        <div className="w-full md:w-[200px]">
-          <MonthSelector value={selectedMonth} onChange={onMonthChange} />
+            <div className="w-full md:w-[200px]">
+              <MonthSelector value={selectedMonth} onChange={onMonthChange} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

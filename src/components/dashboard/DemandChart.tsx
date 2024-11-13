@@ -58,25 +58,39 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
           mes: month,
           demandaForaPonta: 0,
           demandaPonta: 0,
-          contratada: contractedDemand
+          contratada: contractedDemand,
+          total: 0
         };
       }
 
+      const demandaForaPonta = invoice?.demandaMedidaForaPonta || 0;
+      const demandaPonta = invoice?.demandaMedidaPonta || 0;
+      const total = demandaForaPonta + demandaPonta;
+
       return {
         mes: format(monthDate, "MMM/yy", { locale: ptBR }),
-        demandaForaPonta: invoice?.demandaMedidaForaPonta || 0,
-        demandaPonta: invoice?.demandaMedidaPonta || 0,
-        contratada: contractedDemand
+        demandaForaPonta,
+        demandaPonta,
+        contratada: contractedDemand,
+        total
       };
     });
   };
 
   const chartData = getLast12MonthsData();
+  const currentMonthData = chartData.find(data => 
+    data.mes === format(parse(selectedMonth, 'yyyy-MM', new Date()), "MMM/yy", { locale: ptBR })
+  );
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Demanda (kW)</CardTitle>
+        <CardTitle className="flex justify-between items-center">
+          <span>Demanda (kW)</span>
+          <span className="text-xl font-bold">
+            {currentMonthData?.total.toLocaleString("pt-BR")} kW
+          </span>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>

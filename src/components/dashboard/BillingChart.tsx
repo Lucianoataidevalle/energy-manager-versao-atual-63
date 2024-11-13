@@ -6,7 +6,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 import { useData } from "@/contexts/DataContext";
@@ -22,9 +21,7 @@ interface BillingChartProps {
 const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingChartProps) => {
   const { invoices } = useData();
 
-  // Get data for the last 12 months up to selectedMonth
   const getLast12MonthsData = () => {
-    // Validate the selectedMonth format and parsing
     const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
     if (!isValid(selectedDate)) {
       console.error('Invalid date:', selectedMonth);
@@ -60,11 +57,22 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
   };
 
   const chartData = getLast12MonthsData();
+  const currentMonthData = chartData.find(data => 
+    data.mes === format(parse(selectedMonth, 'yyyy-MM', new Date()), "MMM/yy", { locale: ptBR })
+  );
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Custo de Faturas</CardTitle>
+        <CardTitle className="flex justify-between items-center">
+          <span>Custo de Faturas</span>
+          <span className="text-xl font-bold">
+            {currentMonthData?.valor.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            })}
+          </span>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
@@ -73,15 +81,19 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
             <XAxis dataKey="mes" />
             <YAxis />
             <Tooltip />
-            <Legend />
             <Bar
               dataKey="valor"
               fill="#8884d8"
-              name="Valor Total"
               label={{
                 position: "top",
                 formatter: (value: number) =>
-                  `R$ ${value.toLocaleString("pt-BR")}`,
+                  value.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  }),
+                style: { whiteSpace: "nowrap" }
               }}
             />
           </BarChart>

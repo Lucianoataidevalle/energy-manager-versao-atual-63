@@ -41,7 +41,7 @@ const Dashboard = () => {
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <div className="flex-1 p-8 md:ml-64">
+      <div className="flex-1 md:ml-64">
         <DashboardHeader
           selectedCompany={selectedCompany}
           selectedUnit={selectedUnit}
@@ -51,27 +51,29 @@ const Dashboard = () => {
           onMonthChange={setSelectedMonth}
         />
 
-        <DashboardSummary 
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-        />
+        <div className="mt-32 p-8">
+          <DashboardSummary 
+            selectedCompany={selectedCompany}
+            selectedUnit={selectedUnit}
+          />
 
-        <div className="space-y-8">
-          <ConsumptionChart 
-            selectedCompany={selectedCompany}
-            selectedUnit={selectedUnit}
-            selectedMonth={selectedMonth}
-          />
-          <DemandChart 
-            selectedCompany={selectedCompany}
-            selectedUnit={selectedUnit}
-            selectedMonth={selectedMonth}
-          />
-          <BillingChart 
-            selectedCompany={selectedCompany}
-            selectedUnit={selectedUnit}
-            selectedMonth={selectedMonth}
-          />
+          <div className="space-y-8">
+            <ConsumptionChart 
+              selectedCompany={selectedCompany}
+              selectedUnit={selectedUnit}
+              selectedMonth={selectedMonth}
+            />
+            <DemandChart 
+              selectedCompany={selectedCompany}
+              selectedUnit={selectedUnit}
+              selectedMonth={selectedMonth}
+            />
+            <BillingChart 
+              selectedCompany={selectedCompany}
+              selectedUnit={selectedUnit}
+              selectedMonth={selectedMonth}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -22,9 +22,7 @@ interface ConsumptionChartProps {
 const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: ConsumptionChartProps) => {
   const { invoices } = useData();
 
-  // Get data for the last 12 months up to selectedMonth
   const getLast12MonthsData = () => {
-    // Validate the selectedMonth format and parsing
     const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
     if (!isValid(selectedDate)) {
       console.error('Invalid date:', selectedMonth);
@@ -54,21 +52,33 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
         };
       }
 
+      const ponta = invoice?.consumoPonta || 0;
+      const foraPonta = invoice?.consumoForaPonta || 0;
+      const total = ponta + foraPonta;
+
       return {
         mes: format(monthDate, "MMM/yy", { locale: ptBR }),
-        ponta: invoice?.consumoPonta || 0,
-        foraPonta: invoice?.consumoForaPonta || 0,
-        total: (invoice?.consumoPonta || 0) + (invoice?.consumoForaPonta || 0)
+        ponta,
+        foraPonta,
+        total
       };
     });
   };
 
   const chartData = getLast12MonthsData();
+  const currentMonthData = chartData.find(data => 
+    data.mes === format(parse(selectedMonth, 'yyyy-MM', new Date()), "MMM/yy", { locale: ptBR })
+  );
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Consumo (kWh)</CardTitle>
+        <CardTitle className="flex justify-between items-center">
+          <span>Consumo (kWh)</span>
+          <span className="text-xl font-bold">
+            {currentMonthData?.total.toLocaleString("pt-BR")} kWh
+          </span>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
@@ -86,10 +96,9 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
               label={(props) => {
                 const { x, y, value, payload } = props;
                 if (!payload) return null;
-                const total = payload.total;
                 return (
-                  <text x={x} y={y} dy={-10} fill="#666" textAnchor="middle">
-                    {total}
+                  <text x={x} y={y - 10} fill="#666" textAnchor="middle">
+                    {payload.total.toLocaleString("pt-BR")}
                   </text>
                 );
               }}

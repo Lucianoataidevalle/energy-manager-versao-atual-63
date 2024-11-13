@@ -32,8 +32,7 @@ const UserForm = () => {
     }
   }, [editingUser]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     if (!editingUser) {
       addUser({
         ...formData,
@@ -67,7 +66,7 @@ const UserForm = () => {
         <CardTitle>Cadastro de Usuário</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
           <CompanySelect
             value={formData.empresas[0] || ""}
             onChange={handleCompanyChange}

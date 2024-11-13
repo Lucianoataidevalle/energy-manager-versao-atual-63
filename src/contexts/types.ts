@@ -26,6 +26,7 @@ export interface User {
   nome: string;
   fone: string;
   email: string;
+  isAdmin?: boolean;
 }
 
 export interface Invoice {

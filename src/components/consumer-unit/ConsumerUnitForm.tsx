@@ -48,8 +48,7 @@ const ConsumerUnitForm = () => {
     }
   }, [editingConsumerUnit]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     const submitData = {
       ...formData,
       demandaContratada: showSplitDemand ? "" : formData.demandaContratada,
@@ -81,15 +80,13 @@ const ConsumerUnitForm = () => {
     });
   };
 
-  // ... keep existing code (form fields JSX)
-
   return (
     <Card className="mb-8">
       <CardHeader>
         <CardTitle>Unidade Consumidora (UC)</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
           <div className="space-y-2">
             <label>Empresa</label>
             <Select
@@ -245,7 +242,6 @@ const ConsumerUnitForm = () => {
               />
             </div>
           )}
-
           <UpdateConfirmDialog 
             onConfirm={handleSubmit} 
             isEditing={!!editingConsumerUnit}

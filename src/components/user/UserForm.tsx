@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
 import { CompanySelect } from "../invoice/InvoiceForm/CompanySelect";
+import { UpdateConfirmDialog } from "../invoice/InvoiceForm/UpdateConfirmDialog";
 
 const UserForm = () => {
   const { addUser, editingUser, editUser } = useData();
@@ -14,6 +16,7 @@ const UserForm = () => {
     fone: "",
     email: "",
     senha: "",
+    isAdmin: false,
   });
 
   useEffect(() => {
@@ -24,6 +27,7 @@ const UserForm = () => {
         fone: editingUser.fone,
         email: editingUser.email,
         senha: "",
+        isAdmin: editingUser.isAdmin || false,
       });
     }
   }, [editingUser]);
@@ -42,6 +46,7 @@ const UserForm = () => {
         fone: "",
         email: "",
         senha: "",
+        isAdmin: false,
       });
     } else {
       editUser(editingUser.id, formData);
@@ -105,9 +110,31 @@ const UserForm = () => {
               required
             />
           </div>
-          <Button type="submit" className="w-full">
-            {editingUser ? "Atualizar Usuário" : "Cadastrar Usuário"}
-          </Button>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="isAdmin"
+              checked={formData.isAdmin}
+              onCheckedChange={(checked) =>
+                setFormData({ ...formData, isAdmin: checked as boolean })
+              }
+            />
+            <label
+              htmlFor="isAdmin"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Administrador
+            </label>
+          </div>
+          <UpdateConfirmDialog 
+            onConfirm={handleSubmit} 
+            isEditing={!!editingUser}
+            confirmTitle={editingUser ? "Atualizar Usuário" : "Cadastrar Usuário"}
+            confirmMessage={editingUser 
+              ? "Deseja realmente atualizar este usuário? Esta ação não pode ser desfeita."
+              : "Deseja realmente cadastrar este usuário? Esta ação não pode ser desfeita."
+            }
+            buttonText={editingUser ? "Atualizar Usuário" : "Cadastrar Usuário"}
+          />
         </form>
       </CardContent>
     </Card>

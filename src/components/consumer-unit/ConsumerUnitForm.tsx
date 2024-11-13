@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -11,6 +10,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
+import { UpdateConfirmDialog } from "../invoice/InvoiceForm/UpdateConfirmDialog";
 
 const ConsumerUnitForm = () => {
   const { companies, addConsumerUnit, editingConsumerUnit, editConsumerUnit } = useData();
@@ -80,6 +80,8 @@ const ConsumerUnitForm = () => {
       modalidadeTarifaria: "",
     });
   };
+
+  // ... keep existing code (form fields JSX)
 
   return (
     <Card className="mb-8">
@@ -244,9 +246,16 @@ const ConsumerUnitForm = () => {
             </div>
           )}
 
-          <Button type="submit" className="w-full">
-            {editingConsumerUnit ? "Atualizar UC" : "Cadastrar UC"}
-          </Button>
+          <UpdateConfirmDialog 
+            onConfirm={handleSubmit} 
+            isEditing={!!editingConsumerUnit}
+            confirmTitle={editingConsumerUnit ? "Atualizar UC" : "Cadastrar UC"}
+            confirmMessage={editingConsumerUnit 
+              ? "Deseja realmente atualizar esta UC? Esta ação não pode ser desfeita."
+              : "Deseja realmente cadastrar esta UC? Esta ação não pode ser desfeita."
+            }
+            buttonText={editingConsumerUnit ? "Atualizar UC" : "Cadastrar UC"}
+          />
         </form>
       </CardContent>
     </Card>

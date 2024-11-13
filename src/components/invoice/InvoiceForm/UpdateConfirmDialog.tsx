@@ -14,34 +14,39 @@ import { Button } from "@/components/ui/button";
 interface UpdateConfirmDialogProps {
   onConfirm: () => void;
   isEditing: boolean;
+  confirmTitle?: string;
+  confirmMessage?: string;
+  buttonText?: string;
 }
 
-export const UpdateConfirmDialog = ({ onConfirm, isEditing }: UpdateConfirmDialogProps) => {
-  if (!isEditing) {
-    return (
-      <Button type="submit" className="w-full">
-        Inserir Fatura
-      </Button>
-    );
-  }
+export const UpdateConfirmDialog = ({ 
+  onConfirm, 
+  isEditing,
+  confirmTitle = "Confirmar Ação",
+  confirmMessage = "Deseja realmente realizar esta ação? Esta ação não pode ser desfeita.",
+  buttonText = "Confirmar"
+}: UpdateConfirmDialogProps) => {
+  const handleConfirm = () => {
+    onConfirm();
+  };
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button type="button" className="w-full">
-          Atualizar Fatura
+          {buttonText}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Atualizar Fatura</AlertDialogTitle>
+          <AlertDialogTitle>{confirmTitle}</AlertDialogTitle>
           <AlertDialogDescription>
-            Deseja realmente atualizar esta fatura? Esta ação não pode ser desfeita.
+            {confirmMessage}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>
+          <AlertDialogAction onClick={handleConfirm}>
             Confirmar
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -10,7 +10,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { format, subMonths } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
 
@@ -27,8 +26,13 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
     mes: format(subMonths(new Date(), 1), "yyyy-MM"),
     consumoForaPonta: "",
     consumoPonta: "",
-    demandaMedida: "",
-    demandaUltrapassagem: "",
+    demandaMedidaForaPonta: "",
+    demandaMedidaPonta: "",
+    energiaReativaForaPonta: "",
+    energiaReativaPonta: "",
+    demandaReativaForaPonta: "",
+    demandaReativaPonta: "",
+    multasJuros: "",
     valorFatura: "",
   });
 
@@ -40,8 +44,13 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
         mes: editingInvoice.mes,
         consumoForaPonta: editingInvoice.consumoForaPonta.toString(),
         consumoPonta: editingInvoice.consumoPonta.toString(),
-        demandaMedida: editingInvoice.demandaMedida.toString(),
-        demandaUltrapassagem: editingInvoice.demandaUltrapassagem.toString(),
+        demandaMedidaForaPonta: editingInvoice.demandaMedidaForaPonta.toString(),
+        demandaMedidaPonta: editingInvoice.demandaMedidaPonta.toString(),
+        energiaReativaForaPonta: editingInvoice.energiaReativaForaPonta.toString(),
+        energiaReativaPonta: editingInvoice.energiaReativaPonta.toString(),
+        demandaReativaForaPonta: editingInvoice.demandaReativaForaPonta.toString(),
+        demandaReativaPonta: editingInvoice.demandaReativaPonta.toString(),
+        multasJuros: editingInvoice.multasJuros.toString(),
         valorFatura: editingInvoice.valorFatura.toString(),
       });
     }
@@ -53,8 +62,13 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
       ...formData,
       consumoForaPonta: Number(formData.consumoForaPonta),
       consumoPonta: Number(formData.consumoPonta),
-      demandaMedida: Number(formData.demandaMedida),
-      demandaUltrapassagem: Number(formData.demandaUltrapassagem),
+      demandaMedidaForaPonta: Number(formData.demandaMedidaForaPonta),
+      demandaMedidaPonta: Number(formData.demandaMedidaPonta),
+      energiaReativaForaPonta: Number(formData.energiaReativaForaPonta),
+      energiaReativaPonta: Number(formData.energiaReativaPonta),
+      demandaReativaForaPonta: Number(formData.demandaReativaForaPonta),
+      demandaReativaPonta: Number(formData.demandaReativaPonta),
+      multasJuros: Number(formData.multasJuros),
       valorFatura: Number(formData.valorFatura),
     };
 
@@ -79,8 +93,13 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
       mes: format(subMonths(new Date(), 1), "yyyy-MM"),
       consumoForaPonta: "",
       consumoPonta: "",
-      demandaMedida: "",
-      demandaUltrapassagem: "",
+      demandaMedidaForaPonta: "",
+      demandaMedidaPonta: "",
+      energiaReativaForaPonta: "",
+      energiaReativaPonta: "",
+      demandaReativaForaPonta: "",
+      demandaReativaPonta: "",
+      multasJuros: "",
       valorFatura: "",
     });
   };
@@ -179,27 +198,25 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <label htmlFor="demandaMedida">Demanda Medida (kW)</label>
+              <label htmlFor="demandaMedidaForaPonta">Demanda Medida Fora Ponta (kW)</label>
               <Input
-                id="demandaMedida"
+                id="demandaMedidaForaPonta"
                 type="number"
-                value={formData.demandaMedida}
+                value={formData.demandaMedidaForaPonta}
                 onChange={(e) =>
-                  setFormData({ ...formData, demandaMedida: e.target.value })
+                  setFormData({ ...formData, demandaMedidaForaPonta: e.target.value })
                 }
                 required
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="demandaUltrapassagem">
-                Demanda de Ultrapassagem (kW)
-              </label>
+              <label htmlFor="demandaMedidaPonta">Demanda Medida Ponta (kW)</label>
               <Input
-                id="demandaUltrapassagem"
+                id="demandaMedidaPonta"
                 type="number"
-                value={formData.demandaUltrapassagem}
+                value={formData.demandaMedidaPonta}
                 onChange={(e) =>
-                  setFormData({ ...formData, demandaUltrapassagem: e.target.value })
+                  setFormData({ ...formData, demandaMedidaPonta: e.target.value })
                 }
                 required
               />

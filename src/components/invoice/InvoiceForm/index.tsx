@@ -11,7 +11,7 @@ import { InvoiceFormProps } from "./types";
 import { useInvoiceForm } from "./useInvoiceForm";
 
 const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
-  const { companies, consumerUnits } = useData();
+  const { consumerUnits } = useData();
   const { formData, setFormData, handleSubmit } = useInvoiceForm(
     onCompanyChange,
     onUnitChange
@@ -30,7 +30,6 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <CompanySelect
-              companies={companies}
               value={formData.empresa}
               onChange={(value) => {
                 setFormData({ ...formData, empresa: value, unidade: "" });

@@ -85,10 +85,20 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
               stackId="a" 
               fill="#8884d8" 
               name="Consumo Ponta"
-              label={{
-                position: "top",
-                formatter: (value: number, entry: any) => entry.payload.total,
-                fontSize: 12
+              label={(props) => {
+                const { x, y, width, value, payload } = props;
+                if (!payload) return null;
+                return (
+                  <text 
+                    x={x + width / 2} 
+                    y={y - 10} 
+                    fill="#666" 
+                    textAnchor="middle"
+                    fontSize={12}
+                  >
+                    {payload.total}
+                  </text>
+                );
               }}
             />
             <Bar

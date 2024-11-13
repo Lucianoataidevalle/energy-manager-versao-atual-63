@@ -5,7 +5,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UnitSelectProps } from "./types";
+import { ConsumerUnit } from "./types";
+
+interface UnitSelectProps {
+  units: ConsumerUnit[];
+  value: string;
+  onChange: (value: string) => void;
+}
 
 export const UnitSelect = ({ units, value, onChange }: UnitSelectProps) => {
   return (

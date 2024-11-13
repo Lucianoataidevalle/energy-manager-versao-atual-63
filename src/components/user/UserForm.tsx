@@ -49,6 +49,13 @@ const UserForm = () => {
     }
   };
 
+  const handleCompanyChange = (company: string) => {
+    setFormData(prev => ({
+      ...prev,
+      empresas: [company]
+    }));
+  };
+
   return (
     <Card className="mb-8">
       <CardHeader>
@@ -57,8 +64,8 @@ const UserForm = () => {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <CompanySelect
-            value={formData.empresas}
-            onChange={(empresas) => setFormData({ ...formData, empresas })}
+            value={formData.empresas[0] || ""}
+            onChange={handleCompanyChange}
           />
           <div className="space-y-2">
             <label htmlFor="nome">Nome completo</label>

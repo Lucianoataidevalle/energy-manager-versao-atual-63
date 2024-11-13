@@ -38,7 +38,7 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
               }}
             />
             <UnitSelect
-              availableUnits={availableUnits}
+              units={availableUnits}
               value={formData.unidade}
               onChange={(value) => {
                 setFormData({ ...formData, unidade: value });

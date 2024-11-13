@@ -5,20 +5,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useData } from "@/contexts/DataContext";
+import { UnitSelectProps } from "./types";
 
-interface UnitSelectProps {
-  selectedCompany: string;
-  value: string;
-  onChange: (value: string) => void;
-}
-
-export const UnitSelect = ({ selectedCompany, value, onChange }: UnitSelectProps) => {
-  const { consumerUnits } = useData();
-  const availableUnits = consumerUnits.filter(
-    (unit) => unit.empresa === selectedCompany
-  );
-
+export const UnitSelect = ({ units, value, onChange }: UnitSelectProps) => {
   return (
     <div className="space-y-2">
       <label>Unidade Consumidora</label>
@@ -27,7 +16,7 @@ export const UnitSelect = ({ selectedCompany, value, onChange }: UnitSelectProps
           <SelectValue placeholder="Selecione a UC" />
         </SelectTrigger>
         <SelectContent>
-          {availableUnits.map((unit) => (
+          {units.map((unit) => (
             <SelectItem key={unit.id} value={unit.nome}>
               {unit.nome}
             </SelectItem>

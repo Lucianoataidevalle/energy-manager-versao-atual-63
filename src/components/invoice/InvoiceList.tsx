@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useData } from "@/contexts/DataContext";
 import { toast } from "sonner";
-import { TableHeader } from "./InvoiceList/TableHeader";
+import { InvoiceTableHeader } from "./InvoiceList/TableHeader";
 import { TableActions } from "./InvoiceList/TableActions";
 
 interface InvoiceListProps {
@@ -118,7 +118,7 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
         {selectedCompany && selectedUnit ? (
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader />
+              <InvoiceTableHeader />
               <TableBody>
                 {filteredInvoices.map((invoice) => (
                   <TableRow key={invoice.id}>

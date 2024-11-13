@@ -10,6 +10,7 @@ export const useInvoiceForm = (
 ) => {
   const { addInvoice, editingInvoice, editInvoice } = useData();
   const [formData, setFormData] = useState<InvoiceFormData>({
+    id: undefined,  // Add optional id
     empresa: "",
     unidade: "",
     mes: format(subMonths(new Date(), 1), "yyyy-MM"),
@@ -28,6 +29,7 @@ export const useInvoiceForm = (
   useEffect(() => {
     if (editingInvoice) {
       setFormData({
+        id: editingInvoice.id,  // Include id when editing
         empresa: editingInvoice.empresa,
         unidade: editingInvoice.unidade,
         mes: editingInvoice.mes,
@@ -79,6 +81,7 @@ export const useInvoiceForm = (
     }
 
     setFormData({
+      id: undefined,
       empresa: "",
       unidade: "",
       mes: format(subMonths(new Date(), 1), "yyyy-MM"),

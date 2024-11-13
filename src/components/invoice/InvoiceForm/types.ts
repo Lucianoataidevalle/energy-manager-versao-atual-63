@@ -1,4 +1,5 @@
 export interface InvoiceFormData {
+  id?: number;  // Add optional id to the interface
   empresa: string;
   unidade: string;
   mes: string;

@@ -64,7 +64,7 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Valor Total das Faturas</CardTitle>
+        <CardTitle>Custo de Faturas</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>

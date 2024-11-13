@@ -39,6 +39,8 @@ const ConsumerUnitList = () => {
               <TableHead>Número UC</TableHead>
               <TableHead>Endereço</TableHead>
               <TableHead>Demanda Contratada</TableHead>
+              <TableHead>Grupo/Subgrupo</TableHead>
+              <TableHead>Modalidade Tarifária</TableHead>
               <TableHead>Distribuidora</TableHead>
               <TableHead>Ações</TableHead>
             </TableRow>
@@ -51,6 +53,8 @@ const ConsumerUnitList = () => {
                 <TableCell>{unit.numero}</TableCell>
                 <TableCell>{unit.endereco}</TableCell>
                 <TableCell>{unit.demandaContratada}</TableCell>
+                <TableCell>{unit.grupoSubgrupo}</TableCell>
+                <TableCell>{unit.modalidadeTarifaria}</TableCell>
                 <TableCell>{unit.distribuidora}</TableCell>
                 <TableCell className="space-x-2">
                   <Button 

@@ -21,6 +21,8 @@ const ConsumerUnitForm = () => {
     endereco: "",
     demandaContratada: "",
     distribuidora: "",
+    grupoSubgrupo: "",
+    modalidadeTarifaria: "",
   });
 
   useEffect(() => {
@@ -32,6 +34,8 @@ const ConsumerUnitForm = () => {
         endereco: editingConsumerUnit.endereco,
         demandaContratada: editingConsumerUnit.demandaContratada,
         distribuidora: editingConsumerUnit.distribuidora,
+        grupoSubgrupo: editingConsumerUnit.grupoSubgrupo || "",
+        modalidadeTarifaria: editingConsumerUnit.modalidadeTarifaria || "",
       });
     }
   }, [editingConsumerUnit]);
@@ -55,6 +59,8 @@ const ConsumerUnitForm = () => {
       endereco: "",
       demandaContratada: "",
       distribuidora: "",
+      grupoSubgrupo: "",
+      modalidadeTarifaria: "",
     });
   };
 
@@ -127,6 +133,47 @@ const ConsumerUnitForm = () => {
               }
               required
             />
+          </div>
+          <div className="space-y-2">
+            <label>Grupo/Subgrupo</label>
+            <Select
+              value={formData.grupoSubgrupo}
+              onValueChange={(value) => {
+                setFormData({ 
+                  ...formData, 
+                  grupoSubgrupo: value,
+                  // Reset modalidadeTarifaria if grupo B is selected
+                  modalidadeTarifaria: value === "B" ? "" : formData.modalidadeTarifaria 
+                })
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o grupo/subgrupo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="B">B</SelectItem>
+                <SelectItem value="A3a">A3a</SelectItem>
+                <SelectItem value="A4">A4</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <label>Modalidade Tarifária</label>
+            <Select
+              value={formData.modalidadeTarifaria}
+              onValueChange={(value) =>
+                setFormData({ ...formData, modalidadeTarifaria: value })
+              }
+              disabled={formData.grupoSubgrupo === "B"}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione a modalidade tarifária" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Verde">Verde</SelectItem>
+                <SelectItem value="Azul">Azul</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <label htmlFor="distribuidora">Distribuidora de Energia</label>

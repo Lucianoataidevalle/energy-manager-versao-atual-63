@@ -78,17 +78,6 @@ export const FormFields = ({ formData, setFormData, onCompanyChange, onUnitChang
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium">Valor da Fatura (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
-          value={formData.valorFatura}
-          onChange={(e) => setFormData({ ...formData, valorFatura: e.target.value })}
-          required
-        />
-      </div>
-
-      <div className="space-y-2">
         <label className="text-sm font-medium">Energia Reativa Fora Ponta (kVAr)</label>
         <Input
           type="number"
@@ -135,6 +124,17 @@ export const FormFields = ({ formData, setFormData, onCompanyChange, onUnitChang
           step="0.01"
           value={formData.multasJuros}
           onChange={(e) => setFormData({ ...formData, multasJuros: e.target.value })}
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Valor da Fatura (R$)</label>
+        <Input
+          type="number"
+          step="0.01"
+          value={formData.valorFatura}
+          onChange={(e) => setFormData({ ...formData, valorFatura: e.target.value })}
           required
         />
       </div>

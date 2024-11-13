@@ -64,6 +64,11 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
       "Consumo Ponta (kWh)",
       "Demanda Fora Ponta (kW)",
       "Demanda Ponta (kW)",
+      "Energia Reativa Fora Ponta (kVAr)",
+      "Energia Reativa Ponta (kVAr)",
+      "Demanda Reativa Fora Ponta (kVAr)",
+      "Demanda Reativa Ponta (kVAr)",
+      "Multas/Juros (R$)",
       "Valor (R$)",
     ];
 
@@ -73,6 +78,11 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
       invoice.consumoPonta,
       invoice.demandaMedidaForaPonta,
       invoice.demandaMedidaPonta,
+      invoice.energiaReativaForaPonta,
+      invoice.energiaReativaPonta,
+      invoice.demandaReativaForaPonta,
+      invoice.demandaReativaPonta,
+      invoice.multasJuros,
       invoice.valorFatura,
     ]);
 
@@ -120,6 +130,11 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
                   <TableHead className="text-center">Consumo Ponta (kWh)</TableHead>
                   <TableHead className="text-center">Demanda Fora Ponta (kW)</TableHead>
                   <TableHead className="text-center">Demanda Ponta (kW)</TableHead>
+                  <TableHead className="text-center">Energia Reativa Fora Ponta (kVAr)</TableHead>
+                  <TableHead className="text-center">Energia Reativa Ponta (kVAr)</TableHead>
+                  <TableHead className="text-center">Demanda Reativa Fora Ponta (kVAr)</TableHead>
+                  <TableHead className="text-center">Demanda Reativa Ponta (kVAr)</TableHead>
+                  <TableHead className="text-center">Multas/Juros (R$)</TableHead>
                   <TableHead className="text-center">Valor Fatura (R$)</TableHead>
                   <TableHead className="text-center">Ações</TableHead>
                 </TableRow>
@@ -134,6 +149,16 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
                     <TableCell className="text-center">{formatNumber(invoice.consumoPonta)}</TableCell>
                     <TableCell className="text-center">{formatNumber(invoice.demandaMedidaForaPonta)}</TableCell>
                     <TableCell className="text-center">{formatNumber(invoice.demandaMedidaPonta)}</TableCell>
+                    <TableCell className="text-center">{formatNumber(invoice.energiaReativaForaPonta)}</TableCell>
+                    <TableCell className="text-center">{formatNumber(invoice.energiaReativaPonta)}</TableCell>
+                    <TableCell className="text-center">{formatNumber(invoice.demandaReativaForaPonta)}</TableCell>
+                    <TableCell className="text-center">{formatNumber(invoice.demandaReativaPonta)}</TableCell>
+                    <TableCell className="text-center">
+                      {invoice.multasJuros.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </TableCell>
                     <TableCell className="text-center">
                       {invoice.valorFatura.toLocaleString("pt-BR", {
                         style: "currency",

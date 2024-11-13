@@ -123,13 +123,12 @@ const ConsumerUnitForm = () => {
             />
           </div>
           <div className="space-y-2">
-            <label htmlFor="demandaContratada">Demanda Contratada (kW)</label>
+            <label htmlFor="distribuidora">Distribuidora de Energia</label>
             <Input
-              id="demandaContratada"
-              type="number"
-              value={formData.demandaContratada}
+              id="distribuidora"
+              value={formData.distribuidora}
               onChange={(e) =>
-                setFormData({ ...formData, demandaContratada: e.target.value })
+                setFormData({ ...formData, distribuidora: e.target.value })
               }
               required
             />
@@ -142,8 +141,8 @@ const ConsumerUnitForm = () => {
                 setFormData({ 
                   ...formData, 
                   grupoSubgrupo: value,
-                  // Reset modalidadeTarifaria if grupo B is selected
-                  modalidadeTarifaria: value === "B" ? "" : formData.modalidadeTarifaria 
+                  modalidadeTarifaria: value === "B" ? "" : formData.modalidadeTarifaria,
+                  demandaContratada: value === "B" ? "" : formData.demandaContratada
                 })
               }}
             >
@@ -176,14 +175,16 @@ const ConsumerUnitForm = () => {
             </Select>
           </div>
           <div className="space-y-2">
-            <label htmlFor="distribuidora">Distribuidora de Energia</label>
+            <label htmlFor="demandaContratada">Demanda Contratada (kW)</label>
             <Input
-              id="distribuidora"
-              value={formData.distribuidora}
+              id="demandaContratada"
+              type="number"
+              value={formData.demandaContratada}
               onChange={(e) =>
-                setFormData({ ...formData, distribuidora: e.target.value })
+                setFormData({ ...formData, demandaContratada: e.target.value })
               }
-              required
+              disabled={formData.grupoSubgrupo === "B"}
+              required={formData.grupoSubgrupo !== "B"}
             />
           </div>
           <Button type="submit" className="w-full">

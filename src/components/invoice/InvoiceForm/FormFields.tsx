@@ -16,6 +16,9 @@ export const FormFields = ({ formData, setFormData, onCompanyChange, onUnitChang
   const availableUnits = consumerUnits.filter((unit) => unit.empresa === formData.empresa);
   const selectedUnit = availableUnits.find(unit => unit.nome === formData.unidade);
   const isGroupB = selectedUnit?.grupoSubgrupo === "B";
+  const isGreenTariff = selectedUnit?.modalidadeTarifaria === "Verde";
+  const isA3aOrA4 = selectedUnit?.grupoSubgrupo === "A3a" || selectedUnit?.grupoSubgrupo === "A4";
+  const shouldDisablePeakFields = isA3aOrA4 && isGreenTariff;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -78,7 +81,7 @@ export const FormFields = ({ formData, setFormData, onCompanyChange, onUnitChang
           value={formData.demandaMedidaPonta}
           onChange={(e) => setFormData({ ...formData, demandaMedidaPonta: e.target.value })}
           required
-          disabled={isGroupB}
+          disabled={isGroupB || shouldDisablePeakFields}
         />
       </div>
 
@@ -122,7 +125,7 @@ export const FormFields = ({ formData, setFormData, onCompanyChange, onUnitChang
           value={formData.demandaReativaPonta}
           onChange={(e) => setFormData({ ...formData, demandaReativaPonta: e.target.value })}
           required
-          disabled={isGroupB}
+          disabled={isGroupB || shouldDisablePeakFields}
         />
       </div>
 

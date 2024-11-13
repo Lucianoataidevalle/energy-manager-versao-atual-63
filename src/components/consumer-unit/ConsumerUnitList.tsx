@@ -25,6 +25,18 @@ import { useData } from "@/contexts/DataContext";
 const ConsumerUnitList = () => {
   const { consumerUnits, deleteConsumerUnit, setEditingConsumerUnit } = useData();
 
+  const renderDemandaContratada = (unit: any) => {
+    if (unit.modalidadeTarifaria === "Azul") {
+      return (
+        <>
+          <TableCell>{unit.demandaContratadaPonta}</TableCell>
+          <TableCell>{unit.demandaContratadaForaPonta}</TableCell>
+        </>
+      );
+    }
+    return <TableCell>{unit.demandaContratada}</TableCell>;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -38,7 +50,14 @@ const ConsumerUnitList = () => {
               <TableHead>Nome</TableHead>
               <TableHead>Número UC</TableHead>
               <TableHead>Endereço</TableHead>
-              <TableHead>Demanda Contratada</TableHead>
+              {consumerUnits.some(unit => unit.modalidadeTarifaria === "Azul") ? (
+                <>
+                  <TableHead>Demanda Contratada Ponta (kW)</TableHead>
+                  <TableHead>Demanda Contratada Fora Ponta (kW)</TableHead>
+                </>
+              ) : (
+                <TableHead>Demanda Contratada (kW)</TableHead>
+              )}
               <TableHead>Grupo/Subgrupo</TableHead>
               <TableHead>Modalidade Tarifária</TableHead>
               <TableHead>Distribuidora</TableHead>
@@ -52,7 +71,7 @@ const ConsumerUnitList = () => {
                 <TableCell>{unit.nome}</TableCell>
                 <TableCell>{unit.numero}</TableCell>
                 <TableCell>{unit.endereco}</TableCell>
-                <TableCell>{unit.demandaContratada}</TableCell>
+                {renderDemandaContratada(unit)}
                 <TableCell>{unit.grupoSubgrupo}</TableCell>
                 <TableCell>{unit.modalidadeTarifaria}</TableCell>
                 <TableCell>{unit.distribuidora}</TableCell>

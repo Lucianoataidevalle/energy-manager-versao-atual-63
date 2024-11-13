@@ -14,6 +14,8 @@ interface FormFieldsProps {
 export const FormFields = ({ formData, setFormData, onCompanyChange, onUnitChange }: FormFieldsProps) => {
   const { consumerUnits } = useData();
   const availableUnits = consumerUnits.filter((unit) => unit.empresa === formData.empresa);
+  const selectedUnit = availableUnits.find(unit => unit.nome === formData.unidade);
+  const isGroupB = selectedUnit?.grupoSubgrupo === "B";
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -54,6 +56,7 @@ export const FormFields = ({ formData, setFormData, onCompanyChange, onUnitChang
           value={formData.consumoPonta}
           onChange={(e) => setFormData({ ...formData, consumoPonta: e.target.value })}
           required
+          disabled={isGroupB}
         />
       </div>
 
@@ -64,6 +67,7 @@ export const FormFields = ({ formData, setFormData, onCompanyChange, onUnitChang
           value={formData.demandaMedidaForaPonta}
           onChange={(e) => setFormData({ ...formData, demandaMedidaForaPonta: e.target.value })}
           required
+          disabled={isGroupB}
         />
       </div>
 
@@ -74,6 +78,7 @@ export const FormFields = ({ formData, setFormData, onCompanyChange, onUnitChang
           value={formData.demandaMedidaPonta}
           onChange={(e) => setFormData({ ...formData, demandaMedidaPonta: e.target.value })}
           required
+          disabled={isGroupB}
         />
       </div>
 
@@ -84,6 +89,7 @@ export const FormFields = ({ formData, setFormData, onCompanyChange, onUnitChang
           value={formData.energiaReativaForaPonta}
           onChange={(e) => setFormData({ ...formData, energiaReativaForaPonta: e.target.value })}
           required
+          disabled={isGroupB}
         />
       </div>
 
@@ -94,6 +100,7 @@ export const FormFields = ({ formData, setFormData, onCompanyChange, onUnitChang
           value={formData.energiaReativaPonta}
           onChange={(e) => setFormData({ ...formData, energiaReativaPonta: e.target.value })}
           required
+          disabled={isGroupB}
         />
       </div>
 
@@ -104,6 +111,7 @@ export const FormFields = ({ formData, setFormData, onCompanyChange, onUnitChang
           value={formData.demandaReativaForaPonta}
           onChange={(e) => setFormData({ ...formData, demandaReativaForaPonta: e.target.value })}
           required
+          disabled={isGroupB}
         />
       </div>
 
@@ -114,6 +122,7 @@ export const FormFields = ({ formData, setFormData, onCompanyChange, onUnitChang
           value={formData.demandaReativaPonta}
           onChange={(e) => setFormData({ ...formData, demandaReativaPonta: e.target.value })}
           required
+          disabled={isGroupB}
         />
       </div>
 

@@ -18,7 +18,13 @@ interface InvoiceListProps {
 }
 
 const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
-  const { invoices, deleteInvoice, setEditingInvoice } = useData();
+  const { invoices, consumerUnits, deleteInvoice, setEditingInvoice } = useData();
+
+  const selectedConsumerUnit = consumerUnits.find(
+    unit => unit.empresa === selectedCompany && unit.nome === selectedUnit
+  );
+
+  const isGroupB = selectedConsumerUnit?.grupoSubgrupo === "B";
 
   const filteredInvoices = invoices
     .filter(
@@ -29,7 +35,7 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
     .sort((a, b) => new Date(b.mes).getTime() - new Date(a.mes).getTime());
 
   const handleEdit = (invoice: any) => {
-    setEditingInvoice(invoice);
+    setEditingInvoice({ ...invoice, isGroupB });
     toast.success("Editando fatura...", {
       position: "top-right",
     });
@@ -118,7 +124,7 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
         {selectedCompany && selectedUnit ? (
           <div className="overflow-x-auto">
             <Table>
-              <InvoiceTableHeader />
+              <InvoiceTableHeader isGroupB={isGroupB} />
               <TableBody>
                 {filteredInvoices.map((invoice) => (
                   <TableRow key={invoice.id}>
@@ -126,16 +132,20 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
                       {invoice.mes}
                     </TableCell>
                     <TableCell className="text-center">{formatNumber(invoice.consumoForaPonta)}</TableCell>
-                    <TableCell className="text-center">{formatNumber(invoice.consumoPonta)}</TableCell>
-                    <TableCell className="text-center">
-                      {formatNumber(calculateTotalConsumption(invoice.consumoForaPonta, invoice.consumoPonta))}
-                    </TableCell>
-                    <TableCell className="text-center">{formatNumber(invoice.demandaMedidaForaPonta)}</TableCell>
-                    <TableCell className="text-center">{formatNumber(invoice.demandaMedidaPonta)}</TableCell>
-                    <TableCell className="text-center">{formatNumber(invoice.energiaReativaForaPonta)}</TableCell>
-                    <TableCell className="text-center">{formatNumber(invoice.energiaReativaPonta)}</TableCell>
-                    <TableCell className="text-center">{formatNumber(invoice.demandaReativaForaPonta)}</TableCell>
-                    <TableCell className="text-center">{formatNumber(invoice.demandaReativaPonta)}</TableCell>
+                    {!isGroupB && (
+                      <>
+                        <TableCell className="text-center">{formatNumber(invoice.consumoPonta)}</TableCell>
+                        <TableCell className="text-center">
+                          {formatNumber(calculateTotalConsumption(invoice.consumoForaPonta, invoice.consumoPonta))}
+                        </TableCell>
+                        <TableCell className="text-center">{formatNumber(invoice.demandaMedidaForaPonta)}</TableCell>
+                        <TableCell className="text-center">{formatNumber(invoice.demandaMedidaPonta)}</TableCell>
+                        <TableCell className="text-center">{formatNumber(invoice.energiaReativaForaPonta)}</TableCell>
+                        <TableCell className="text-center">{formatNumber(invoice.energiaReativaPonta)}</TableCell>
+                        <TableCell className="text-center">{formatNumber(invoice.demandaReativaForaPonta)}</TableCell>
+                        <TableCell className="text-center">{formatNumber(invoice.demandaReativaPonta)}</TableCell>
+                      </>
+                    )}
                     <TableCell className="text-center">
                       {invoice.multasJuros.toLocaleString("pt-BR", {
                         style: "currency",

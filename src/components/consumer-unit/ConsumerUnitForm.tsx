@@ -20,10 +20,16 @@ const ConsumerUnitForm = () => {
     numero: "",
     endereco: "",
     demandaContratada: "",
+    demandaContratadaPonta: "",
+    demandaContratadaForaPonta: "",
     distribuidora: "",
     grupoSubgrupo: "",
     modalidadeTarifaria: "",
   });
+
+  const isGrupoA = ["A3a", "A4"].includes(formData.grupoSubgrupo);
+  const isModalidadeAzul = formData.modalidadeTarifaria === "Azul";
+  const showSplitDemand = isGrupoA && isModalidadeAzul;
 
   useEffect(() => {
     if (editingConsumerUnit) {
@@ -33,6 +39,8 @@ const ConsumerUnitForm = () => {
         numero: editingConsumerUnit.numero,
         endereco: editingConsumerUnit.endereco,
         demandaContratada: editingConsumerUnit.demandaContratada,
+        demandaContratadaPonta: editingConsumerUnit.demandaContratadaPonta || "",
+        demandaContratadaForaPonta: editingConsumerUnit.demandaContratadaForaPonta || "",
         distribuidora: editingConsumerUnit.distribuidora,
         grupoSubgrupo: editingConsumerUnit.grupoSubgrupo || "",
         modalidadeTarifaria: editingConsumerUnit.modalidadeTarifaria || "",
@@ -42,14 +50,21 @@ const ConsumerUnitForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const submitData = {
+      ...formData,
+      demandaContratada: showSplitDemand ? "" : formData.demandaContratada,
+      demandaContratadaPonta: showSplitDemand ? formData.demandaContratadaPonta : "",
+      demandaContratadaForaPonta: showSplitDemand ? formData.demandaContratadaForaPonta : "",
+    };
+
     if (!editingConsumerUnit) {
       addConsumerUnit({
-        ...formData,
+        ...submitData,
         id: Date.now(),
       });
       toast.success("Unidade Consumidora cadastrada com sucesso!");
     } else {
-      editConsumerUnit(editingConsumerUnit.id, formData);
+      editConsumerUnit(editingConsumerUnit.id, submitData);
       toast.success("Unidade Consumidora atualizada com sucesso!");
     }
     setFormData({
@@ -58,6 +73,8 @@ const ConsumerUnitForm = () => {
       numero: "",
       endereco: "",
       demandaContratada: "",
+      demandaContratadaPonta: "",
+      demandaContratadaForaPonta: "",
       distribuidora: "",
       grupoSubgrupo: "",
       modalidadeTarifaria: "",
@@ -133,6 +150,7 @@ const ConsumerUnitForm = () => {
               required
             />
           </div>
+
           <div className="space-y-2">
             <label>Grupo/Subgrupo</label>
             <Select
@@ -142,7 +160,9 @@ const ConsumerUnitForm = () => {
                   ...formData, 
                   grupoSubgrupo: value,
                   modalidadeTarifaria: value === "B" ? "" : formData.modalidadeTarifaria,
-                  demandaContratada: value === "B" ? "" : formData.demandaContratada
+                  demandaContratada: value === "B" ? "" : formData.demandaContratada,
+                  demandaContratadaPonta: "",
+                  demandaContratadaForaPonta: "",
                 })
               }}
             >
@@ -156,12 +176,18 @@ const ConsumerUnitForm = () => {
               </SelectContent>
             </Select>
           </div>
+
           <div className="space-y-2">
             <label>Modalidade Tarifária</label>
             <Select
               value={formData.modalidadeTarifaria}
               onValueChange={(value) =>
-                setFormData({ ...formData, modalidadeTarifaria: value })
+                setFormData({ 
+                  ...formData, 
+                  modalidadeTarifaria: value,
+                  demandaContratadaPonta: "",
+                  demandaContratadaForaPonta: "",
+                })
               }
               disabled={formData.grupoSubgrupo === "B"}
             >
@@ -174,19 +200,50 @@ const ConsumerUnitForm = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-2">
-            <label htmlFor="demandaContratada">Demanda Contratada (kW)</label>
-            <Input
-              id="demandaContratada"
-              type="number"
-              value={formData.demandaContratada}
-              onChange={(e) =>
-                setFormData({ ...formData, demandaContratada: e.target.value })
-              }
-              disabled={formData.grupoSubgrupo === "B"}
-              required={formData.grupoSubgrupo !== "B"}
-            />
-          </div>
+
+          {showSplitDemand ? (
+            <>
+              <div className="space-y-2">
+                <label htmlFor="demandaContratadaPonta">Demanda Contratada Ponta (kW)</label>
+                <Input
+                  id="demandaContratadaPonta"
+                  type="number"
+                  value={formData.demandaContratadaPonta}
+                  onChange={(e) =>
+                    setFormData({ ...formData, demandaContratadaPonta: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="demandaContratadaForaPonta">Demanda Contratada Fora Ponta (kW)</label>
+                <Input
+                  id="demandaContratadaForaPonta"
+                  type="number"
+                  value={formData.demandaContratadaForaPonta}
+                  onChange={(e) =>
+                    setFormData({ ...formData, demandaContratadaForaPonta: e.target.value })
+                  }
+                  required
+                />
+              </div>
+            </>
+          ) : (
+            <div className="space-y-2">
+              <label htmlFor="demandaContratada">Demanda Contratada (kW)</label>
+              <Input
+                id="demandaContratada"
+                type="number"
+                value={formData.demandaContratada}
+                onChange={(e) =>
+                  setFormData({ ...formData, demandaContratada: e.target.value })
+                }
+                disabled={formData.grupoSubgrupo === "B"}
+                required={formData.grupoSubgrupo !== "B"}
+              />
+            </div>
+          )}
+
           <Button type="submit" className="w-full">
             {editingConsumerUnit ? "Atualizar UC" : "Cadastrar UC"}
           </Button>

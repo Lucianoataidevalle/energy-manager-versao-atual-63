@@ -23,12 +23,12 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
   );
 
   return (
-    <Card className="mb-8 w-full">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl">Dados da Fatura</CardTitle>
+    <Card className="w-full p-6">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-2xl font-bold">Dados da Fatura</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <CompanySelect
               value={formData.empresa}
@@ -46,20 +46,38 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
               }}
             />
             <div className="space-y-2">
-              <label>Mês de Referência</label>
+              <label className="text-sm font-medium">Mês de Referência</label>
               <Input
                 type="month"
                 value={formData.mes}
                 onChange={(e) => setFormData({ ...formData, mes: e.target.value })}
                 required
+                className="w-full"
               />
             </div>
           </div>
 
-          <ConsumptionInputs formData={formData} setFormData={setFormData} />
-          <DemandInputs formData={formData} setFormData={setFormData} />
-          <ReactiveInputs formData={formData} setFormData={setFormData} />
-          <BillingInputs formData={formData} setFormData={setFormData} />
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Consumo</h3>
+              <ConsumptionInputs formData={formData} setFormData={setFormData} />
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Demanda</h3>
+              <DemandInputs formData={formData} setFormData={setFormData} />
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Energia Reativa</h3>
+              <ReactiveInputs formData={formData} setFormData={setFormData} />
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Valores</h3>
+              <BillingInputs formData={formData} setFormData={setFormData} />
+            </div>
+          </div>
 
           <Button type="submit" className="w-full">
             {formData.id ? "Atualizar Fatura" : "Inserir Fatura"}

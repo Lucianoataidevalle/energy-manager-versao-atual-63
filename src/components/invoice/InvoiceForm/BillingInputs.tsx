@@ -9,9 +9,8 @@ export const BillingInputs = ({ formData, setFormData }: BillingInputsProps) => 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-2">
-        <label htmlFor="multasJuros">Multas/Juros (R$)</label>
+        <label className="text-sm font-medium">Multas/Juros (R$)</label>
         <Input
-          id="multasJuros"
           type="number"
           step="0.01"
           value={formData.multasJuros}
@@ -19,12 +18,12 @@ export const BillingInputs = ({ formData, setFormData }: BillingInputsProps) => 
             setFormData({ ...formData, multasJuros: e.target.value })
           }
           required
+          className="w-full"
         />
       </div>
       <div className="space-y-2">
-        <label htmlFor="valorFatura">Valor da Fatura (R$)</label>
+        <label className="text-sm font-medium">Valor da Fatura (R$)</label>
         <Input
-          id="valorFatura"
           type="number"
           step="0.01"
           value={formData.valorFatura}
@@ -32,6 +31,7 @@ export const BillingInputs = ({ formData, setFormData }: BillingInputsProps) => 
             setFormData({ ...formData, valorFatura: e.target.value })
           }
           required
+          className="w-full"
         />
       </div>
     </div>

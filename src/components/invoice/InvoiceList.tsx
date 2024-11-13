@@ -2,26 +2,15 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Pencil, Trash2, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { useData } from "@/contexts/DataContext";
 import { toast } from "sonner";
+import { TableHeader } from "./InvoiceList/TableHeader";
+import { TableActions } from "./InvoiceList/TableActions";
 
 interface InvoiceListProps {
   selectedCompany: string;
@@ -57,11 +46,16 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
     return value.toLocaleString('pt-BR');
   };
 
+  const calculateTotalConsumption = (foraPonta: number, ponta: number) => {
+    return foraPonta + ponta;
+  };
+
   const exportToCSV = () => {
     const headers = [
       "Mês de Referência",
       "Consumo Fora Ponta (kWh)",
       "Consumo Ponta (kWh)",
+      "Consumo Total (kWh)",
       "Demanda Fora Ponta (kW)",
       "Demanda Ponta (kW)",
       "Energia Reativa Fora Ponta (kVAr)",
@@ -76,6 +70,7 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
       invoice.mes,
       invoice.consumoForaPonta,
       invoice.consumoPonta,
+      calculateTotalConsumption(invoice.consumoForaPonta, invoice.consumoPonta),
       invoice.demandaMedidaForaPonta,
       invoice.demandaMedidaPonta,
       invoice.energiaReativaForaPonta,
@@ -123,22 +118,7 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
         {selectedCompany && selectedUnit ? (
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-center">Mês de Referência</TableHead>
-                  <TableHead className="text-center">Consumo Fora Ponta (kWh)</TableHead>
-                  <TableHead className="text-center">Consumo Ponta (kWh)</TableHead>
-                  <TableHead className="text-center">Demanda Fora Ponta (kW)</TableHead>
-                  <TableHead className="text-center">Demanda Ponta (kW)</TableHead>
-                  <TableHead className="text-center">Energia Reativa Fora Ponta (kVAr)</TableHead>
-                  <TableHead className="text-center">Energia Reativa Ponta (kVAr)</TableHead>
-                  <TableHead className="text-center">Demanda Reativa Fora Ponta (kVAr)</TableHead>
-                  <TableHead className="text-center">Demanda Reativa Ponta (kVAr)</TableHead>
-                  <TableHead className="text-center">Multas/Juros (R$)</TableHead>
-                  <TableHead className="text-center">Valor Fatura (R$)</TableHead>
-                  <TableHead className="text-center">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
+              <TableHeader />
               <TableBody>
                 {filteredInvoices.map((invoice) => (
                   <TableRow key={invoice.id}>
@@ -147,6 +127,9 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
                     </TableCell>
                     <TableCell className="text-center">{formatNumber(invoice.consumoForaPonta)}</TableCell>
                     <TableCell className="text-center">{formatNumber(invoice.consumoPonta)}</TableCell>
+                    <TableCell className="text-center">
+                      {formatNumber(calculateTotalConsumption(invoice.consumoForaPonta, invoice.consumoPonta))}
+                    </TableCell>
                     <TableCell className="text-center">{formatNumber(invoice.demandaMedidaForaPonta)}</TableCell>
                     <TableCell className="text-center">{formatNumber(invoice.demandaMedidaPonta)}</TableCell>
                     <TableCell className="text-center">{formatNumber(invoice.energiaReativaForaPonta)}</TableCell>
@@ -165,36 +148,11 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
                         currency: "BRL",
                       })}
                     </TableCell>
-                    <TableCell className="text-center space-x-2">
-                      <Button 
-                        variant="outline" 
-                        size="icon"
-                        onClick={() => handleEdit(invoice)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="outline" size="icon">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Excluir Fatura</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Deseja realmente excluir esta fatura? Esta ação não pode ser desfeita.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(invoice.id)}>
-                              Confirmar
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                    <TableCell className="text-center">
+                      <TableActions
+                        onEdit={() => handleEdit(invoice)}
+                        onDelete={() => handleDelete(invoice.id)}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}

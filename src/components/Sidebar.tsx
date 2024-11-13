@@ -19,14 +19,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-// Separando o conteúdo do Sidebar em um componente próprio para melhor organização
 const SidebarContent = ({ user, handleLogout }: { 
   user: { name: string; email: string; }, 
   handleLogout: () => void 
 }) => (
   <div className="flex flex-col h-full">
     <div className="flex flex-col items-center mb-8">
-      <img src="/l2-logo.png" alt="L2 Engenharia" className="h-16 mb-4" />
       <h1 className="text-xl font-bold text-center">Sistema de Gestão de Energia</h1>
     </div>
     
@@ -120,12 +118,10 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Desktop Sidebar */}
       <div className="hidden md:fixed md:inset-y-0 md:left-0 md:z-50 md:w-64 md:flex md:flex-col bg-gray-900 text-white p-4">
         <SidebarContent user={user} handleLogout={handleLogout} />
       </div>
 
-      {/* Mobile Menu */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-gray-900 text-white p-4">
         <Sheet>
           <SheetTrigger asChild>
@@ -139,7 +135,6 @@ const Sidebar = () => {
         </Sheet>
       </div>
 
-      {/* Content Padding for Mobile */}
       <div className="md:hidden h-16" />
     </>
   );

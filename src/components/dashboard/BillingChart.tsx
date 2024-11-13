@@ -6,7 +6,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 import { useData } from "@/contexts/DataContext";
@@ -22,9 +21,7 @@ interface BillingChartProps {
 const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingChartProps) => {
   const { invoices } = useData();
 
-  // Get data for the last 12 months up to selectedMonth
   const getLast12MonthsData = () => {
-    // Validate the selectedMonth format and parsing
     const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
     if (!isValid(selectedDate)) {
       console.error('Invalid date:', selectedMonth);
@@ -73,7 +70,6 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
             <XAxis dataKey="mes" />
             <YAxis />
             <Tooltip />
-            <Legend />
             <Bar
               dataKey="valor"
               fill="#8884d8"
@@ -81,7 +77,7 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
               label={{
                 position: "top",
                 formatter: (value: number) =>
-                  `R$ ${value.toLocaleString("pt-BR")}`,
+                  `R$${value.toLocaleString("pt-BR")}`,
               }}
             />
           </BarChart>

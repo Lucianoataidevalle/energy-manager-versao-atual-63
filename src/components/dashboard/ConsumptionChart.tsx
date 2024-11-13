@@ -22,9 +22,7 @@ interface ConsumptionChartProps {
 const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: ConsumptionChartProps) => {
   const { invoices } = useData();
 
-  // Get data for the last 12 months up to selectedMonth
   const getLast12MonthsData = () => {
-    // Validate the selectedMonth format and parsing
     const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
     if (!isValid(selectedDate)) {
       console.error('Invalid date:', selectedMonth);
@@ -54,11 +52,15 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
         };
       }
 
+      const ponta = invoice?.consumoPonta || 0;
+      const foraPonta = invoice?.consumoForaPonta || 0;
+      const total = ponta + foraPonta;
+
       return {
         mes: format(monthDate, "MMM/yy", { locale: ptBR }),
-        ponta: invoice?.consumoPonta || 0,
-        foraPonta: invoice?.consumoForaPonta || 0,
-        total: (invoice?.consumoPonta || 0) + (invoice?.consumoForaPonta || 0)
+        ponta,
+        foraPonta,
+        total
       };
     });
   };
@@ -83,15 +85,10 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
               stackId="a" 
               fill="#8884d8" 
               name="Consumo Ponta"
-              label={(props) => {
-                const { x, y, value, payload } = props;
-                if (!payload) return null;
-                const total = payload.total;
-                return (
-                  <text x={x} y={y} dy={-10} fill="#666" textAnchor="middle">
-                    {total}
-                  </text>
-                );
+              label={{
+                position: "top",
+                formatter: (value: number, entry: any) => entry.payload.total,
+                fontSize: 12
               }}
             />
             <Bar

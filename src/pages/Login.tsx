@@ -33,7 +33,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <Card className="w-[400px]">
         <CardHeader className="flex items-center justify-center">
-          <img src="/l2-logo.png" alt="L2 Engenharia" className="h-24 mb-4" />
+          <h1 className="text-2xl font-bold">Sistema de Gestão de Energia</h1>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

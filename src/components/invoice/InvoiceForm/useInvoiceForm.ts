@@ -10,7 +10,6 @@ export const useInvoiceForm = (
 ) => {
   const { addInvoice, editingInvoice, editInvoice } = useData();
   const [formData, setFormData] = useState<InvoiceFormData>({
-    id: undefined,  // Add optional id
     empresa: "",
     unidade: "",
     mes: format(subMonths(new Date(), 1), "yyyy-MM"),
@@ -29,7 +28,6 @@ export const useInvoiceForm = (
   useEffect(() => {
     if (editingInvoice) {
       setFormData({
-        id: editingInvoice.id,  // Include id when editing
         empresa: editingInvoice.empresa,
         unidade: editingInvoice.unidade,
         mes: editingInvoice.mes,
@@ -44,10 +42,8 @@ export const useInvoiceForm = (
         multasJuros: editingInvoice.multasJuros.toString(),
         valorFatura: editingInvoice.valorFatura.toString(),
       });
-      onCompanyChange(editingInvoice.empresa);
-      onUnitChange(editingInvoice.unidade);
     }
-  }, [editingInvoice, onCompanyChange, onUnitChange]);
+  }, [editingInvoice]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,7 +77,6 @@ export const useInvoiceForm = (
     }
 
     setFormData({
-      id: undefined,
       empresa: "",
       unidade: "",
       mes: format(subMonths(new Date(), 1), "yyyy-MM"),
@@ -98,9 +93,5 @@ export const useInvoiceForm = (
     });
   };
 
-  return {
-    formData,
-    setFormData,
-    handleSubmit,
-  };
+  return { formData, setFormData, handleSubmit };
 };

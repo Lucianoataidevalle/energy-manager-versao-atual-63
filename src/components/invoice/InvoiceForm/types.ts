@@ -1,5 +1,5 @@
 export interface InvoiceFormData {
-  id?: number;  // Add optional id to the interface
+  id?: number;
   empresa: string;
   unidade: string;
   mes: string;
@@ -20,25 +20,6 @@ export interface InvoiceFormProps {
   onUnitChange: (unit: string) => void;
 }
 
-export interface UnitSelectProps {
-  units: ConsumerUnit[];
-  value: string;
-  onChange: (value: string) => void;
-}
-
-export interface CompanySelectProps {
-  companies: Company[];
-  value: string;
-  onChange: (value: string) => void;
-}
-
-export interface Company {
-  id: number;
-  razaoSocial: string;
-  cnpj: string;
-  endereco: string;
-}
-
 export interface ConsumerUnit {
   id: number;
   empresa: string;
@@ -49,4 +30,11 @@ export interface ConsumerUnit {
   distribuidora: string;
   grupoSubgrupo: string;
   modalidadeTarifaria: string;
+}
+
+export interface Company {
+  id: number;
+  razaoSocial: string;
+  cnpj: string;
+  endereco: string;
 }

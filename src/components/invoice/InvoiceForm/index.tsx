@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { format, subMonths } from "date-fns";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
@@ -7,6 +8,7 @@ import { CompanySelect } from "./CompanySelect";
 import { UnitSelect } from "./UnitSelect";
 import { ConsumptionInputs } from "./ConsumptionInputs";
 import { DemandInputs } from "./DemandInputs";
+import { ReactiveInputs } from "./ReactiveInputs";
 import { BillingInputs } from "./BillingInputs";
 import { UpdateConfirmDialog } from "./UpdateConfirmDialog";
 
@@ -23,8 +25,13 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
     mes: format(subMonths(new Date(), 1), "yyyy-MM"),
     consumoForaPonta: "",
     consumoPonta: "",
-    demandaMedida: "",
-    demandaUltrapassagem: "",
+    demandaMedidaForaPonta: "",
+    demandaMedidaPonta: "",
+    energiaReativaForaPonta: "",
+    energiaReativaPonta: "",
+    demandaReativaForaPonta: "",
+    demandaReativaPonta: "",
+    multasJuros: "",
     valorFatura: "",
   });
 
@@ -36,11 +43,15 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
         mes: editingInvoice.mes,
         consumoForaPonta: editingInvoice.consumoForaPonta.toString(),
         consumoPonta: editingInvoice.consumoPonta.toString(),
-        demandaMedida: editingInvoice.demandaMedida.toString(),
-        demandaUltrapassagem: editingInvoice.demandaUltrapassagem.toString(),
+        demandaMedidaForaPonta: editingInvoice.demandaMedidaForaPonta.toString(),
+        demandaMedidaPonta: editingInvoice.demandaMedidaPonta.toString(),
+        energiaReativaForaPonta: editingInvoice.energiaReativaForaPonta.toString(),
+        energiaReativaPonta: editingInvoice.energiaReativaPonta.toString(),
+        demandaReativaForaPonta: editingInvoice.demandaReativaForaPonta.toString(),
+        demandaReativaPonta: editingInvoice.demandaReativaPonta.toString(),
+        multasJuros: editingInvoice.multasJuros.toString(),
         valorFatura: editingInvoice.valorFatura.toString(),
       });
-      // Update parent components with company and unit
       onCompanyChange(editingInvoice.empresa);
       onUnitChange(editingInvoice.unidade);
     }
@@ -55,8 +66,13 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
       ...formData,
       consumoForaPonta: Number(formData.consumoForaPonta),
       consumoPonta: Number(formData.consumoPonta),
-      demandaMedida: Number(formData.demandaMedida),
-      demandaUltrapassagem: Number(formData.demandaUltrapassagem),
+      demandaMedidaForaPonta: Number(formData.demandaMedidaForaPonta),
+      demandaMedidaPonta: Number(formData.demandaMedidaPonta),
+      energiaReativaForaPonta: Number(formData.energiaReativaForaPonta),
+      energiaReativaPonta: Number(formData.energiaReativaPonta),
+      demandaReativaForaPonta: Number(formData.demandaReativaForaPonta),
+      demandaReativaPonta: Number(formData.demandaReativaPonta),
+      multasJuros: Number(formData.multasJuros),
       valorFatura: Number(formData.valorFatura),
     };
 
@@ -81,8 +97,13 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
       mes: format(subMonths(new Date(), 1), "yyyy-MM"),
       consumoForaPonta: "",
       consumoPonta: "",
-      demandaMedida: "",
-      demandaUltrapassagem: "",
+      demandaMedidaForaPonta: "",
+      demandaMedidaPonta: "",
+      energiaReativaForaPonta: "",
+      energiaReativaPonta: "",
+      demandaReativaForaPonta: "",
+      demandaReativaPonta: "",
+      multasJuros: "",
       valorFatura: "",
     });
   };
@@ -112,11 +133,10 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
             />
             <div className="space-y-2">
               <label>Mês de Referência</label>
-              <input
+              <Input
                 type="month"
                 value={formData.mes}
                 onChange={(e) => setFormData({ ...formData, mes: e.target.value })}
-                className="w-full px-3 py-2 border rounded-md"
                 required
               />
             </div>
@@ -128,6 +148,11 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
           />
 
           <DemandInputs
+            formData={formData}
+            setFormData={setFormData}
+          />
+
+          <ReactiveInputs
             formData={formData}
             setFormData={setFormData}
           />

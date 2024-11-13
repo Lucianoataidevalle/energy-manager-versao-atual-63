@@ -36,8 +36,13 @@ interface Invoice {
   mes: string;
   consumoForaPonta: number;
   consumoPonta: number;
-  demandaMedida: number;
-  demandaUltrapassagem: number;
+  demandaMedidaForaPonta: number;
+  demandaMedidaPonta: number;
+  energiaReativaForaPonta: number;
+  energiaReativaPonta: number;
+  demandaReativaForaPonta: number;
+  demandaReativaPonta: number;
+  multasJuros: number;
   valorFatura: number;
 }
 

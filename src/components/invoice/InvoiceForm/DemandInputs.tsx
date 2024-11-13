@@ -9,25 +9,25 @@ export const DemandInputs = ({ formData, setFormData }: DemandInputsProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-2">
-        <label htmlFor="demandaMedida">Demanda Medida (kW)</label>
+        <label htmlFor="demandaMedidaForaPonta">Demanda Medida Fora Ponta (kW)</label>
         <Input
-          id="demandaMedida"
+          id="demandaMedidaForaPonta"
           type="number"
-          value={formData.demandaMedida}
+          value={formData.demandaMedidaForaPonta}
           onChange={(e) =>
-            setFormData({ ...formData, demandaMedida: e.target.value })
+            setFormData({ ...formData, demandaMedidaForaPonta: e.target.value })
           }
           required
         />
       </div>
       <div className="space-y-2">
-        <label htmlFor="demandaUltrapassagem">Demanda de Ultrapassagem (kW)</label>
+        <label htmlFor="demandaMedidaPonta">Demanda Medida Ponta (kW)</label>
         <Input
-          id="demandaUltrapassagem"
+          id="demandaMedidaPonta"
           type="number"
-          value={formData.demandaUltrapassagem}
+          value={formData.demandaMedidaPonta}
           onChange={(e) =>
-            setFormData({ ...formData, demandaUltrapassagem: e.target.value })
+            setFormData({ ...formData, demandaMedidaPonta: e.target.value })
           }
           required
         />

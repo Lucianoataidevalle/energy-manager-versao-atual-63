@@ -17,6 +17,8 @@ interface ConsumerUnit {
   endereco: string;
   demandaContratada: string;
   distribuidora: string;
+  grupoSubgrupo: string;
+  modalidadeTarifaria: string;
 }
 
 interface User {

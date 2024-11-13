@@ -23,13 +23,13 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
   );
 
   return (
-    <Card className="mb-8">
-      <CardHeader>
-        <CardTitle>Dados da Fatura</CardTitle>
+    <Card className="mb-8 w-full">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-2xl">Dados da Fatura</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <CompanySelect
               value={formData.empresa}
               onChange={(value) => {

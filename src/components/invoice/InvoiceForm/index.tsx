@@ -9,6 +9,7 @@ import { ReactiveInputs } from "./ReactiveInputs";
 import { BillingInputs } from "./BillingInputs";
 import { InvoiceFormProps } from "./types";
 import { useInvoiceForm } from "./useInvoiceForm";
+import { Button } from "@/components/ui/button";
 
 const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
   const { consumerUnits } = useData();
@@ -59,6 +60,10 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
           <DemandInputs formData={formData} setFormData={setFormData} />
           <ReactiveInputs formData={formData} setFormData={setFormData} />
           <BillingInputs formData={formData} setFormData={setFormData} />
+
+          <Button type="submit" className="w-full">
+            {formData.id ? "Atualizar Fatura" : "Inserir Fatura"}
+          </Button>
         </form>
       </CardContent>
     </Card>

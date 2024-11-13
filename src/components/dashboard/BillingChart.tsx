@@ -57,22 +57,11 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
   };
 
   const chartData = getLast12MonthsData();
-  const currentMonthData = chartData.find(data => 
-    data.mes === format(parse(selectedMonth, 'yyyy-MM', new Date()), "MMM/yy", { locale: ptBR })
-  );
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex justify-between items-center">
-          <span>Custo de Faturas</span>
-          <span className="text-xl font-bold">
-            {currentMonthData?.valor.toLocaleString("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            })}
-          </span>
-        </CardTitle>
+        <CardTitle>Custo de Faturas</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>

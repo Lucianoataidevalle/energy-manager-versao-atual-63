@@ -1,39 +1,33 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useData } from "@/contexts/DataContext";
+import { format, parse } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface DashboardSummaryProps {
   selectedCompany: string;
   selectedUnit: string;
+  selectedMonth: string;
 }
 
-const DashboardSummary = ({ selectedCompany, selectedUnit }: DashboardSummaryProps) => {
+const DashboardSummary = ({ selectedCompany, selectedUnit, selectedMonth }: DashboardSummaryProps) => {
   const { invoices } = useData();
 
-  const filteredInvoices = invoices.filter(
-    (invoice) =>
-      invoice.empresa === selectedCompany && invoice.unidade === selectedUnit
-  );
-
-  const calculateAverages = () => {
-    if (filteredInvoices.length === 0) return { consumption: 0, demand: 0, total: 0 };
-
-    const sum = filteredInvoices.reduce(
-      (acc, invoice) => ({
-        consumption: acc.consumption + (invoice.consumoPonta + invoice.consumoForaPonta),
-        demand: acc.demand + (invoice.demandaMedidaForaPonta + invoice.demandaMedidaPonta),
-        total: acc.total + invoice.valorFatura,
-      }),
-      { consumption: 0, demand: 0, total: 0 }
+  const getCurrentMonthData = () => {
+    const invoice = invoices.find(
+      inv => 
+        inv.empresa === selectedCompany && 
+        inv.unidade === selectedUnit && 
+        inv.mes === selectedMonth
     );
 
     return {
-      consumption: sum.consumption / filteredInvoices.length,
-      demand: sum.demand / filteredInvoices.length,
-      total: sum.total / filteredInvoices.length,
+      consumption: invoice ? invoice.consumoPonta + invoice.consumoForaPonta : 0,
+      demand: invoice ? invoice.demandaMedidaForaPonta + invoice.demandaMedidaPonta : 0,
+      total: invoice ? invoice.valorFatura : 0,
     };
   };
 
-  const averages = calculateAverages();
+  const currentData = getCurrentMonthData();
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -41,9 +35,9 @@ const DashboardSummary = ({ selectedCompany, selectedUnit }: DashboardSummaryPro
         <CardHeader>
           <CardTitle>Consumo Médio</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex justify-between items-end">
           <p className="text-2xl font-bold">
-            {averages.consumption.toLocaleString("pt-BR", {
+            {currentData.consumption.toLocaleString("pt-BR", {
               maximumFractionDigits: 0,
             })}{" "}
             kWh
@@ -54,9 +48,9 @@ const DashboardSummary = ({ selectedCompany, selectedUnit }: DashboardSummaryPro
         <CardHeader>
           <CardTitle>Demanda Média</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex justify-between items-end">
           <p className="text-2xl font-bold">
-            {averages.demand.toLocaleString("pt-BR", {
+            {currentData.demand.toLocaleString("pt-BR", {
               maximumFractionDigits: 0,
             })}{" "}
             kW
@@ -67,9 +61,9 @@ const DashboardSummary = ({ selectedCompany, selectedUnit }: DashboardSummaryPro
         <CardHeader>
           <CardTitle>Valor Total Médio</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex justify-between items-end">
           <p className="text-2xl font-bold">
-            {averages.total.toLocaleString("pt-BR", {
+            {currentData.total.toLocaleString("pt-BR", {
               style: "currency",
               currency: "BRL",
             })}

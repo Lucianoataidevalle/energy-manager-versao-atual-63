@@ -9,20 +9,18 @@ interface DashboardSummaryProps {
 const DashboardSummary = ({ selectedCompany, selectedUnit }: DashboardSummaryProps) => {
   const { invoices } = useData();
 
-  // Filtra as faturas pela empresa e UC selecionadas
   const filteredInvoices = invoices.filter(
     (invoice) =>
       invoice.empresa === selectedCompany && invoice.unidade === selectedUnit
   );
 
-  // Calcula as médias
   const calculateAverages = () => {
     if (filteredInvoices.length === 0) return { consumption: 0, demand: 0, total: 0 };
 
     const sum = filteredInvoices.reduce(
       (acc, invoice) => ({
         consumption: acc.consumption + (invoice.consumoPonta + invoice.consumoForaPonta),
-        demand: acc.demand + invoice.demandaMedida,
+        demand: acc.demand + (invoice.demandaMedidaForaPonta + invoice.demandaMedidaPonta),
         total: acc.total + invoice.valorFatura,
       }),
       { consumption: 0, demand: 0, total: 0 }

@@ -23,7 +23,6 @@ interface DemandChartProps {
 const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandChartProps) => {
   const { invoices, consumerUnits } = useData();
 
-  // Get contracted demand from consumer unit
   const getContractedDemand = () => {
     const unit = consumerUnits.find(
       unit => unit.empresa === selectedCompany && unit.nome === selectedUnit
@@ -31,9 +30,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
     return unit ? Number(unit.demandaContratada) : 0;
   };
 
-  // Get data for the last 12 months up to selectedMonth
   const getLast12MonthsData = () => {
-    // Validate the selectedMonth format and parsing
     const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
     if (!isValid(selectedDate)) {
       console.error('Invalid date:', selectedMonth);
@@ -59,16 +56,16 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
         console.error('Invalid month date:', month);
         return {
           mes: month,
-          medida: 0,
-          ultrapassagem: 0,
+          demandaForaPonta: 0,
+          demandaPonta: 0,
           contratada: contractedDemand
         };
       }
 
       return {
         mes: format(monthDate, "MMM/yy", { locale: ptBR }),
-        medida: invoice?.demandaMedida || 0,
-        ultrapassagem: invoice?.demandaUltrapassagem || 0,
+        demandaForaPonta: invoice?.demandaMedidaForaPonta || 0,
+        demandaPonta: invoice?.demandaMedidaPonta || 0,
         contratada: contractedDemand
       };
     });
@@ -90,21 +87,21 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
             <Tooltip />
             <Legend />
             <Bar 
-              dataKey="medida" 
+              dataKey="demandaForaPonta" 
               stackId="a" 
               fill="#8884d8" 
-              name="Demanda Medida"
+              name="Demanda Fora Ponta"
             />
             <Bar
-              dataKey="ultrapassagem"
+              dataKey="demandaPonta"
               stackId="a"
-              fill="#ff8042"
-              name="Ultrapassagem"
+              fill="#82ca9d"
+              name="Demanda Ponta"
             />
             <Line
               type="monotone"
               dataKey="contratada"
-              stroke="#82ca9d"
+              stroke="#ff7300"
               name="Demanda Contratada"
             />
           </ComposedChart>

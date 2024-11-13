@@ -62,8 +62,8 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
       "Mês de Referência",
       "Consumo Fora Ponta (kWh)",
       "Consumo Ponta (kWh)",
-      "Demanda Medida (kW)",
-      "Demanda Ultrapassagem (kW)",
+      "Demanda Fora Ponta (kW)",
+      "Demanda Ponta (kW)",
       "Valor (R$)",
     ];
 
@@ -71,8 +71,8 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
       invoice.mes,
       invoice.consumoForaPonta,
       invoice.consumoPonta,
-      invoice.demandaMedida,
-      invoice.demandaUltrapassagem,
+      invoice.demandaMedidaForaPonta,
+      invoice.demandaMedidaPonta,
       invoice.valorFatura,
     ]);
 
@@ -118,8 +118,8 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
                   <TableHead className="text-center">Mês de Referência</TableHead>
                   <TableHead className="text-center">Consumo Fora Ponta (kWh)</TableHead>
                   <TableHead className="text-center">Consumo Ponta (kWh)</TableHead>
-                  <TableHead className="text-center">Demanda Medida (kW)</TableHead>
-                  <TableHead className="text-center">Demanda Ultrapassagem (kW)</TableHead>
+                  <TableHead className="text-center">Demanda Fora Ponta (kW)</TableHead>
+                  <TableHead className="text-center">Demanda Ponta (kW)</TableHead>
                   <TableHead className="text-center">Valor Fatura (R$)</TableHead>
                   <TableHead className="text-center">Ações</TableHead>
                 </TableRow>
@@ -132,8 +132,8 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
                     </TableCell>
                     <TableCell className="text-center">{formatNumber(invoice.consumoForaPonta)}</TableCell>
                     <TableCell className="text-center">{formatNumber(invoice.consumoPonta)}</TableCell>
-                    <TableCell className="text-center">{formatNumber(invoice.demandaMedida)}</TableCell>
-                    <TableCell className="text-center">{formatNumber(invoice.demandaUltrapassagem)}</TableCell>
+                    <TableCell className="text-center">{formatNumber(invoice.demandaMedidaForaPonta)}</TableCell>
+                    <TableCell className="text-center">{formatNumber(invoice.demandaMedidaPonta)}</TableCell>
                     <TableCell className="text-center">
                       {invoice.valorFatura.toLocaleString("pt-BR", {
                         style: "currency",

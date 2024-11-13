@@ -55,7 +55,6 @@ const Dashboard = () => {
           <DashboardSummary 
             selectedCompany={selectedCompany}
             selectedUnit={selectedUnit}
-            selectedMonth={selectedMonth}
           />
 
           <div className="space-y-8">

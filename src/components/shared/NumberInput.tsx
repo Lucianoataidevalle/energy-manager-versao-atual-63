@@ -1,11 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { ComponentPropsWithoutRef } from "react";
 
-interface NumberInputProps extends ComponentPropsWithoutRef<'input'> {
+type NumberInputProps = Omit<ComponentPropsWithoutRef<'input'>, 'onChange'> & {
   value: string;
   onChange: (value: string) => void;
   allowSpecialChars?: boolean;
-}
+};
 
 export const NumberInput = ({ 
   value, 

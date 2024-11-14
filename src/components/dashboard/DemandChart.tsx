@@ -131,6 +131,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   dataKey="demandaMedidaForaPonta" 
                   fill="#8884d8" 
                   name="Demanda Medida"
+                  barSize={20}
                 />
                 <Line
                   type="monotone"

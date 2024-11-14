@@ -23,7 +23,7 @@ export const UpdateConfirmDialog = ({
   onConfirm, 
   isEditing,
   confirmTitle = "Confirmar Ação",
-  confirmMessage = "Deseja realmente realizar esta ação? Esta ação não pode ser desfeita.",
+  confirmMessage = "Deseja realmente realizar esta ação?",
   buttonText = "Confirmar"
 }: UpdateConfirmDialogProps) => {
   const handleConfirm = () => {

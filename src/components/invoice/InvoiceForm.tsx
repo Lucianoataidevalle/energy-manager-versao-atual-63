@@ -5,6 +5,7 @@ import { format, subMonths } from "date-fns";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
 import { FormFields } from "./InvoiceForm/FormFields";
+import { UpdateConfirmDialog } from "./InvoiceForm/UpdateConfirmDialog";
 
 interface InvoiceFormProps {
   onCompanyChange: (company: string) => void;
@@ -12,7 +13,7 @@ interface InvoiceFormProps {
 }
 
 const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
-  const { addInvoice, editingInvoice, editInvoice } = useData();
+  const { addInvoice, editingInvoice, editInvoice, invoices } = useData();
   const [formData, setFormData] = useState({
     empresa: "",
     unidade: "",
@@ -49,8 +50,7 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
     }
   }, [editingInvoice]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     const invoiceData = {
       ...formData,
       consumoForaPonta: Number(formData.consumoForaPonta),
@@ -65,19 +65,28 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
       valorFatura: Number(formData.valorFatura),
     };
 
+    // Check for duplicate invoice
+    const isDuplicate = invoices.some(
+      invoice =>
+        invoice.unidade === formData.unidade &&
+        invoice.mes === formData.mes &&
+        (!editingInvoice || invoice.id !== editingInvoice.id)
+    );
+
+    if (isDuplicate) {
+      toast.error("Já existe uma fatura cadastrada para esta unidade neste mês!");
+      return;
+    }
+
     if (!editingInvoice) {
       addInvoice({
         ...invoiceData,
         id: Date.now(),
       });
-      toast.success("Fatura cadastrada com sucesso!", {
-        position: "top-right",
-      });
+      toast.success("Fatura cadastrada com sucesso!");
     } else {
       editInvoice(editingInvoice.id, invoiceData);
-      toast.success("Fatura atualizada com sucesso!", {
-        position: "top-right",
-      });
+      toast.success("Fatura atualizada com sucesso!");
     }
 
     setFormData({
@@ -103,16 +112,23 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
         <CardTitle>Informações da Fatura</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
           <FormFields
             formData={formData}
             setFormData={setFormData}
             onCompanyChange={onCompanyChange}
             onUnitChange={onUnitChange}
           />
-          <Button type="submit" className="w-full">
-            {editingInvoice ? "Atualizar Fatura" : "Inserir Fatura"}
-          </Button>
+          <UpdateConfirmDialog
+            onConfirm={handleSubmit}
+            isEditing={!!editingInvoice}
+            confirmTitle={editingInvoice ? "Atualizar Fatura" : "Inserir Fatura"}
+            confirmMessage={editingInvoice 
+              ? "Deseja realmente atualizar esta fatura?"
+              : "Deseja realmente inserir esta fatura?"
+            }
+            buttonText={editingInvoice ? "Atualizar Fatura" : "Inserir Fatura"}
+          />
         </form>
       </CardContent>
     </Card>

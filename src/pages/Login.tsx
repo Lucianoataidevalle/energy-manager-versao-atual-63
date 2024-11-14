@@ -30,10 +30,10 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <Card className="w-full max-w-[400px]">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <Card className="w-[400px]">
         <CardHeader className="flex items-center justify-center">
-          <h1 className="text-xl md:text-2xl font-bold text-center">Sistema de Gestão de Energia</h1>
+          <h1 className="text-2xl font-bold">Sistema de Gestão de Energia</h1>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

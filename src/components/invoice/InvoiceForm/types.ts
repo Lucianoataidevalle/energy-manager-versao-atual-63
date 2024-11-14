@@ -8,6 +8,7 @@ export interface InvoiceFormProps {
 }
 
 export interface InvoiceFormData {
+  id?: string;
   empresa: string;
   unidade: string;
   mes: string;

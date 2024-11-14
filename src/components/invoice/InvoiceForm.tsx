@@ -52,7 +52,9 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
 
   const handleSubmit = () => {
     const invoiceData = {
-      ...formData,
+      empresa: formData.empresa,
+      unidade: formData.unidade,
+      mes: formData.mes,
       consumoForaPonta: Number(formData.consumoForaPonta),
       consumoPonta: Number(formData.consumoPonta),
       demandaMedidaForaPonta: Number(formData.demandaMedidaForaPonta),
@@ -79,10 +81,7 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
     }
 
     if (!editingInvoice) {
-      addInvoice({
-        ...invoiceData,
-        id: Date.now(),
-      });
+      addInvoice(invoiceData);
       toast.success("Fatura cadastrada com sucesso!");
     } else {
       editInvoice(editingInvoice.id, invoiceData);

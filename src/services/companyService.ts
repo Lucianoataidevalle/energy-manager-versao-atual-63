@@ -33,9 +33,9 @@ export const companyService = {
     }
   },
 
-  async update(id: string | number, data: Partial<Company>) {
+  async update(id: string, data: Partial<Company>) {
     try {
-      const docRef = doc(db, COLLECTION_NAME, id.toString());
+      const docRef = doc(db, COLLECTION_NAME, id);
       await updateDoc(docRef, {
         razaoSocial: data.razaoSocial,
         cnpj: data.cnpj,
@@ -49,9 +49,9 @@ export const companyService = {
     }
   },
 
-  async delete(id: string | number) {
+  async delete(id: string) {
     try {
-      const docRef = doc(db, COLLECTION_NAME, id.toString());
+      const docRef = doc(db, COLLECTION_NAME, id);
       await deleteDoc(docRef);
     } catch (error) {
       console.error('Error deleting company:', error);

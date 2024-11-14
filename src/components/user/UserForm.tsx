@@ -35,10 +35,7 @@ const UserForm = () => {
 
   const handleSubmit = () => {
     if (!editingUser) {
-      addUser({
-        ...formData,
-        id: Date.now(),
-      });
+      addUser(formData);
       toast.success("Usuário cadastrado com sucesso!");
       setFormData({
         empresas: [],

@@ -41,7 +41,7 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
     });
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteInvoice(id);
     toast.success("Fatura excluída com sucesso!", {
       position: "top-right",

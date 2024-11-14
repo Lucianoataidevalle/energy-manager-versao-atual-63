@@ -62,20 +62,12 @@ export const useInvoiceForm = (
     };
 
     if (!editingInvoice) {
-      addInvoice({
-        ...invoiceData,
-        id: Date.now(),
-      });
-      toast.success("Fatura cadastrada com sucesso!", {
-        position: "top-right",
-      });
+      addInvoice(invoiceData);
+      toast.success("Fatura cadastrada com sucesso!");
     } else {
       editInvoice(editingInvoice.id, invoiceData);
-      toast.success("Fatura atualizada com sucesso!", {
-        position: "top-right",
-      });
+      toast.success("Fatura atualizada com sucesso!");
     }
-
     setFormData({
       empresa: "",
       unidade: "",

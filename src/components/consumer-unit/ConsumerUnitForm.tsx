@@ -60,7 +60,7 @@ const ConsumerUnitForm = () => {
     if (!editingConsumerUnit) {
       addConsumerUnit({
         ...submitData,
-        id: Date.now(),
+        id: Date.now().toString(),
       });
       toast.success("Unidade Consumidora cadastrada com sucesso!");
     } else {

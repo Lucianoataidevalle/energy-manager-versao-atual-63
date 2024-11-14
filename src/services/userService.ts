@@ -8,7 +8,7 @@ export const userService = {
   async create(user: Omit<User, 'id'>) {
     try {
       const docRef = await addDoc(collection(db, COLLECTION_NAME), user);
-      return { ...user, id: Number(docRef.id) };
+      return { ...user, id: docRef.id };
     } catch (error) {
       console.error('Error creating user:', error);
       throw error;
@@ -20,7 +20,7 @@ export const userService = {
       const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
       return querySnapshot.docs.map(doc => ({
         ...(doc.data() as Omit<User, 'id'>),
-        id: Number(doc.id),
+        id: doc.id,
       }));
     } catch (error) {
       console.error('Error getting users:', error);
@@ -28,9 +28,9 @@ export const userService = {
     }
   },
 
-  async update(id: number, data: Partial<User>) {
+  async update(id: string, data: Partial<User>) {
     try {
-      await updateDoc(doc(db, COLLECTION_NAME, id.toString()), data);
+      await updateDoc(doc(db, COLLECTION_NAME, id), data);
       return { ...data, id };
     } catch (error) {
       console.error('Error updating user:', error);
@@ -38,9 +38,9 @@ export const userService = {
     }
   },
 
-  async delete(id: number) {
+  async delete(id: string) {
     try {
-      await deleteDoc(doc(db, COLLECTION_NAME, id.toString()));
+      await deleteDoc(doc(db, COLLECTION_NAME, id));
     } catch (error) {
       console.error('Error deleting user:', error);
       throw error;

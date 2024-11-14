@@ -8,7 +8,7 @@ export const invoiceService = {
   async create(invoice: Omit<Invoice, 'id'>) {
     try {
       const docRef = await addDoc(collection(db, COLLECTION_NAME), invoice);
-      return { ...invoice, id: Number(docRef.id) };
+      return { ...invoice, id: docRef.id };
     } catch (error) {
       console.error('Error creating invoice:', error);
       throw error;
@@ -20,7 +20,7 @@ export const invoiceService = {
       const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
       return querySnapshot.docs.map(doc => ({
         ...(doc.data() as Omit<Invoice, 'id'>),
-        id: Number(doc.id),
+        id: doc.id,
       }));
     } catch (error) {
       console.error('Error getting invoices:', error);
@@ -28,9 +28,9 @@ export const invoiceService = {
     }
   },
 
-  async update(id: number, data: Partial<Invoice>) {
+  async update(id: string, data: Partial<Invoice>) {
     try {
-      await updateDoc(doc(db, COLLECTION_NAME, id.toString()), data);
+      await updateDoc(doc(db, COLLECTION_NAME, id), data);
       return { ...data, id };
     } catch (error) {
       console.error('Error updating invoice:', error);
@@ -38,9 +38,9 @@ export const invoiceService = {
     }
   },
 
-  async delete(id: number) {
+  async delete(id: string) {
     try {
-      await deleteDoc(doc(db, COLLECTION_NAME, id.toString()));
+      await deleteDoc(doc(db, COLLECTION_NAME, id));
     } catch (error) {
       console.error('Error deleting invoice:', error);
       throw error;

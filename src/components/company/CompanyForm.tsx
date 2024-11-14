@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import InputMask from "react-input-mask";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -18,7 +25,7 @@ import {
 import { useData } from "@/contexts/DataContext";
 
 const CompanyForm = () => {
-  const { editingCompany, editCompany, addCompany } = useData();
+  const { companies, editingCompany, editCompany, addCompany } = useData();
   const [formData, setFormData] = useState({
     razaoSocial: "",
     cnpj: "",
@@ -65,6 +72,19 @@ const CompanyForm = () => {
     }
   };
 
+  const handleCompanySelect = (companyName: string) => {
+    const selectedCompany = companies.find(
+      (company) => company.razaoSocial === companyName
+    );
+    if (selectedCompany) {
+      setFormData({
+        razaoSocial: selectedCompany.razaoSocial,
+        cnpj: selectedCompany.cnpj,
+        endereco: selectedCompany.endereco,
+      });
+    }
+  };
+
   return (
     <Card className="mb-8">
       <CardHeader>
@@ -72,6 +92,24 @@ const CompanyForm = () => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <label htmlFor="empresaSelect">Empresas</label>
+            <Select onValueChange={handleCompanySelect}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione uma empresa" />
+              </SelectTrigger>
+              <SelectContent>
+                {companies.map((company) => (
+                  <SelectItem
+                    key={company.id}
+                    value={company.razaoSocial}
+                  >
+                    {company.razaoSocial}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <div className="space-y-2">
             <label htmlFor="razaoSocial">Razão Social</label>
             <Input

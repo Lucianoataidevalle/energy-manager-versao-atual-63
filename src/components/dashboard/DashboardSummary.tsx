@@ -38,11 +38,11 @@ const DashboardSummary = ({ selectedCompany, selectedUnit }: DashboardSummaryPro
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
       <Card>
-        <CardHeader>
-          <CardTitle>Consumo Médio</CardTitle>
+        <CardHeader className="h-[60px] pb-2">
+          <CardTitle className="text-[18px]">Consumo Médio</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold">
+          <p className="text-[18px] font-bold">
             {averages.consumption.toLocaleString("pt-BR", {
               maximumFractionDigits: 0,
             })}{" "}
@@ -51,11 +51,11 @@ const DashboardSummary = ({ selectedCompany, selectedUnit }: DashboardSummaryPro
         </CardContent>
       </Card>
       <Card>
-        <CardHeader>
-          <CardTitle>Demanda Média</CardTitle>
+        <CardHeader className="h-[60px] pb-2">
+          <CardTitle className="text-[18px]">Demanda Média</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold">
+          <p className="text-[18px] font-bold">
             {averages.demand.toLocaleString("pt-BR", {
               maximumFractionDigits: 0,
             })}{" "}
@@ -64,11 +64,11 @@ const DashboardSummary = ({ selectedCompany, selectedUnit }: DashboardSummaryPro
         </CardContent>
       </Card>
       <Card>
-        <CardHeader>
-          <CardTitle>Valor Total Médio</CardTitle>
+        <CardHeader className="h-[60px] pb-2">
+          <CardTitle className="text-[18px]">Valor Total Médio</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold">
+          <p className="text-[18px] font-bold">
             {averages.total.toLocaleString("pt-BR", {
               style: "currency",
               currency: "BRL",

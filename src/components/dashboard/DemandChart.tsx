@@ -91,7 +91,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <ComposedChart data={chartData} barSize={30}>
+          <ComposedChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
             <YAxis />

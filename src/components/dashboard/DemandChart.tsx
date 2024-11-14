@@ -35,11 +35,6 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
     };
   };
 
-  const calculateOverageDemand = (measured: number, contracted: number) => {
-    const threshold = contracted * 1.05;
-    return measured > threshold ? measured - contracted : 0;
-  };
-
   const getLast12MonthsData = () => {
     const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
     if (!isValid(selectedDate)) {
@@ -70,34 +65,14 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
           demandaMedidaPonta: 0,
           demandaContratada: 0,
           demandaContratadaPonta: 0,
-          demandaContratadaForaPonta: 0,
-          demandaUltrapassagemForaPonta: 0,
-          demandaUltrapassagemPonta: 0,
-          demandaEfetivaForaPonta: 0,
-          demandaEfetivaPonta: 0
+          demandaContratadaForaPonta: 0
         };
       }
 
-      const demandaMedidaForaPonta = invoice?.demandaMedidaForaPonta || 0;
-      const demandaMedidaPonta = invoice?.demandaMedidaPonta || 0;
-
-      const demandaUltrapassagemForaPonta = modalidadeTarifaria === "Azul" 
-        ? calculateOverageDemand(demandaMedidaForaPonta, demandaContratadaForaPonta)
-        : calculateOverageDemand(demandaMedidaForaPonta, demandaContratada);
-
-      const demandaUltrapassagemPonta = modalidadeTarifaria === "Azul"
-        ? calculateOverageDemand(demandaMedidaPonta, demandaContratadaPonta)
-        : 0;
-
-      const demandaEfetivaForaPonta = demandaMedidaForaPonta - demandaUltrapassagemForaPonta;
-      const demandaEfetivaPonta = demandaMedidaPonta - demandaUltrapassagemPonta;
-
       return {
         mes: format(monthDate, "MMM/yy", { locale: ptBR }),
-        demandaEfetivaForaPonta,
-        demandaEfetivaPonta,
-        demandaUltrapassagemForaPonta,
-        demandaUltrapassagemPonta,
+        demandaMedidaForaPonta: invoice?.demandaMedidaForaPonta || 0,
+        demandaMedidaPonta: invoice?.demandaMedidaPonta || 0,
         demandaContratada: modalidadeTarifaria === "Verde" ? demandaContratada : 0,
         demandaContratadaPonta: modalidadeTarifaria === "Azul" ? demandaContratadaPonta : 0,
         demandaContratadaForaPonta: modalidadeTarifaria === "Azul" ? demandaContratadaForaPonta : 0
@@ -126,31 +101,15 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
             {isAzul ? (
               <>
                 <Bar 
-                  dataKey="demandaEfetivaForaPonta" 
-                  stackId="foraPonta"
+                  dataKey="demandaMedidaForaPonta" 
                   fill="#8884d8" 
-                  name="Demanda Efetiva Fora Ponta"
+                  name="Demanda Medida Fora Ponta"
                   barSize={20}
                 />
                 <Bar
-                  dataKey="demandaUltrapassagemForaPonta"
-                  stackId="foraPonta"
-                  fill="#ff7300"
-                  name="Demanda Ultrapassagem Fora Ponta"
-                  barSize={20}
-                />
-                <Bar 
-                  dataKey="demandaEfetivaPonta" 
-                  stackId="ponta"
+                  dataKey="demandaMedidaPonta"
                   fill="#82ca9d"
-                  name="Demanda Efetiva Ponta"
-                  barSize={20}
-                />
-                <Bar
-                  dataKey="demandaUltrapassagemPonta"
-                  stackId="ponta"
-                  fill="#ff0000"
-                  name="Demanda Ultrapassagem Ponta"
+                  name="Demanda Medida Ponta"
                   barSize={20}
                 />
                 <Line
@@ -169,17 +128,9 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
             ) : (
               <>
                 <Bar 
-                  dataKey="demandaEfetivaForaPonta" 
-                  stackId="foraPonta"
+                  dataKey="demandaMedidaForaPonta" 
                   fill="#8884d8" 
-                  name="Demanda Efetiva"
-                  barSize={20}
-                />
-                <Bar
-                  dataKey="demandaUltrapassagemForaPonta"
-                  stackId="foraPonta"
-                  fill="#ff7300"
-                  name="Demanda Ultrapassagem"
+                  name="Demanda Medida"
                   barSize={20}
                 />
                 <Line

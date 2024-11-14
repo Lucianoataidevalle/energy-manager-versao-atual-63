@@ -21,6 +21,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useData } from "@/contexts/DataContext";
+import { formatCNPJ } from "@/utils/formatters";
 
 const CompanyList = () => {
   const { companies, deleteCompany, setEditingCompany } = useData();
@@ -45,7 +46,7 @@ const CompanyList = () => {
             {companies.map((company) => (
               <TableRow key={company.id}>
                 <TableCell className="text-center">{company.razaoSocial}</TableCell>
-                <TableCell className="text-center">{company.cnpj}</TableCell>
+                <TableCell className="text-center">{formatCNPJ(company.cnpj)}</TableCell>
                 <TableCell className="text-center">{company.endereco}</TableCell>
                 <TableCell className="text-center">{company.unidades.length}</TableCell>
                 <TableCell className="text-center space-x-2">

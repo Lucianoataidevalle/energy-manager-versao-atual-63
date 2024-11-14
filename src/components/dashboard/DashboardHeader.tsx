@@ -26,7 +26,7 @@ const AVAILABLE_CHARTS = [
   { id: "consumption", label: "Consumo (kWh)" },
   { id: "demand", label: "Demanda (kW)" },
   { id: "billing", label: "Custo de Faturas (R$)" },
-  { id: "reactiveEnergy", label: "Energia Reativa (kVAr)" },
+  { id: "reactiveEnergy", label: "Energia Reativa (kVArh)" },
   { id: "reactiveDemand", label: "Demanda Reativa (kVAr)" },
   { id: "fines", label: "Multas/Juros (R$)" },
 ];

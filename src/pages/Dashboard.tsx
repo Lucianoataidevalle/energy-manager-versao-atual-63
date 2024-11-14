@@ -5,6 +5,9 @@ import DashboardSummary from "@/components/dashboard/DashboardSummary";
 import ConsumptionChart from "@/components/dashboard/ConsumptionChart";
 import DemandChart from "@/components/dashboard/DemandChart";
 import BillingChart from "@/components/dashboard/BillingChart";
+import ReactiveEnergyChart from "@/components/dashboard/ReactiveEnergyChart";
+import ReactiveDemandChart from "@/components/dashboard/ReactiveDemandChart";
+import FinesChart from "@/components/dashboard/FinesChart";
 import { useData } from "@/contexts/DataContext";
 import { format, subMonths } from "date-fns";
 
@@ -68,6 +71,21 @@ const Dashboard = () => {
               selectedMonth={selectedMonth}
             />
             <BillingChart 
+              selectedCompany={selectedCompany}
+              selectedUnit={selectedUnit}
+              selectedMonth={selectedMonth}
+            />
+            <ReactiveEnergyChart 
+              selectedCompany={selectedCompany}
+              selectedUnit={selectedUnit}
+              selectedMonth={selectedMonth}
+            />
+            <ReactiveDemandChart 
+              selectedCompany={selectedCompany}
+              selectedUnit={selectedUnit}
+              selectedMonth={selectedMonth}
+            />
+            <FinesChart 
               selectedCompany={selectedCompany}
               selectedUnit={selectedUnit}
               selectedMonth={selectedMonth}

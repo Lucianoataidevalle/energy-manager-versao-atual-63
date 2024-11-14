@@ -8,7 +8,7 @@ export const consumerUnitService = {
   async create(unit: Omit<ConsumerUnit, 'id'>) {
     try {
       const docRef = await addDoc(collection(db, COLLECTION_NAME), unit);
-      return { ...unit, id: Number(docRef.id) };
+      return { ...unit, id: docRef.id };
     } catch (error) {
       console.error('Error creating consumer unit:', error);
       throw error;
@@ -20,7 +20,7 @@ export const consumerUnitService = {
       const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
       return querySnapshot.docs.map(doc => ({
         ...(doc.data() as Omit<ConsumerUnit, 'id'>),
-        id: Number(doc.id),
+        id: doc.id,
       }));
     } catch (error) {
       console.error('Error getting consumer units:', error);
@@ -28,9 +28,9 @@ export const consumerUnitService = {
     }
   },
 
-  async update(id: number, data: Partial<ConsumerUnit>) {
+  async update(id: string, data: Partial<ConsumerUnit>) {
     try {
-      await updateDoc(doc(db, COLLECTION_NAME, id.toString()), data);
+      await updateDoc(doc(db, COLLECTION_NAME, id), data);
       return { ...data, id };
     } catch (error) {
       console.error('Error updating consumer unit:', error);
@@ -38,9 +38,9 @@ export const consumerUnitService = {
     }
   },
 
-  async delete(id: number) {
+  async delete(id: string) {
     try {
-      await deleteDoc(doc(db, COLLECTION_NAME, id.toString()));
+      await deleteDoc(doc(db, COLLECTION_NAME, id));
     } catch (error) {
       console.error('Error deleting consumer unit:', error);
       throw error;

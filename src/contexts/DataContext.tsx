@@ -18,7 +18,6 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [editingInvoice, setEditingInvoice] = useState<Invoice | null>(null);
 
-  // Load initial data
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -42,7 +41,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     loadData();
   }, []);
 
-  const addCompany = async (company: Company) => {
+  const addCompany = async (company: Omit<Company, 'id'>) => {
     try {
       const newCompany = await companyService.create(company);
       setCompanies((prev) => [...prev, newCompany]);
@@ -53,7 +52,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const addConsumerUnit = async (unit: ConsumerUnit) => {
+  const addConsumerUnit = async (unit: Omit<ConsumerUnit, 'id'>) => {
     try {
       const newUnit = await consumerUnitService.create(unit);
       setConsumerUnits((prev) => [...prev, newUnit]);
@@ -71,7 +70,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const addUser = async (user: User) => {
+  const addUser = async (user: Omit<User, 'id'>) => {
     try {
       const newUser = await userService.create(user);
       setUsers((prev) => [...prev, newUser]);
@@ -82,7 +81,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const addInvoice = async (invoice: Invoice) => {
+  const addInvoice = async (invoice: Omit<Invoice, 'id'>) => {
     try {
       const newInvoice = await invoiceService.create(invoice);
       setInvoices((prev) => [...prev, newInvoice]);
@@ -93,7 +92,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const deleteCompany = async (id: number) => {
+  const deleteCompany = async (id: string) => {
     try {
       await companyService.delete(id);
       setCompanies((prev) => prev.filter((company) => company.id !== id));
@@ -105,7 +104,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const deleteConsumerUnit = async (id: number) => {
+  const deleteConsumerUnit = async (id: string) => {
     try {
       const unit = consumerUnits.find((u) => u.id === id);
       if (unit) {
@@ -130,7 +129,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const deleteUser = async (id: number) => {
+  const deleteUser = async (id: string) => {
     try {
       await userService.delete(id);
       setUsers((prev) => prev.filter((user) => user.id !== id));
@@ -142,7 +141,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const deleteInvoice = async (id: number) => {
+  const deleteInvoice = async (id: string) => {
     try {
       await invoiceService.delete(id);
       setInvoices((prev) => prev.filter((invoice) => invoice.id !== id));
@@ -154,7 +153,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const editCompany = async (id: number, data: Partial<Company>) => {
+  const editCompany = async (id: string, data: Partial<Company>) => {
     try {
       await companyService.update(id, data);
       setCompanies((prev) =>
@@ -170,7 +169,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const editConsumerUnit = async (id: number, data: Partial<ConsumerUnit>) => {
+  const editConsumerUnit = async (id: string, data: Partial<ConsumerUnit>) => {
     try {
       await consumerUnitService.update(id, data);
       setConsumerUnits((prev) =>
@@ -184,7 +183,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const editUser = async (id: number, data: Partial<User>) => {
+  const editUser = async (id: string, data: Partial<User>) => {
     try {
       await userService.update(id, data);
       setUsers((prev) =>
@@ -198,7 +197,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const editInvoice = async (id: number, data: Partial<Invoice>) => {
+  const editInvoice = async (id: string, data: Partial<Invoice>) => {
     try {
       await invoiceService.update(id, data);
       setInvoices((prev) =>

@@ -1,13 +1,18 @@
 import { Input } from "@/components/ui/input";
-import { InputProps } from "@radix-ui/react-select";
+import { ComponentPropsWithoutRef } from "react";
 
-interface NumberInputProps extends InputProps {
+interface NumberInputProps extends ComponentPropsWithoutRef<'input'> {
   value: string;
   onChange: (value: string) => void;
   allowSpecialChars?: boolean;
 }
 
-export const NumberInput = ({ value, onChange, allowSpecialChars = false, ...props }: NumberInputProps) => {
+export const NumberInput = ({ 
+  value, 
+  onChange, 
+  allowSpecialChars = false,
+  ...props 
+}: NumberInputProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     if (allowSpecialChars) {

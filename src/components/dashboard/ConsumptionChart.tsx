@@ -67,11 +67,6 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
 
   const chartData = getLast12MonthsData();
 
-  const getYAxisDomain = () => {
-    const maxValue = Math.max(...chartData.map(d => d.total));
-    return [0, maxValue * 1.1];
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -82,7 +77,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
           <BarChart data={chartData} barSize={30}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
-            <YAxis domain={getYAxisDomain()} />
+            <YAxis />
             <Tooltip />
             <Legend />
             <Bar 

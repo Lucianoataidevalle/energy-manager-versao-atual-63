@@ -58,11 +58,6 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
 
   const chartData = getLast12MonthsData();
 
-  const getYAxisDomain = () => {
-    const maxValue = Math.max(...chartData.map(d => d.valor));
-    return [0, maxValue * 1.1];
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -73,7 +68,7 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
           <BarChart data={chartData} barSize={30}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
-            <YAxis domain={getYAxisDomain()} />
+            <YAxis />
             <Tooltip />
             <Bar
               dataKey="valor"

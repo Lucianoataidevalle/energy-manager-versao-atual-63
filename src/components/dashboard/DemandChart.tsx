@@ -84,19 +84,6 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
   const { modalidadeTarifaria } = getContractedDemand();
   const isAzul = modalidadeTarifaria === "Azul";
 
-  const getYAxisDomain = () => {
-    const maxValue = Math.max(
-      ...chartData.map(d => Math.max(
-        d.demandaMedidaForaPonta,
-        d.demandaMedidaPonta,
-        d.demandaContratada,
-        d.demandaContratadaPonta,
-        d.demandaContratadaForaPonta
-      ))
-    );
-    return [0, maxValue * 1.1];
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -107,7 +94,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
           <ComposedChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
-            <YAxis domain={getYAxisDomain()} />
+            <YAxis />
             <Tooltip />
             <Legend />
             

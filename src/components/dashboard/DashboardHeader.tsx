@@ -72,7 +72,7 @@ const DashboardHeader = ({
   };
 
   return (
-    <div className="fixed top-0 right-0 left-64 bg-background z-50 border-b">
+    <div className="fixed top-0 right-0 left-64 bg-background z-50 border-b h-[190px]">
       <div className="p-8 flex flex-col space-y-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
           <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -134,8 +134,7 @@ const DashboardHeader = ({
             ))}
             <Button
               onClick={handleApply}
-              variant="outline"
-              className="min-w-[100px]"
+              className="min-w-[100px] bg-primary text-primary-foreground hover:bg-primary/90"
             >
               Aplicar
             </Button>

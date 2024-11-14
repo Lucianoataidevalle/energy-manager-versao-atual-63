@@ -65,7 +65,7 @@ const DashboardSummary = ({ selectedCompany, selectedUnit }: DashboardSummaryPro
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Valor Total Médio</CardTitle>
+          <CardTitle>Custo Médio de Faturas</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-2xl font-bold">

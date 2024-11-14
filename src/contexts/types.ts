@@ -1,5 +1,5 @@
 export interface Company {
-  id: number;
+  id: string;
   razaoSocial: string;
   cnpj: string;
   endereco: string;
@@ -7,7 +7,7 @@ export interface Company {
 }
 
 export interface ConsumerUnit {
-  id: number;
+  id: string;
   empresa: string;
   nome: string;
   numero: string;
@@ -21,7 +21,7 @@ export interface ConsumerUnit {
 }
 
 export interface User {
-  id: number;
+  id: string;
   empresas: string[];
   nome: string;
   fone: string;
@@ -30,7 +30,7 @@ export interface User {
 }
 
 export interface Invoice {
-  id: number;
+  id: string;
   empresa: string;
   unidade: string;
   mes: string;
@@ -55,18 +55,18 @@ export interface DataContextType {
   editingConsumerUnit: ConsumerUnit | null;
   editingUser: User | null;
   editingInvoice: Invoice | null;
-  addCompany: (company: Company) => void;
-  addConsumerUnit: (unit: ConsumerUnit) => void;
-  addUser: (user: User) => void;
-  addInvoice: (invoice: Invoice) => void;
-  deleteCompany: (id: number) => void;
-  deleteConsumerUnit: (id: number) => void;
-  deleteUser: (id: number) => void;
-  deleteInvoice: (id: number) => void;
-  editCompany: (id: number, data: Partial<Company>) => void;
-  editConsumerUnit: (id: number, data: Partial<ConsumerUnit>) => void;
-  editUser: (id: number, data: Partial<User>) => void;
-  editInvoice: (id: number, data: Partial<Invoice>) => void;
+  addCompany: (company: Omit<Company, 'id'>) => Promise<void>;
+  addConsumerUnit: (unit: Omit<ConsumerUnit, 'id'>) => Promise<void>;
+  addUser: (user: Omit<User, 'id'>) => Promise<void>;
+  addInvoice: (invoice: Omit<Invoice, 'id'>) => Promise<void>;
+  deleteCompany: (id: string) => Promise<void>;
+  deleteConsumerUnit: (id: string) => Promise<void>;
+  deleteUser: (id: string) => Promise<void>;
+  deleteInvoice: (id: string) => Promise<void>;
+  editCompany: (id: string, data: Partial<Company>) => Promise<void>;
+  editConsumerUnit: (id: string, data: Partial<ConsumerUnit>) => Promise<void>;
+  editUser: (id: string, data: Partial<User>) => Promise<void>;
+  editInvoice: (id: string, data: Partial<Invoice>) => Promise<void>;
   setEditingCompany: (company: Company | null) => void;
   setEditingConsumerUnit: (unit: ConsumerUnit | null) => void;
   setEditingUser: (user: User | null) => void;

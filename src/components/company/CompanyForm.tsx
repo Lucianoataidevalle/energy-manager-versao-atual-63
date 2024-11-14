@@ -35,25 +35,34 @@ const CompanyForm = () => {
     }
   }, [editingCompany]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editingCompany) {
-      addCompany({
-        ...formData,
-        id: Date.now(),
-        unidades: [],
-      });
-      toast.success("Empresa cadastrada com sucesso!");
-      setFormData({ razaoSocial: "", cnpj: "", endereco: "" });
+    try {
+      if (!editingCompany) {
+        await addCompany({
+          ...formData,
+          unidades: [],
+        });
+        toast.success("Empresa cadastrada com sucesso!");
+        setFormData({ razaoSocial: "", cnpj: "", endereco: "" });
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error("Erro ao cadastrar empresa");
     }
   };
 
-  const handleUpdate = () => {
-    if (editingCompany) {
-      editCompany(editingCompany.id, formData);
-      toast.success("Empresa atualizada com sucesso!");
+  const handleUpdate = async () => {
+    try {
+      if (editingCompany?.id) {
+        await editCompany(editingCompany.id, formData);
+        toast.success("Empresa atualizada com sucesso!");
+        setFormData({ razaoSocial: "", cnpj: "", endereco: "" });
+      }
+    } catch (error) {
+      console.error('Error updating company:', error);
+      toast.error("Erro ao atualizar empresa");
     }
-    setFormData({ razaoSocial: "", cnpj: "", endereco: "" });
   };
 
   return (

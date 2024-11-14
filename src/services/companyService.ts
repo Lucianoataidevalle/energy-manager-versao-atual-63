@@ -7,8 +7,13 @@ const COLLECTION_NAME = 'companies';
 export const companyService = {
   async create(company: Omit<Company, 'id'>) {
     try {
-      const docRef = await addDoc(collection(db, COLLECTION_NAME), company);
-      return { ...company, id: Number(docRef.id) };
+      const docRef = await addDoc(collection(db, COLLECTION_NAME), {
+        razaoSocial: company.razaoSocial,
+        cnpj: company.cnpj,
+        endereco: company.endereco,
+        unidades: company.unidades || [],
+      });
+      return { ...company, id: docRef.id };
     } catch (error) {
       console.error('Error creating company:', error);
       throw error;
@@ -20,7 +25,7 @@ export const companyService = {
       const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
       return querySnapshot.docs.map(doc => ({
         ...(doc.data() as Omit<Company, 'id'>),
-        id: Number(doc.id),
+        id: doc.id,
       }));
     } catch (error) {
       console.error('Error getting companies:', error);
@@ -28,9 +33,15 @@ export const companyService = {
     }
   },
 
-  async update(id: number, data: Partial<Company>) {
+  async update(id: string | number, data: Partial<Company>) {
     try {
-      await updateDoc(doc(db, COLLECTION_NAME, id.toString()), data);
+      const docRef = doc(db, COLLECTION_NAME, id.toString());
+      await updateDoc(docRef, {
+        razaoSocial: data.razaoSocial,
+        cnpj: data.cnpj,
+        endereco: data.endereco,
+        unidades: data.unidades || [],
+      });
       return { ...data, id };
     } catch (error) {
       console.error('Error updating company:', error);
@@ -38,9 +49,10 @@ export const companyService = {
     }
   },
 
-  async delete(id: number) {
+  async delete(id: string | number) {
     try {
-      await deleteDoc(doc(db, COLLECTION_NAME, id.toString()));
+      const docRef = doc(db, COLLECTION_NAME, id.toString());
+      await deleteDoc(docRef);
     } catch (error) {
       console.error('Error deleting company:', error);
       throw error;

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { NumberInput } from "@/components/shared/NumberInput";
 import {
   Select,
   SelectContent,
@@ -118,12 +119,11 @@ const ConsumerUnitForm = () => {
           </div>
           <div className="space-y-2">
             <label htmlFor="numero">Número da UC</label>
-            <Input
+            <NumberInput
               id="numero"
               value={formData.numero}
-              onChange={(e) =>
-                setFormData({ ...formData, numero: e.target.value })
-              }
+              onChange={(value) => setFormData({ ...formData, numero: value })}
+              allowSpecialChars
               required
             />
           </div>
@@ -204,24 +204,22 @@ const ConsumerUnitForm = () => {
             <>
               <div className="space-y-2">
                 <label htmlFor="demandaContratadaPonta">Demanda Contratada Ponta (kW)</label>
-                <Input
+                <NumberInput
                   id="demandaContratadaPonta"
-                  type="number"
                   value={formData.demandaContratadaPonta}
-                  onChange={(e) =>
-                    setFormData({ ...formData, demandaContratadaPonta: e.target.value })
+                  onChange={(value) =>
+                    setFormData({ ...formData, demandaContratadaPonta: value })
                   }
                   required
                 />
               </div>
               <div className="space-y-2">
                 <label htmlFor="demandaContratadaForaPonta">Demanda Contratada Fora Ponta (kW)</label>
-                <Input
+                <NumberInput
                   id="demandaContratadaForaPonta"
-                  type="number"
                   value={formData.demandaContratadaForaPonta}
-                  onChange={(e) =>
-                    setFormData({ ...formData, demandaContratadaForaPonta: e.target.value })
+                  onChange={(value) =>
+                    setFormData({ ...formData, demandaContratadaForaPonta: value })
                   }
                   required
                 />
@@ -230,12 +228,11 @@ const ConsumerUnitForm = () => {
           ) : (
             <div className="space-y-2">
               <label htmlFor="demandaContratada">Demanda Contratada (kW)</label>
-              <Input
+              <NumberInput
                 id="demandaContratada"
-                type="number"
                 value={formData.demandaContratada}
-                onChange={(e) =>
-                  setFormData({ ...formData, demandaContratada: e.target.value })
+                onChange={(value) =>
+                  setFormData({ ...formData, demandaContratada: value })
                 }
                 disabled={formData.grupoSubgrupo === "B"}
                 required={formData.grupoSubgrupo !== "B"}

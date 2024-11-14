@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import InputMask from "react-input-mask";
 import { useData } from "@/contexts/DataContext";
 import { CompanySelect } from "../invoice/InvoiceForm/CompanySelect";
 import { UpdateConfirmDialog } from "../invoice/InvoiceForm/UpdateConfirmDialog";
@@ -82,12 +83,21 @@ const UserForm = () => {
           </div>
           <div className="space-y-2">
             <label htmlFor="fone">Fone</label>
-            <Input
-              id="fone"
+            <InputMask
+              mask="(99) 99999-9999"
               value={formData.fone}
               onChange={(e) => setFormData({ ...formData, fone: e.target.value })}
               required
-            />
+            >
+              {(inputProps: any) => (
+                <Input
+                  {...inputProps}
+                  id="fone"
+                  placeholder="(XX) XXXXX-XXXX"
+                  type="text"
+                />
+              )}
+            </InputMask>
           </div>
           <div className="space-y-2">
             <label htmlFor="email">E-mail (Login)</label>

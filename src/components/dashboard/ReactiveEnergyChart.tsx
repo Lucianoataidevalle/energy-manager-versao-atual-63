@@ -70,7 +70,7 @@ const ReactiveEnergyChart = ({ selectedCompany, selectedUnit, selectedMonth }: R
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Energia Reativa (kVAr)</CardTitle>
+        <CardTitle className="text-lg">Energia Reativa (kVArh)</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={270}>

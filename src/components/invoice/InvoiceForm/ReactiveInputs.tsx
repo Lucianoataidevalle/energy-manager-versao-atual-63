@@ -9,7 +9,7 @@ export const ReactiveInputs = ({ formData, setFormData }: ReactiveInputsProps) =
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-2">
-        <label className="text-sm font-medium">Energia Reativa Fora Ponta (kVAr)</label>
+        <label className="text-sm font-medium">Energia Reativa Fora Ponta (kVArh)</label>
         <Input
           type="number"
           value={formData.energiaReativaForaPonta}
@@ -21,7 +21,7 @@ export const ReactiveInputs = ({ formData, setFormData }: ReactiveInputsProps) =
         />
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium">Energia Reativa Ponta (kVAr)</label>
+        <label className="text-sm font-medium">Energia Reativa Ponta (kVArh)</label>
         <Input
           type="number"
           value={formData.energiaReativaPonta}

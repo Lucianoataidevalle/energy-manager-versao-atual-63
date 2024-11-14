@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import InputMask from "react-input-mask";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -75,12 +76,21 @@ const CompanyForm = () => {
           </div>
           <div className="space-y-2">
             <label htmlFor="cnpj">CNPJ</label>
-            <Input
-              id="cnpj"
+            <InputMask
+              mask="99.999.999/9999-99"
               value={formData.cnpj}
               onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
               required
-            />
+            >
+              {(inputProps: any) => (
+                <Input
+                  {...inputProps}
+                  id="cnpj"
+                  placeholder="00.000.000/0000-00"
+                  type="text"
+                />
+              )}
+            </InputMask>
           </div>
           <div className="space-y-2">
             <label htmlFor="endereco">Endereço</label>

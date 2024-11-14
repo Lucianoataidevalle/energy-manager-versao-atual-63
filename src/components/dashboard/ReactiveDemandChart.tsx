@@ -61,6 +61,16 @@ const ReactiveDemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: R
 
   const chartData = getLast12MonthsData();
 
+  const getYAxisDomain = () => {
+    const maxValue = Math.max(
+      ...chartData.map(d => Math.max(
+        d.demandaReativaPonta,
+        d.demandaReativaForaPonta
+      ))
+    );
+    return [0, maxValue * 1.1];
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -71,7 +81,7 @@ const ReactiveDemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: R
           <ComposedChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
-            <YAxis />
+            <YAxis domain={getYAxisDomain()} />
             <Tooltip />
             <Legend />
             <Bar 

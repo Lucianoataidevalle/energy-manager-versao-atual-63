@@ -116,7 +116,7 @@ const DashboardHeader = ({
         </div>
 
         <div className="border-t pt-4">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">
+          <div className="flex flex-wrap gap-4 items-center">
             {AVAILABLE_CHARTS.map((chart) => (
               <div key={chart.id} className="flex items-center space-x-2">
                 <Checkbox
@@ -132,14 +132,10 @@ const DashboardHeader = ({
                 </label>
               </div>
             ))}
+            <Button onClick={handleApply} variant="outline">
+              Aplicar
+            </Button>
           </div>
-          <Button
-            onClick={handleApply}
-            className="w-full"
-            variant="outline"
-          >
-            Aplicar
-          </Button>
         </div>
       </div>
     </div>

@@ -26,27 +26,39 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
 
   const isGroupB = selectedConsumerUnit?.grupoSubgrupo === "B";
 
+  const calculateDemandaUltrapassagem = (medida: number, contratada: number) => {
+    const limite = contratada * 1.05;
+    return medida > limite ? medida - contratada : 0;
+  };
+
   const filteredInvoices = invoices
     .filter(
       (invoice) => 
         (!selectedCompany || invoice.empresa === selectedCompany) && 
         (!selectedUnit || invoice.unidade === selectedUnit)
     )
-    .sort((a, b) => new Date(b.mes).getTime() - new Date(a.mes).getTime());
+    .sort((a, b) => new Date(b.mes).getTime() - new Date(a.mes).getTime())
+    .map(invoice => {
+      const unit = consumerUnits.find(
+        unit => unit.empresa === invoice.empresa && unit.nome === invoice.unidade
+      );
 
-  const handleEdit = (invoice: any) => {
-    setEditingInvoice({ ...invoice, isGroupB });
-    toast.success("Editando fatura...", {
-      position: "top-right",
-    });
-  };
+      if (!unit) return invoice;
 
-  const handleDelete = (id: string) => {
-    deleteInvoice(id);
-    toast.success("Fatura excluída com sucesso!", {
-      position: "top-right",
+      const demandaContratada = Number(unit.demandaContratada);
+      const demandaContratadaPonta = Number(unit.demandaContratadaPonta);
+      const demandaContratadaForaPonta = Number(unit.demandaContratadaForaPonta);
+
+      return {
+        ...invoice,
+        demandaUltrapassagemForaPonta: unit.modalidadeTarifaria === "Verde" 
+          ? calculateDemandaUltrapassagem(invoice.demandaMedidaForaPonta, demandaContratada)
+          : calculateDemandaUltrapassagem(invoice.demandaMedidaForaPonta, demandaContratadaForaPonta),
+        demandaUltrapassagemPonta: unit.modalidadeTarifaria === "Azul"
+          ? calculateDemandaUltrapassagem(invoice.demandaMedidaPonta, demandaContratadaPonta)
+          : 0
+      };
     });
-  };
 
   const formatNumber = (value: number) => {
     return value.toLocaleString('pt-BR');
@@ -64,6 +76,8 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
       "Consumo Total (kWh)",
       "Demanda Fora Ponta (kW)",
       "Demanda Ponta (kW)",
+      "Demanda de Ultrapassagem Fora Ponta (kW)",
+      "Demanda de Ultrapassagem Ponta (kW)",
       "Energia Reativa Fora Ponta (kVAr)",
       "Energia Reativa Ponta (kVAr)",
       "Demanda Reativa Fora Ponta (kVAr)",
@@ -79,6 +93,8 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
       calculateTotalConsumption(invoice.consumoForaPonta, invoice.consumoPonta),
       invoice.demandaMedidaForaPonta,
       invoice.demandaMedidaPonta,
+      invoice.demandaUltrapassagemForaPonta,
+      invoice.demandaUltrapassagemPonta,
       invoice.energiaReativaForaPonta,
       invoice.energiaReativaPonta,
       invoice.demandaReativaForaPonta,
@@ -128,9 +144,7 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
               <TableBody>
                 {filteredInvoices.map((invoice) => (
                   <TableRow key={invoice.id}>
-                    <TableCell className="text-center">
-                      {invoice.mes}
-                    </TableCell>
+                    <TableCell className="text-center">{invoice.mes}</TableCell>
                     <TableCell className="text-center">{formatNumber(invoice.consumoForaPonta)}</TableCell>
                     {!isGroupB && (
                       <>
@@ -140,6 +154,8 @@ const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
                         </TableCell>
                         <TableCell className="text-center">{formatNumber(invoice.demandaMedidaForaPonta)}</TableCell>
                         <TableCell className="text-center">{formatNumber(invoice.demandaMedidaPonta)}</TableCell>
+                        <TableCell className="text-center">{formatNumber(invoice.demandaUltrapassagemForaPonta)}</TableCell>
+                        <TableCell className="text-center">{formatNumber(invoice.demandaUltrapassagemPonta)}</TableCell>
                         <TableCell className="text-center">{formatNumber(invoice.energiaReativaForaPonta)}</TableCell>
                         <TableCell className="text-center">{formatNumber(invoice.energiaReativaPonta)}</TableCell>
                         <TableCell className="text-center">{formatNumber(invoice.demandaReativaForaPonta)}</TableCell>

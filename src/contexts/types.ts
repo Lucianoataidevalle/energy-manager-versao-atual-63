@@ -38,6 +38,8 @@ export interface Invoice {
   consumoPonta: number;
   demandaMedidaForaPonta: number;
   demandaMedidaPonta: number;
+  demandaUltrapassagemForaPonta: number;
+  demandaUltrapassagemPonta: number;
   energiaReativaForaPonta: number;
   energiaReativaPonta: number;
   demandaReativaForaPonta: number;

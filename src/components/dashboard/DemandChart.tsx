@@ -35,6 +35,11 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
     };
   };
 
+  const calculateDemandaUltrapassagem = (medida: number, contratada: number) => {
+    const limite = contratada * 1.05;
+    return medida > limite ? medida - contratada : 0;
+  };
+
   const getLast12MonthsData = () => {
     const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
     if (!isValid(selectedDate)) {
@@ -63,16 +68,32 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
           mes: month,
           demandaMedidaForaPonta: 0,
           demandaMedidaPonta: 0,
+          demandaUltrapassagemForaPonta: 0,
+          demandaUltrapassagemPonta: 0,
           demandaContratada: 0,
           demandaContratadaPonta: 0,
           demandaContratadaForaPonta: 0
         };
       }
 
+      const demandaUltrapassagemForaPonta = modalidadeTarifaria === "Azul" 
+        ? calculateDemandaUltrapassagem(invoice?.demandaMedidaForaPonta || 0, demandaContratadaForaPonta)
+        : 0;
+      
+      const demandaUltrapassagemPonta = modalidadeTarifaria === "Azul"
+        ? calculateDemandaUltrapassagem(invoice?.demandaMedidaPonta || 0, demandaContratadaPonta)
+        : 0;
+
+      const demandaUltrapassagemVerde = modalidadeTarifaria === "Verde"
+        ? calculateDemandaUltrapassagem(invoice?.demandaMedidaForaPonta || 0, demandaContratada)
+        : 0;
+
       return {
         mes: format(monthDate, "MMM/yy", { locale: ptBR }),
-        demandaMedidaForaPonta: invoice?.demandaMedidaForaPonta || 0,
-        demandaMedidaPonta: invoice?.demandaMedidaPonta || 0,
+        demandaMedidaForaPonta: (invoice?.demandaMedidaForaPonta || 0) - (modalidadeTarifaria === "Verde" ? demandaUltrapassagemVerde : demandaUltrapassagemForaPonta),
+        demandaMedidaPonta: (invoice?.demandaMedidaPonta || 0) - demandaUltrapassagemPonta,
+        demandaUltrapassagemForaPonta: modalidadeTarifaria === "Verde" ? demandaUltrapassagemVerde : demandaUltrapassagemForaPonta,
+        demandaUltrapassagemPonta,
         demandaContratada: modalidadeTarifaria === "Verde" ? demandaContratada : 0,
         demandaContratadaPonta: modalidadeTarifaria === "Azul" ? demandaContratadaPonta : 0,
         demandaContratadaForaPonta: modalidadeTarifaria === "Azul" ? demandaContratadaForaPonta : 0
@@ -102,14 +123,30 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
               <>
                 <Bar 
                   dataKey="demandaMedidaForaPonta" 
+                  stackId="foraPonta"
                   fill="#8884d8" 
                   name="Demanda Medida Fora Ponta"
                   barSize={20}
                 />
+                <Bar 
+                  dataKey="demandaUltrapassagemForaPonta" 
+                  stackId="foraPonta"
+                  fill="#483d8b" 
+                  name="Demanda de Ultrapassagem Fora Ponta"
+                  barSize={20}
+                />
                 <Bar
                   dataKey="demandaMedidaPonta"
+                  stackId="ponta"
                   fill="#82ca9d"
                   name="Demanda Medida Ponta"
+                  barSize={20}
+                />
+                <Bar
+                  dataKey="demandaUltrapassagemPonta"
+                  stackId="ponta"
+                  fill="#2e8b57"
+                  name="Demanda de Ultrapassagem Ponta"
                   barSize={20}
                 />
                 <Line
@@ -129,8 +166,16 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
               <>
                 <Bar 
                   dataKey="demandaMedidaForaPonta" 
+                  stackId="demanda"
                   fill="#8884d8" 
                   name="Demanda Medida"
+                  barSize={20}
+                />
+                <Bar 
+                  dataKey="demandaUltrapassagemForaPonta" 
+                  stackId="demanda"
+                  fill="#483d8b" 
+                  name="Demanda de Ultrapassagem"
                   barSize={20}
                 />
                 <Line

@@ -20,6 +20,14 @@ interface InvoiceListProps {
 const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
   const { invoices, consumerUnits, deleteInvoice, setEditingInvoice } = useData();
 
+  const handleEdit = (invoice: Invoice) => {
+    setEditingInvoice(invoice);
+  };
+
+  const handleDelete = (id: string) => {
+    deleteInvoice(id);
+  };
+
   const selectedConsumerUnit = consumerUnits.find(
     unit => unit.empresa === selectedCompany && unit.nome === selectedUnit
   );

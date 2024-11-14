@@ -59,6 +59,8 @@ export const useInvoiceForm = (
       demandaReativaPonta: Number(formData.demandaReativaPonta),
       multasJuros: Number(formData.multasJuros),
       valorFatura: Number(formData.valorFatura),
+      demandaUltrapassagemForaPonta: 0,
+      demandaUltrapassagemPonta: 0,
     };
 
     if (!editingInvoice) {
@@ -68,6 +70,7 @@ export const useInvoiceForm = (
       editInvoice(editingInvoice.id, invoiceData);
       toast.success("Fatura atualizada com sucesso!");
     }
+    
     setFormData({
       empresa: "",
       unidade: "",

@@ -65,6 +65,8 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
       demandaReativaPonta: Number(formData.demandaReativaPonta),
       multasJuros: Number(formData.multasJuros),
       valorFatura: Number(formData.valorFatura),
+      demandaUltrapassagemForaPonta: 0,
+      demandaUltrapassagemPonta: 0,
     };
 
     // Check for duplicate invoice

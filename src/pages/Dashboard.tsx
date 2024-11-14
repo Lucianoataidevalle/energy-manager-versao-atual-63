@@ -16,6 +16,14 @@ const Dashboard = () => {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedUnit, setSelectedUnit] = useState("");
   const [selectedMonth, setSelectedMonth] = useState("");
+  const [visibleCharts, setVisibleCharts] = useState([
+    "consumption",
+    "demand",
+    "billing",
+    "reactiveEnergy",
+    "reactiveDemand",
+    "fines",
+  ]);
 
   useEffect(() => {
     if (companies.length > 0 && !selectedCompany) {
@@ -41,6 +49,57 @@ const Dashboard = () => {
     }
   }, []);
 
+  const renderChart = (chartId: string) => {
+    if (!visibleCharts.includes(chartId)) return null;
+
+    const charts = {
+      consumption: (
+        <ConsumptionChart
+          selectedCompany={selectedCompany}
+          selectedUnit={selectedUnit}
+          selectedMonth={selectedMonth}
+        />
+      ),
+      demand: (
+        <DemandChart
+          selectedCompany={selectedCompany}
+          selectedUnit={selectedUnit}
+          selectedMonth={selectedMonth}
+        />
+      ),
+      billing: (
+        <BillingChart
+          selectedCompany={selectedCompany}
+          selectedUnit={selectedUnit}
+          selectedMonth={selectedMonth}
+        />
+      ),
+      reactiveEnergy: (
+        <ReactiveEnergyChart
+          selectedCompany={selectedCompany}
+          selectedUnit={selectedUnit}
+          selectedMonth={selectedMonth}
+        />
+      ),
+      reactiveDemand: (
+        <ReactiveDemandChart
+          selectedCompany={selectedCompany}
+          selectedUnit={selectedUnit}
+          selectedMonth={selectedMonth}
+        />
+      ),
+      fines: (
+        <FinesChart
+          selectedCompany={selectedCompany}
+          selectedUnit={selectedUnit}
+          selectedMonth={selectedMonth}
+        />
+      ),
+    };
+
+    return charts[chartId as keyof typeof charts];
+  };
+
   return (
     <div className="flex min-h-screen">
       <Sidebar />
@@ -52,44 +111,19 @@ const Dashboard = () => {
           onCompanyChange={setSelectedCompany}
           onUnitChange={setSelectedUnit}
           onMonthChange={setSelectedMonth}
+          visibleCharts={visibleCharts}
+          onVisibleChartsChange={setVisibleCharts}
         />
-        <div className="p-8 mt-32">
-          <DashboardSummary 
+        <div className="p-8 mt-48">
+          <DashboardSummary
             selectedCompany={selectedCompany}
             selectedUnit={selectedUnit}
           />
 
           <div className="space-y-8">
-            <ConsumptionChart 
-              selectedCompany={selectedCompany}
-              selectedUnit={selectedUnit}
-              selectedMonth={selectedMonth}
-            />
-            <DemandChart 
-              selectedCompany={selectedCompany}
-              selectedUnit={selectedUnit}
-              selectedMonth={selectedMonth}
-            />
-            <BillingChart 
-              selectedCompany={selectedCompany}
-              selectedUnit={selectedUnit}
-              selectedMonth={selectedMonth}
-            />
-            <ReactiveEnergyChart 
-              selectedCompany={selectedCompany}
-              selectedUnit={selectedUnit}
-              selectedMonth={selectedMonth}
-            />
-            <ReactiveDemandChart 
-              selectedCompany={selectedCompany}
-              selectedUnit={selectedUnit}
-              selectedMonth={selectedMonth}
-            />
-            <FinesChart 
-              selectedCompany={selectedCompany}
-              selectedUnit={selectedUnit}
-              selectedMonth={selectedMonth}
-            />
+            {["consumption", "demand", "billing", "reactiveEnergy", "reactiveDemand", "fines"].map(
+              (chartId) => renderChart(chartId)
+            )}
           </div>
         </div>
       </div>

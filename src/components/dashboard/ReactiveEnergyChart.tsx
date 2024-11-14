@@ -70,10 +70,10 @@ const ReactiveEnergyChart = ({ selectedCompany, selectedUnit, selectedMonth }: R
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Energia Reativa (kVAr)</CardTitle>
+        <CardTitle className="text-lg">Energia Reativa (kVAr)</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={270}>
           <BarChart data={chartData} barSize={30}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />

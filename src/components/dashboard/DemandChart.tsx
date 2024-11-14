@@ -27,7 +27,12 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
     const unit = consumerUnits.find(
       unit => unit.empresa === selectedCompany && unit.nome === selectedUnit
     );
-    return unit ? Number(unit.demandaContratada) : 0;
+    return {
+      demandaContratada: unit?.demandaContratada ? Number(unit.demandaContratada) : 0,
+      demandaContratadaPonta: unit?.demandaContratadaPonta ? Number(unit.demandaContratadaPonta) : 0,
+      demandaContratadaForaPonta: unit?.demandaContratadaForaPonta ? Number(unit.demandaContratadaForaPonta) : 0,
+      modalidadeTarifaria: unit?.modalidadeTarifaria || ""
+    };
   };
 
   const getLast12MonthsData = () => {
@@ -42,7 +47,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
       return format(date, 'yyyy-MM');
     }).reverse();
 
-    const contractedDemand = getContractedDemand();
+    const { demandaContratada, demandaContratadaPonta, demandaContratadaForaPonta, modalidadeTarifaria } = getContractedDemand();
 
     return months.map(month => {
       const invoice = invoices.find(inv => 
@@ -56,22 +61,28 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
         console.error('Invalid month date:', month);
         return {
           mes: month,
-          demandaForaPonta: 0,
-          demandaPonta: 0,
-          contratada: contractedDemand
+          demandaMedidaForaPonta: 0,
+          demandaMedidaPonta: 0,
+          demandaContratada: 0,
+          demandaContratadaPonta: 0,
+          demandaContratadaForaPonta: 0
         };
       }
 
       return {
         mes: format(monthDate, "MMM/yy", { locale: ptBR }),
-        demandaForaPonta: invoice?.demandaMedidaForaPonta || 0,
-        demandaPonta: invoice?.demandaMedidaPonta || 0,
-        contratada: contractedDemand
+        demandaMedidaForaPonta: invoice?.demandaMedidaForaPonta || 0,
+        demandaMedidaPonta: invoice?.demandaMedidaPonta || 0,
+        demandaContratada: modalidadeTarifaria === "Verde" ? demandaContratada : 0,
+        demandaContratadaPonta: modalidadeTarifaria === "Azul" ? demandaContratadaPonta : 0,
+        demandaContratadaForaPonta: modalidadeTarifaria === "Azul" ? demandaContratadaForaPonta : 0
       };
     });
   };
 
   const chartData = getLast12MonthsData();
+  const { modalidadeTarifaria } = getContractedDemand();
+  const isAzul = modalidadeTarifaria === "Azul";
 
   return (
     <Card>
@@ -86,24 +97,47 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar 
-              dataKey="demandaForaPonta" 
-              stackId="a" 
-              fill="#8884d8" 
-              name="Demanda Fora Ponta"
-            />
-            <Bar
-              dataKey="demandaPonta"
-              stackId="a"
-              fill="#82ca9d"
-              name="Demanda Ponta"
-            />
-            <Line
-              type="monotone"
-              dataKey="contratada"
-              stroke="#ff7300"
-              name="Demanda Contratada"
-            />
+            
+            {isAzul ? (
+              <>
+                <Bar 
+                  dataKey="demandaMedidaForaPonta" 
+                  fill="#8884d8" 
+                  name="Demanda Medida Fora Ponta"
+                />
+                <Bar
+                  dataKey="demandaMedidaPonta"
+                  fill="#82ca9d"
+                  name="Demanda Medida Ponta"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="demandaContratadaForaPonta"
+                  stroke="#ff7300"
+                  name="Demanda Contratada Fora Ponta"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="demandaContratadaPonta"
+                  stroke="#ff0000"
+                  name="Demanda Contratada Ponta"
+                />
+              </>
+            ) : (
+              <>
+                <Bar 
+                  dataKey="demandaMedidaForaPonta" 
+                  fill="#8884d8" 
+                  name="Demanda Medida"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="demandaContratada"
+                  stroke="#ff7300"
+                  name="Demanda Contratada"
+                />
+              </>
+            )}
           </ComposedChart>
         </ResponsiveContainer>
       </CardContent>

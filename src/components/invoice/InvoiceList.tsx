@@ -8,6 +8,7 @@ import { Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useData } from "@/contexts/DataContext";
+import { Invoice } from "@/contexts/types";
 import { toast } from "sonner";
 import { InvoiceTableHeader } from "./InvoiceList/TableHeader";
 import { TableActions } from "./InvoiceList/TableActions";

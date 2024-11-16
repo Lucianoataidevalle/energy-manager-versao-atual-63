@@ -72,7 +72,9 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
           demandaUltrapassagemPonta: 0,
           demandaContratada: 0,
           demandaContratadaPonta: 0,
-          demandaContratadaForaPonta: 0
+          demandaContratadaForaPonta: 0,
+          totalDemandaForaPonta: 0,
+          totalDemandaPonta: 0
         };
       }
 
@@ -88,15 +90,20 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
         ? calculateDemandaUltrapassagem(invoice?.demandaMedidaForaPonta || 0, demandaContratada)
         : 0;
 
+      const demandaMedidaForaPonta = (invoice?.demandaMedidaForaPonta || 0) - (modalidadeTarifaria === "Verde" ? demandaUltrapassagemVerde : demandaUltrapassagemForaPonta);
+      const demandaMedidaPonta = (invoice?.demandaMedidaPonta || 0) - demandaUltrapassagemPonta;
+
       return {
         mes: format(monthDate, "MMM/yy", { locale: ptBR }),
-        demandaMedidaForaPonta: (invoice?.demandaMedidaForaPonta || 0) - (modalidadeTarifaria === "Verde" ? demandaUltrapassagemVerde : demandaUltrapassagemForaPonta),
-        demandaMedidaPonta: (invoice?.demandaMedidaPonta || 0) - demandaUltrapassagemPonta,
+        demandaMedidaForaPonta,
+        demandaMedidaPonta,
         demandaUltrapassagemForaPonta: modalidadeTarifaria === "Verde" ? demandaUltrapassagemVerde : demandaUltrapassagemForaPonta,
         demandaUltrapassagemPonta,
         demandaContratada: modalidadeTarifaria === "Verde" ? demandaContratada : 0,
         demandaContratadaPonta: modalidadeTarifaria === "Azul" ? demandaContratadaPonta : 0,
-        demandaContratadaForaPonta: modalidadeTarifaria === "Azul" ? demandaContratadaForaPonta : 0
+        demandaContratadaForaPonta: modalidadeTarifaria === "Azul" ? demandaContratadaForaPonta : 0,
+        totalDemandaForaPonta: demandaMedidaForaPonta + (modalidadeTarifaria === "Verde" ? demandaUltrapassagemVerde : demandaUltrapassagemForaPonta),
+        totalDemandaPonta: demandaMedidaPonta + demandaUltrapassagemPonta
       };
     });
   };
@@ -116,11 +123,32 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
             <YAxis />
-            <Tooltip />
+            <Tooltip 
+              formatter={(value: any, name: string) => {
+                if (name.includes("Medida")) {
+                  const type = name.includes("Ponta") ? "totalDemandaPonta" : "totalDemandaForaPonta";
+                  const total = chartData.find(item => item.mes === (value as any)?.payload?.mes)?.[type] || 0;
+                  return [total.toFixed(2), name];
+                }
+                return [value, name];
+              }}
+            />
             <Legend />
             
             {isAzul ? (
               <>
+                <Line
+                  type="monotone"
+                  dataKey="demandaContratadaForaPonta"
+                  stroke="#ff7300"
+                  name="Demanda Contratada Fora Ponta"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="demandaContratadaPonta"
+                  stroke="#ff0000"
+                  name="Demanda Contratada Ponta"
+                />
                 <Bar 
                   dataKey="demandaMedidaForaPonta" 
                   stackId="foraPonta"
@@ -149,21 +177,15 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   name="Demanda de Ultrapassagem Ponta"
                   barSize={20}
                 />
-                <Line
-                  type="monotone"
-                  dataKey="demandaContratadaForaPonta"
-                  stroke="#ff7300"
-                  name="Demanda Contratada Fora Ponta"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="demandaContratadaPonta"
-                  stroke="#ff0000"
-                  name="Demanda Contratada Ponta"
-                />
               </>
             ) : (
               <>
+                <Line
+                  type="monotone"
+                  dataKey="demandaContratada"
+                  stroke="#ff7300"
+                  name="Demanda Contratada"
+                />
                 <Bar 
                   dataKey="demandaMedidaForaPonta" 
                   stackId="demanda"
@@ -177,12 +199,6 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   fill="#483d8b" 
                   name="Demanda de Ultrapassagem"
                   barSize={20}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="demandaContratada"
-                  stroke="#ff7300"
-                  name="Demanda Contratada"
                 />
               </>
             )}

@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  LabelList,
 } from "recharts";
 import { useData } from "@/contexts/DataContext";
 import { format, subMonths, parse, isValid } from "date-fns";
@@ -67,6 +68,21 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
 
   const chartData = getLast12MonthsData();
 
+  const renderCustomizedLabel = (props: any) => {
+    const { x, y, width, value } = props;
+    return (
+      <text 
+        x={x + width / 2} 
+        y={y - 10} 
+        fill="#666" 
+        textAnchor="middle"
+        fontSize={12}
+      >
+        {value}
+      </text>
+    );
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -74,39 +90,40 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={270}>
-          <BarChart data={chartData} barSize={30}>
+          <BarChart 
+            data={chartData} 
+            barSize={30}
+            stackOffset="none"
+          >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
             <YAxis />
             <Tooltip />
-            <Legend />
+            <Legend 
+              payload={[
+                { value: 'Consumo Fora Ponta', type: 'rect', color: '#82ca9d' },
+                { value: 'Consumo Ponta', type: 'rect', color: '#8884d8' },
+                { value: 'Consumo Total', type: 'rect', color: '#666' }
+              ]}
+            />
+            <Bar 
+              dataKey="foraPonta" 
+              stackId="a" 
+              fill="#82ca9d" 
+              name="Consumo Fora Ponta"
+            />
             <Bar 
               dataKey="ponta" 
               stackId="a" 
               fill="#8884d8" 
               name="Consumo Ponta"
-              label={(props) => {
-                const { x, y, width, value, payload } = props;
-                if (!payload) return null;
-                return (
-                  <text 
-                    x={x + width / 2} 
-                    y={y - 10} 
-                    fill="#666" 
-                    textAnchor="middle"
-                    fontSize={12}
-                  >
-                    {payload.total}
-                  </text>
-                );
-              }}
-            />
-            <Bar
-              dataKey="foraPonta"
-              stackId="a"
-              fill="#82ca9d"
-              name="Consumo Fora Ponta"
-            />
+            >
+              <LabelList 
+                dataKey="total" 
+                position="top" 
+                content={renderCustomizedLabel}
+              />
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

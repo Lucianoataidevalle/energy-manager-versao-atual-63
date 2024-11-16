@@ -23,6 +23,10 @@ interface ConsumptionChartProps {
 const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: ConsumptionChartProps) => {
   const { invoices } = useData();
 
+  const formatNumber = (value: number) => {
+    return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
   const getLast12MonthsData = () => {
     const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
     if (!isValid(selectedDate)) {
@@ -77,10 +81,30 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
         fill="#666" 
         textAnchor="middle"
         fontSize={12}
+        fontWeight="bold"
       >
-        {value}
+        {formatNumber(value)}
       </text>
     );
+  };
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-2 border border-gray-200 rounded shadow">
+          <p className="text-sm font-semibold">{label}</p>
+          {payload.map((entry: any, index: number) => (
+            <p key={index} className="text-sm" style={{ color: entry.color }}>
+              {entry.name}: {formatNumber(entry.value)}
+            </p>
+          ))}
+          <p className="text-sm font-semibold">
+            Consumo Total: {formatNumber(payload[0].payload.total)}
+          </p>
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
@@ -97,8 +121,8 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
-            <YAxis />
-            <Tooltip />
+            <YAxis tickFormatter={formatNumber} />
+            <Tooltip content={<CustomTooltip />} />
             <Legend 
               payload={[
                 { value: 'Consumo Fora Ponta', type: 'rect', color: '#82ca9d' },

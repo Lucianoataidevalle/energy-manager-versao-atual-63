@@ -21,6 +21,10 @@ interface BillingChartProps {
 const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingChartProps) => {
   const { invoices } = useData();
 
+  const formatNumber = (value: number) => {
+    return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
   const getLast12MonthsData = () => {
     const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
     if (!isValid(selectedDate)) {
@@ -58,6 +62,22 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
 
   const chartData = getLast12MonthsData();
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-2 border border-gray-200 rounded shadow">
+          <p className="text-sm font-semibold">{label}</p>
+          {payload.map((entry: any) => (
+            <p key={entry.name} className="text-sm" style={{ color: entry.color }}>
+              {entry.name}: R$ {formatNumber(entry.value)}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -68,16 +88,18 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
           <BarChart data={chartData} barSize={30}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
-            <YAxis />
-            <Tooltip />
+            <YAxis tickFormatter={(value) => `R$ ${formatNumber(value)}`} />
+            <Tooltip content={<CustomTooltip />} />
             <Bar
               dataKey="valor"
               fill="#8884d8"
               name="Valor Total"
               label={{
                 position: "top",
-                formatter: (value: number) =>
-                  `R$${value.toLocaleString("pt-BR")}`,
+                formatter: (value: number) => `R$ ${formatNumber(value)}`,
+                fontSize: 12,
+                fontWeight: "bold",
+                fill: "#666"
               }}
             />
           </BarChart>

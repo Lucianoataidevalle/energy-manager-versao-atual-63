@@ -40,6 +40,10 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
     return medida > limite ? medida - contratada : 0;
   };
 
+  const formatNumber = (value: number) => {
+    return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
   const getLast12MonthsData = () => {
     const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
     if (!isValid(selectedDate)) {
@@ -90,8 +94,8 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
 
       return {
         mes: format(monthDate, "MMM/yy", { locale: ptBR }),
-        demandaMedidaForaPonta: (invoice?.demandaMedidaForaPonta || 0) - (modalidadeTarifaria === "Verde" ? demandaUltrapassagemVerde : demandaUltrapassagemForaPonta),
-        demandaMedidaPonta: (invoice?.demandaMedidaPonta || 0) - demandaUltrapassagemPonta,
+        demandaMedidaForaPonta: (invoice?.demandaMedidaForaPonta || 0),
+        demandaMedidaPonta: (invoice?.demandaMedidaPonta || 0),
         demandaUltrapassagemForaPonta: modalidadeTarifaria === "Verde" ? demandaUltrapassagemVerde : demandaUltrapassagemForaPonta,
         demandaUltrapassagemPonta,
         demandaContratada: modalidadeTarifaria === "Verde" ? demandaContratada : 0,
@@ -105,6 +109,22 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
   const { modalidadeTarifaria } = getContractedDemand();
   const isAzul = modalidadeTarifaria === "Azul";
 
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length > 0) {
+      return (
+        <div className="bg-white p-2 border border-gray-200 rounded shadow">
+          {payload.map((entry: any, index: number) => (
+            <div key={index} className="text-sm">
+              <span style={{ color: entry.color }}>{entry.name}: </span>
+              <span>{formatNumber(entry.value)}</span>
+            </div>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -116,11 +136,23 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
             <YAxis />
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             <Legend />
             
             {isAzul ? (
               <>
+                <Line
+                  type="monotone"
+                  dataKey="demandaContratadaForaPonta"
+                  stroke="#ff7300"
+                  name="Demanda Contratada Fora Ponta"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="demandaContratadaPonta"
+                  stroke="#ff0000"
+                  name="Demanda Contratada Ponta"
+                />
                 <Bar 
                   dataKey="demandaMedidaForaPonta" 
                   stackId="foraPonta"
@@ -149,21 +181,15 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   name="Demanda de Ultrapassagem Ponta"
                   barSize={20}
                 />
-                <Line
-                  type="monotone"
-                  dataKey="demandaContratadaForaPonta"
-                  stroke="#ff7300"
-                  name="Demanda Contratada Fora Ponta"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="demandaContratadaPonta"
-                  stroke="#ff0000"
-                  name="Demanda Contratada Ponta"
-                />
               </>
             ) : (
               <>
+                <Line
+                  type="monotone"
+                  dataKey="demandaContratada"
+                  stroke="#ff7300"
+                  name="Demanda Contratada"
+                />
                 <Bar 
                   dataKey="demandaMedidaForaPonta" 
                   stackId="demanda"
@@ -177,12 +203,6 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   fill="#483d8b" 
                   name="Demanda de Ultrapassagem"
                   barSize={20}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="demandaContratada"
-                  stroke="#ff7300"
-                  name="Demanda Contratada"
                 />
               </>
             )}

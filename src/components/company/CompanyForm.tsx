@@ -37,6 +37,12 @@ const CompanyForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.razaoSocial || !formData.cnpj || !formData.endereco) {
+      toast.error("Todos os campos são obrigatórios");
+      return;
+    }
+
     try {
       if (!editingCompany) {
         await addCompany({
@@ -53,6 +59,11 @@ const CompanyForm = () => {
   };
 
   const handleUpdate = async () => {
+    if (!formData.razaoSocial || !formData.cnpj || !formData.endereco) {
+      toast.error("Todos os campos são obrigatórios");
+      return;
+    }
+
     try {
       if (editingCompany?.id) {
         await editCompany(editingCompany.id, formData);
@@ -81,6 +92,7 @@ const CompanyForm = () => {
                 setFormData({ ...formData, razaoSocial: e.target.value })
               }
               placeholder="Digite o nome da empresa"
+              required
             />
           </div>
           <div className="space-y-2">
@@ -97,6 +109,7 @@ const CompanyForm = () => {
                   id="cnpj"
                   placeholder="00.000.000/0000-00"
                   type="text"
+                  required
                 />
               )}
             </InputMask>

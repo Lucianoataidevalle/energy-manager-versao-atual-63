@@ -18,8 +18,8 @@ export const InvoiceTableHeader = ({ isGroupB }: InvoiceTableHeaderProps) => {
           <>
             <TableHead className="text-center">Consumo Ponta (kWh)</TableHead>
             <TableHead className="text-center">Consumo Total (kWh)</TableHead>
-            <TableHead className="text-center">Demanda Fora Ponta (kW)</TableHead>
-            <TableHead className="text-center">Demanda Ponta (kW)</TableHead>
+            <TableHead className="text-center">Demanda Medida Fora Ponta (kW)</TableHead>
+            <TableHead className="text-center">Demanda Medida Ponta (kW)</TableHead>
             <TableHead className="text-center">Demanda de Ultrapassagem Fora Ponta (kW)</TableHead>
             <TableHead className="text-center">Demanda de Ultrapassagem Ponta (kW)</TableHead>
             <TableHead className="text-center">Energia Reativa Fora Ponta (kVAr)</TableHead>

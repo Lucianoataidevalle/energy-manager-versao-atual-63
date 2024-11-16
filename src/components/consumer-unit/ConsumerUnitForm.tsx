@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const ConsumerUnitForm = () => {
-  const { addConsumerUnit, editingConsumerUnit, editConsumerUnit } = useData();
+  const { companies, addConsumerUnit, editingConsumerUnit, editConsumerUnit } = useData();
   const [formData, setFormData] = useState({
     empresa: "",
     nome: "",
@@ -78,12 +78,24 @@ const ConsumerUnitForm = () => {
           <div className="grid gap-4">
             <div className="space-y-2">
               <Label htmlFor="empresa">Empresa</Label>
-              <Input
-                id="empresa"
+              <Select
                 value={formData.empresa}
-                onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
-                required
-              />
+                onValueChange={(value) => setFormData({ ...formData, empresa: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione uma empresa" />
+                </SelectTrigger>
+                <SelectContent>
+                  {companies.map((company) => (
+                    <SelectItem
+                      key={company.id}
+                      value={company.razaoSocial}
+                    >
+                      {company.razaoSocial}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">

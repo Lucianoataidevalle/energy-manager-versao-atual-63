@@ -34,7 +34,12 @@ const ConsumerUnitList = () => {
         </>
       );
     }
-    return <TableCell>{unit.demandaContratada}</TableCell>;
+    return (
+      <>
+        <TableCell>-</TableCell>
+        <TableCell>{unit.demandaContratada}</TableCell>
+      </>
+    );
   };
 
   return (
@@ -50,14 +55,8 @@ const ConsumerUnitList = () => {
               <TableHead>Nome</TableHead>
               <TableHead>Número UC</TableHead>
               <TableHead>Endereço</TableHead>
-              {consumerUnits.some(unit => unit.modalidadeTarifaria === "Azul") ? (
-                <>
-                  <TableHead>Demanda Contratada Ponta (kW)</TableHead>
-                  <TableHead>Demanda Contratada Fora Ponta (kW)</TableHead>
-                </>
-              ) : (
-                <TableHead>Demanda Contratada (kW)</TableHead>
-              )}
+              <TableHead>Demanda Contratada Ponta (kW)</TableHead>
+              <TableHead>Demanda Contratada Fora Ponta (kW)</TableHead>
               <TableHead>Grupo/Subgrupo</TableHead>
               <TableHead>Modalidade Tarifária</TableHead>
               <TableHead>Distribuidora</TableHead>

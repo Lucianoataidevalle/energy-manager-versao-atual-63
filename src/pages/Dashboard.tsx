@@ -93,7 +93,7 @@ const Dashboard = () => {
             selectedCompany={selectedCompany}
             selectedUnit={selectedUnit}
           />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
+          <div className="grid grid-cols-1 gap-4 mt-8">
             {["consumption", "demand", "billing", "reactiveEnergy", "reactiveDemand", "fines"].map(
               (chartId) => (
                 <div key={chartId} className="w-full">

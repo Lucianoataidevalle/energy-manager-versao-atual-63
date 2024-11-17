@@ -10,6 +10,7 @@ import ReactiveDemandChart from "@/components/dashboard/ReactiveDemandChart";
 import FinesChart from "@/components/dashboard/FinesChart";
 import { useData } from "@/contexts/DataContext";
 import { format, subMonths } from "date-fns";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const Dashboard = () => {
   const { companies, consumerUnits } = useData();
@@ -24,6 +25,8 @@ const Dashboard = () => {
     "reactiveDemand",
     "fines",
   ]);
+
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     if (companies.length > 0 && !selectedCompany) {
@@ -52,56 +55,27 @@ const Dashboard = () => {
   const renderChart = (chartId: string) => {
     if (!visibleCharts.includes(chartId)) return null;
 
+    const commonProps = {
+      selectedCompany,
+      selectedUnit,
+      selectedMonth,
+      monthsToShow: isMobile ? 3 : 12,
+    };
+
     const charts = {
-      consumption: (
-        <ConsumptionChart
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-          selectedMonth={selectedMonth}
-        />
-      ),
-      demand: (
-        <DemandChart
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-          selectedMonth={selectedMonth}
-        />
-      ),
-      billing: (
-        <BillingChart
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-          selectedMonth={selectedMonth}
-        />
-      ),
-      reactiveEnergy: (
-        <ReactiveEnergyChart
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-          selectedMonth={selectedMonth}
-        />
-      ),
-      reactiveDemand: (
-        <ReactiveDemandChart
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-          selectedMonth={selectedMonth}
-        />
-      ),
-      fines: (
-        <FinesChart
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-          selectedMonth={selectedMonth}
-        />
-      ),
+      consumption: <ConsumptionChart {...commonProps} />,
+      demand: <DemandChart {...commonProps} />,
+      billing: <BillingChart {...commonProps} />,
+      reactiveEnergy: <ReactiveEnergyChart {...commonProps} />,
+      reactiveDemand: <ReactiveDemandChart {...commonProps} />,
+      fines: <FinesChart {...commonProps} />,
     };
 
     return charts[chartId as keyof typeof charts];
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 md:ml-64">
         <DashboardHeader
@@ -114,15 +88,18 @@ const Dashboard = () => {
           visibleCharts={visibleCharts}
           onVisibleChartsChange={setVisibleCharts}
         />
-        <div className="p-8 mt-48">
+        <div className="p-4 md:p-8 mt-[280px] md:mt-[220px]">
           <DashboardSummary
             selectedCompany={selectedCompany}
             selectedUnit={selectedUnit}
           />
-
-          <div className="space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
             {["consumption", "demand", "billing", "reactiveEnergy", "reactiveDemand", "fines"].map(
-              (chartId) => renderChart(chartId)
+              (chartId) => (
+                <div key={chartId} className="w-full">
+                  {renderChart(chartId)}
+                </div>
+              )
             )}
           </div>
         </div>

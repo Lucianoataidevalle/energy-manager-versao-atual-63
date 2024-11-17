@@ -16,15 +16,9 @@ interface BillingChartProps {
   selectedCompany: string;
   selectedUnit: string;
   selectedMonth: string;
-  monthsToShow?: number;
 }
 
-const BillingChart = ({ 
-  selectedCompany, 
-  selectedUnit, 
-  selectedMonth,
-  monthsToShow = 12 
-}: BillingChartProps) => {
+const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingChartProps) => {
   const { invoices } = useData();
 
   const formatNumber = (value: number) => {
@@ -38,7 +32,7 @@ const BillingChart = ({
       return [];
     }
 
-    const months = Array.from({ length: monthsToShow }, (_, i) => {
+    const months = Array.from({ length: 12 }, (_, i) => {
       const date = subMonths(selectedDate, i);
       return format(date, 'yyyy-MM');
     }).reverse();
@@ -90,28 +84,26 @@ const BillingChart = ({
         <CardTitle className="text-lg">Custo de Faturas</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="w-full h-[270px] md:h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} barSize={30}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="mes" />
-              <YAxis tickFormatter={(value) => `R$ ${formatNumber(value)}`} />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar
-                dataKey="valor"
-                fill="#8884d8"
-                name="Valor Total"
-                label={{
-                  position: "top",
-                  formatter: (value: number) => `R$ ${formatNumber(value)}`,
-                  fontSize: 12,
-                  fontWeight: "bold",
-                  fill: "#666"
-                }}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        <ResponsiveContainer width="100%" height={270}>
+          <BarChart data={chartData} barSize={30}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="mes" />
+            <YAxis tickFormatter={(value) => `R$ ${formatNumber(value)}`} />
+            <Tooltip content={<CustomTooltip />} />
+            <Bar
+              dataKey="valor"
+              fill="#8884d8"
+              name="Valor Total"
+              label={{
+                position: "top",
+                formatter: (value: number) => `R$ ${formatNumber(value)}`,
+                fontSize: 12,
+                fontWeight: "bold",
+                fill: "#666"
+              }}
+            />
+          </BarChart>
+        </ResponsiveContainer>
       </CardContent>
     </Card>
   );

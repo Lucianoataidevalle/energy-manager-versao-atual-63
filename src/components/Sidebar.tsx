@@ -118,27 +118,23 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:flex md:fixed md:inset-y-0 md:left-0 md:z-50 md:w-64 bg-gray-900 text-white p-4">
+      <div className="hidden md:fixed md:inset-y-0 md:left-0 md:z-50 md:w-64 md:flex md:flex-col bg-gray-900 text-white p-4">
         <SidebarContent user={user} handleLogout={handleLogout} />
-      </aside>
+      </div>
 
-      {/* Mobile Header with Menu */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-gray-900 text-white p-4 flex items-center">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-gray-900 text-white p-4">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-white">
+            <Button variant="ghost" size="icon">
               <Menu className="h-6 w-6" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-64 p-0 bg-gray-900 text-white border-r-0">
+          <SheetContent side="left" className="w-64 p-0 bg-gray-900 text-white">
             <SidebarContent user={user} handleLogout={handleLogout} />
           </SheetContent>
         </Sheet>
-        <h1 className="ml-4 text-lg font-bold">Sistema de Gestão de Energia</h1>
       </div>
 
-      {/* Mobile Spacer */}
       <div className="md:hidden h-16" />
     </>
   );

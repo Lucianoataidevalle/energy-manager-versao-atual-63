@@ -47,6 +47,7 @@ const Dashboard = () => {
   }, [selectedCompany, consumerUnits]);
 
   const handleVisibleChartsChange = (newCharts: string[]) => {
+    // Maintain the original order of charts when re-adding them
     const orderedCharts = CHART_ORDER.filter(chartId => newCharts.includes(chartId));
     setVisibleCharts(orderedCharts);
   };
@@ -76,34 +77,30 @@ const Dashboard = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 md:ml-64">
-        <div className="flex flex-col">
-          <div className="md:sticky md:top-0 bg-background z-40">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h1 className="text-2xl font-bold">Dashboard</h1>
-            </div>
-            <DashboardHeader
+        <div className="md:sticky md:top-0 bg-background z-40">
+          <h1 className="text-2xl font-bold p-4 bg-background border-b">Dashboard</h1>
+          <DashboardHeader
+            selectedCompany={selectedCompany}
+            selectedUnit={selectedUnit}
+            selectedMonth={selectedMonth}
+            onCompanyChange={setSelectedCompany}
+            onUnitChange={setSelectedUnit}
+            onMonthChange={setSelectedMonth}
+            visibleCharts={visibleCharts}
+            onVisibleChartsChange={handleVisibleChartsChange}
+          />
+        </div>
+        <div className="p-4">
+          <div className="grid grid-cols-1 gap-4">
+            <DashboardSummary
               selectedCompany={selectedCompany}
               selectedUnit={selectedUnit}
-              selectedMonth={selectedMonth}
-              onCompanyChange={setSelectedCompany}
-              onUnitChange={setSelectedUnit}
-              onMonthChange={setSelectedMonth}
-              visibleCharts={visibleCharts}
-              onVisibleChartsChange={handleVisibleChartsChange}
             />
-          </div>
-          <div className="p-4">
-            <div className="grid grid-cols-1 gap-4">
-              <DashboardSummary
-                selectedCompany={selectedCompany}
-                selectedUnit={selectedUnit}
-              />
-              {visibleCharts.map((chartId) => (
-                <div key={chartId} className="w-full">
-                  {renderChart(chartId)}
-                </div>
-              ))}
-            </div>
+            {visibleCharts.map((chartId) => (
+              <div key={chartId} className="w-full">
+                {renderChart(chartId)}
+              </div>
+            ))}
           </div>
         </div>
       </div>

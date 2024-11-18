@@ -9,9 +9,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useData } from "@/contexts/DataContext";
-import { format, parse, isValid } from "date-fns";
+import { format, subMonths, parse, isValid } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useChartData } from "@/hooks/useChartData";
 
 interface FinesChartProps {
   selectedCompany: string;
@@ -21,13 +20,23 @@ interface FinesChartProps {
 
 const FinesChart = ({ selectedCompany, selectedUnit, selectedMonth }: FinesChartProps) => {
   const { invoices } = useData();
-  const { months } = useChartData(selectedMonth, invoices);
 
   const formatNumber = (value: number) => {
     return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
-  const getChartData = () => {
+  const getLast12MonthsData = () => {
+    const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
+    if (!isValid(selectedDate)) {
+      console.error('Invalid date:', selectedMonth);
+      return [];
+    }
+
+    const months = Array.from({ length: 12 }, (_, i) => {
+      const date = subMonths(selectedDate, i);
+      return format(date, 'yyyy-MM');
+    }).reverse();
+
     return months.map(month => {
       const invoice = invoices.find(inv => 
         inv.empresa === selectedCompany && 
@@ -51,7 +60,7 @@ const FinesChart = ({ selectedCompany, selectedUnit, selectedMonth }: FinesChart
     });
   };
 
-  const chartData = getChartData();
+  const chartData = getLast12MonthsData();
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {

@@ -74,8 +74,21 @@ const DashboardHeader = ({
   };
 
   return (
-    <div className="bg-background">
+    <div className="bg-background border-b">
       <div className="p-4 flex flex-col space-y-4">
+        <div className="flex justify-between items-center">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-64">
+              {/* Menu content */}
+            </SheetContent>
+          </Sheet>
+        </div>
+
         <div className="flex flex-col space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">

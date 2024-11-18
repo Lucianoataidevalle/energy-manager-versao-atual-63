@@ -11,6 +11,15 @@ import FinesChart from "@/components/dashboard/FinesChart";
 import { useData } from "@/contexts/DataContext";
 import { format, subMonths } from "date-fns";
 
+const CHART_ORDER = [
+  "consumption",
+  "demand",
+  "billing",
+  "reactiveEnergy",
+  "reactiveDemand",
+  "fines"
+];
+
 const Dashboard = () => {
   const { companies, consumerUnits } = useData();
   const [selectedCompany, setSelectedCompany] = useState("");
@@ -18,14 +27,7 @@ const Dashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(
     format(subMonths(new Date(), 1), "yyyy-MM")
   );
-  const [visibleCharts, setVisibleCharts] = useState([
-    "consumption",
-    "demand",
-    "billing",
-    "reactiveEnergy",
-    "reactiveDemand",
-    "fines",
-  ]);
+  const [visibleCharts, setVisibleCharts] = useState(CHART_ORDER);
 
   useEffect(() => {
     if (companies.length > 0 && !selectedCompany) {
@@ -43,6 +45,12 @@ const Dashboard = () => {
       }
     }
   }, [selectedCompany, consumerUnits]);
+
+  const handleVisibleChartsChange = (newCharts: string[]) => {
+    // Maintain the original order of charts when re-adding them
+    const orderedCharts = CHART_ORDER.filter(chartId => newCharts.includes(chartId));
+    setVisibleCharts(orderedCharts);
+  };
 
   const renderChart = (chartId: string) => {
     if (!visibleCharts.includes(chartId)) return null;
@@ -69,8 +77,8 @@ const Dashboard = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 md:ml-64">
-        <h1 className="text-2xl font-bold p-4 bg-background border-b">Dashboard</h1>
-        <div className="overflow-auto">
+        <div className="md:sticky md:top-0 bg-background z-40">
+          <h1 className="text-2xl font-bold p-4 bg-background border-b">Dashboard</h1>
           <DashboardHeader
             selectedCompany={selectedCompany}
             selectedUnit={selectedUnit}
@@ -79,20 +87,20 @@ const Dashboard = () => {
             onUnitChange={setSelectedUnit}
             onMonthChange={setSelectedMonth}
             visibleCharts={visibleCharts}
-            onVisibleChartsChange={setVisibleCharts}
+            onVisibleChartsChange={handleVisibleChartsChange}
           />
-          <div className="p-4">
-            <div className="grid grid-cols-1 gap-4">
-              <DashboardSummary
-                selectedCompany={selectedCompany}
-                selectedUnit={selectedUnit}
-              />
-              {visibleCharts.map((chartId) => (
-                <div key={chartId} className="w-full">
-                  {renderChart(chartId)}
-                </div>
-              ))}
-            </div>
+        </div>
+        <div className="p-4">
+          <div className="grid grid-cols-1 gap-4">
+            <DashboardSummary
+              selectedCompany={selectedCompany}
+              selectedUnit={selectedUnit}
+            />
+            {visibleCharts.map((chartId) => (
+              <div key={chartId} className="w-full">
+                {renderChart(chartId)}
+              </div>
+            ))}
           </div>
         </div>
       </div>

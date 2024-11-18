@@ -11,7 +11,7 @@ import {
   LabelList,
 } from "recharts";
 import { useData } from "@/contexts/DataContext";
-import { getLast3Months, formatMonthYear, parseMonthString } from "@/utils/dateUtils";
+import { formatMonthYear, parseMonthString, getMonthsByScreenSize } from "@/utils/dateUtils";
 
 interface ConsumptionChartProps {
   selectedCompany: string;
@@ -27,7 +27,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
   };
 
   const getChartData = () => {
-    const months = getLast3Months(selectedMonth);
+    const months = getMonthsByScreenSize(selectedMonth);
 
     return months.map(month => {
       const invoice = invoices.find(inv => 

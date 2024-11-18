@@ -33,10 +33,10 @@ export const MonthSelector = ({ value, onChange }: MonthSelectorProps) => {
   const months = getLastThreeYearsMonths();
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <label className="text-sm font-medium">Mês de Referência</label>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger>
+        <SelectTrigger className="h-8">
           <SelectValue placeholder="Selecione o mês" />
         </SelectTrigger>
         <SelectContent>

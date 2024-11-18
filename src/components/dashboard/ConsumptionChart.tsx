@@ -39,7 +39,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
       // Ensure values are numbers, defaulting to 0 if undefined
       const ponta = Number(invoice?.consumoPonta || 0);
       const foraPonta = Number(invoice?.consumoForaPonta || 0);
-      const total = Number(ponta + foraPonta);
+      const total = ponta + foraPonta;
 
       return {
         mes: formatMonthYear(parseMonthString(month)),
@@ -103,7 +103,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
               <LabelList 
                 dataKey="total" 
                 position="top" 
-                content={({ x, y, width, value }) => (
+                content={({ x, y, width, value }: any) => (
                   <text 
                     x={x + width / 2} 
                     y={y - 10} 

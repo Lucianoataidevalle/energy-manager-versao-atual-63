@@ -68,7 +68,10 @@ const Dashboard = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <div className="flex-1 md:ml-64">
+      <div className="flex-1 md:ml-64 overflow-auto">
+        <div className="sticky top-0 bg-background z-40 border-b">
+          <h1 className="text-2xl font-bold p-4">Dashboard</h1>
+        </div>
         <DashboardHeader
           selectedCompany={selectedCompany}
           selectedUnit={selectedUnit}

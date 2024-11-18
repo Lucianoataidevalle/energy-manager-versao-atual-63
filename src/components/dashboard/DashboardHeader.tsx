@@ -74,10 +74,9 @@ const DashboardHeader = ({
   };
 
   return (
-    <div className="sticky top-0 bg-background z-40 border-b">
+    <div className="bg-background border-b">
       <div className="p-4 flex flex-col space-y-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">

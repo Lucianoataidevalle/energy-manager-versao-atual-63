@@ -36,8 +36,9 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
         inv.mes === month
       );
 
-      const ponta = invoice?.consumoPonta || 0;
-      const foraPonta = invoice?.consumoForaPonta || 0;
+      // Ensure values are numbers, defaulting to 0 if undefined
+      const ponta = Number(invoice?.consumoPonta || 0);
+      const foraPonta = Number(invoice?.consumoForaPonta || 0);
       const total = ponta + foraPonta;
 
       return {
@@ -111,7 +112,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
                     fontSize={12}
                     fontWeight="bold"
                   >
-                    {formatNumber(value as number)}
+                    {formatNumber(Number(value))}
                   </text>
                 )}
               />

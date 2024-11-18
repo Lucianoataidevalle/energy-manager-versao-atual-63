@@ -15,7 +15,7 @@ const Dashboard = () => {
   const { companies, consumerUnits } = useData();
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedUnit, setSelectedUnit] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState(format(subMonths(new Date(), 1), "yyyy-MM"));
   const [visibleCharts, setVisibleCharts] = useState([
     "consumption",
     "demand",
@@ -42,62 +42,25 @@ const Dashboard = () => {
     }
   }, [selectedCompany, consumerUnits]);
 
-  useEffect(() => {
-    if (!selectedMonth) {
-      const previousMonth = format(subMonths(new Date(), 1), "yyyy-MM");
-      setSelectedMonth(previousMonth);
-    }
-  }, []);
-
   const renderChart = (chartId: string) => {
     if (!visibleCharts.includes(chartId)) return null;
 
-    const charts = {
-      consumption: (
-        <ConsumptionChart
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-          selectedMonth={selectedMonth}
-        />
-      ),
-      demand: (
-        <DemandChart
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-          selectedMonth={selectedMonth}
-        />
-      ),
-      billing: (
-        <BillingChart
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-          selectedMonth={selectedMonth}
-        />
-      ),
-      reactiveEnergy: (
-        <ReactiveEnergyChart
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-          selectedMonth={selectedMonth}
-        />
-      ),
-      reactiveDemand: (
-        <ReactiveDemandChart
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-          selectedMonth={selectedMonth}
-        />
-      ),
-      fines: (
-        <FinesChart
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-          selectedMonth={selectedMonth}
-        />
-      ),
+    const chartProps = {
+      selectedCompany,
+      selectedUnit,
+      selectedMonth,
     };
 
-    return charts[chartId as keyof typeof charts];
+    const charts: Record<string, JSX.Element | null> = {
+      consumption: <ConsumptionChart {...chartProps} />,
+      demand: <DemandChart {...chartProps} />,
+      billing: <BillingChart {...chartProps} />,
+      reactiveEnergy: <ReactiveEnergyChart {...chartProps} />,
+      reactiveDemand: <ReactiveDemandChart {...chartProps} />,
+      fines: <FinesChart {...chartProps} />,
+    };
+
+    return charts[chartId] || null;
   };
 
   return (
@@ -120,13 +83,11 @@ const Dashboard = () => {
               selectedCompany={selectedCompany}
               selectedUnit={selectedUnit}
             />
-            {["consumption", "demand", "billing", "reactiveEnergy", "reactiveDemand", "fines"].map(
-              (chartId) => (
-                <div key={chartId} className="w-full">
-                  {renderChart(chartId)}
-                </div>
-              )
-            )}
+            {Object.keys(visibleCharts).map((chartId) => (
+              <div key={chartId} className="w-full">
+                {renderChart(chartId)}
+              </div>
+            ))}
           </div>
         </div>
       </div>

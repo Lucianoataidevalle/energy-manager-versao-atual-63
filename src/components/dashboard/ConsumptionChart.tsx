@@ -11,8 +11,7 @@ import {
   LabelList,
 } from "recharts";
 import { useData } from "@/contexts/DataContext";
-import { format, subMonths, parse, isValid } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { getLast3Months, formatMonthYear, parseMonthString } from "@/utils/dateUtils";
 
 interface ConsumptionChartProps {
   selectedCompany: string;
@@ -27,17 +26,8 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
     return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
-  const getLast12MonthsData = () => {
-    const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
-    if (!isValid(selectedDate)) {
-      console.error('Invalid date:', selectedMonth);
-      return [];
-    }
-
-    const months = Array.from({ length: 12 }, (_, i) => {
-      const date = subMonths(selectedDate, i);
-      return format(date, 'yyyy-MM');
-    }).reverse();
+  const getChartData = () => {
+    const months = getLast3Months(selectedMonth);
 
     return months.map(month => {
       const invoice = invoices.find(inv => 
@@ -46,23 +36,12 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
         inv.mes === month
       );
 
-      const monthDate = parse(month, 'yyyy-MM', new Date());
-      if (!isValid(monthDate)) {
-        console.error('Invalid month date:', month);
-        return {
-          mes: month,
-          ponta: 0,
-          foraPonta: 0,
-          total: 0
-        };
-      }
-
       const ponta = invoice?.consumoPonta || 0;
       const foraPonta = invoice?.consumoForaPonta || 0;
       const total = ponta + foraPonta;
 
       return {
-        mes: format(monthDate, "MMM/yy", { locale: ptBR }),
+        mes: formatMonthYear(parseMonthString(month)),
         ponta,
         foraPonta,
         total
@@ -70,23 +49,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
     });
   };
 
-  const chartData = getLast12MonthsData();
-
-  const renderCustomizedLabel = (props: any) => {
-    const { x, y, width, value } = props;
-    return (
-      <text 
-        x={x + width / 2} 
-        y={y - 10} 
-        fill="#666" 
-        textAnchor="middle"
-        fontSize={12}
-        fontWeight="bold"
-      >
-        {formatNumber(value)}
-      </text>
-    );
-  };
+  const chartData = getChartData();
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -117,20 +80,13 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
           <BarChart 
             data={chartData} 
             barSize={30}
-            stackOffset="none"
             margin={{ top: 40, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />
             <YAxis tickFormatter={formatNumber} />
             <Tooltip content={<CustomTooltip />} />
-            <Legend 
-              payload={[
-                { value: 'Consumo Fora Ponta', type: 'rect', color: '#82ca9d' },
-                { value: 'Consumo Ponta', type: 'rect', color: '#8884d8' },
-                { value: 'Consumo Total', type: 'rect', color: '#666' }
-              ]}
-            />
+            <Legend />
             <Bar 
               dataKey="foraPonta" 
               stackId="a" 
@@ -146,7 +102,18 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
               <LabelList 
                 dataKey="total" 
                 position="top" 
-                content={renderCustomizedLabel}
+                content={({ x, y, width, value }) => (
+                  <text 
+                    x={x + width / 2} 
+                    y={y - 10} 
+                    fill="#666" 
+                    textAnchor="middle"
+                    fontSize={12}
+                    fontWeight="bold"
+                  >
+                    {formatNumber(value as number)}
+                  </text>
+                )}
               />
             </Bar>
           </BarChart>

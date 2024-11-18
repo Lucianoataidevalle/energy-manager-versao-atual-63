@@ -75,8 +75,9 @@ const DashboardHeader = ({
 
   return (
     <div className="bg-background border-b">
-      <div className="p-4 flex flex-col space-y-4">
-        <div className="flex justify-between items-center">
+      <div className="p-4">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold">Dashboard</h1>
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
@@ -89,45 +90,43 @@ const DashboardHeader = ({
           </Sheet>
         </div>
 
-        <div className="flex flex-col space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Empresa</label>
-              <Select value={selectedCompany} onValueChange={onCompanyChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione a empresa" />
-                </SelectTrigger>
-                <SelectContent>
-                  {companies.map((company) => (
-                    <SelectItem key={company.id} value={company.razaoSocial}>
-                      {company.razaoSocial}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">UC</label>
-              <Select value={selectedUnit} onValueChange={onUnitChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione a UC" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableUnits.map((unit) => (
-                    <SelectItem key={unit.id} value={unit.nome}>
-                      {unit.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <MonthSelector value={selectedMonth} onChange={onMonthChange} />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="space-y-1">
+            <label className="text-sm font-medium">Empresa</label>
+            <Select value={selectedCompany} onValueChange={onCompanyChange}>
+              <SelectTrigger className="h-9">
+                <SelectValue placeholder="Selecione a empresa" />
+              </SelectTrigger>
+              <SelectContent>
+                {companies.map((company) => (
+                  <SelectItem key={company.id} value={company.razaoSocial}>
+                    {company.razaoSocial}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
+
+          <div className="space-y-1">
+            <label className="text-sm font-medium">UC</label>
+            <Select value={selectedUnit} onValueChange={onUnitChange}>
+              <SelectTrigger className="h-9">
+                <SelectValue placeholder="Selecione a UC" />
+              </SelectTrigger>
+              <SelectContent>
+                {availableUnits.map((unit) => (
+                  <SelectItem key={unit.id} value={unit.nome}>
+                    {unit.nome}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <MonthSelector value={selectedMonth} onChange={onMonthChange} />
         </div>
 
-        <div className="border-t pt-4">
+        <div className="border-t mt-4 pt-4">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
             {AVAILABLE_CHARTS.map((chart) => (
               <div key={chart.id} className="flex items-center space-x-2">

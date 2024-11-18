@@ -101,9 +101,9 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <div className="flex-1 md:ml-64">
+      <div className="flex-1">
         <DashboardHeader
           selectedCompany={selectedCompany}
           selectedUnit={selectedUnit}
@@ -114,15 +114,18 @@ const Dashboard = () => {
           visibleCharts={visibleCharts}
           onVisibleChartsChange={setVisibleCharts}
         />
-        <div className="p-8 mt-48">
-          <DashboardSummary
-            selectedCompany={selectedCompany}
-            selectedUnit={selectedUnit}
-          />
-
-          <div className="space-y-8">
+        <div className="p-4 mt-[280px] md:mt-[240px]">
+          <div className="grid grid-cols-1 gap-4">
+            <DashboardSummary
+              selectedCompany={selectedCompany}
+              selectedUnit={selectedUnit}
+            />
             {["consumption", "demand", "billing", "reactiveEnergy", "reactiveDemand", "fines"].map(
-              (chartId) => renderChart(chartId)
+              (chartId) => (
+                <div key={chartId} className="w-full">
+                  {renderChart(chartId)}
+                </div>
+              )
             )}
           </div>
         </div>

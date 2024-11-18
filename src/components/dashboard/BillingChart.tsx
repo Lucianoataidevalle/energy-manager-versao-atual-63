@@ -84,7 +84,7 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
         <CardTitle className="text-lg">Custo de Faturas</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={189}>
+        <ResponsiveContainer width="100%" height={270}>
           <BarChart data={chartData} barSize={30}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />

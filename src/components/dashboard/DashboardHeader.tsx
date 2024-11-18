@@ -83,7 +83,7 @@ const DashboardHeader = ({
             <div className="space-y-1">
               <label className="text-sm font-medium">Empresa</label>
               <Select value={selectedCompany} onValueChange={onCompanyChange}>
-                <SelectTrigger className="h-6 text-sm">
+                <SelectTrigger className="h-8">
                   <SelectValue placeholder="Selecione a empresa" />
                 </SelectTrigger>
                 <SelectContent>
@@ -99,7 +99,7 @@ const DashboardHeader = ({
             <div className="space-y-1">
               <label className="text-sm font-medium">UC</label>
               <Select value={selectedUnit} onValueChange={onUnitChange}>
-                <SelectTrigger className="h-6 text-sm">
+                <SelectTrigger className="h-8">
                   <SelectValue placeholder="Selecione a UC" />
                 </SelectTrigger>
                 <SelectContent>
@@ -146,7 +146,7 @@ const DashboardHeader = ({
                 </div>
               ))}
             </div>
-            <Button onClick={handleApply} className="whitespace-nowrap h-6 text-sm">
+            <Button onClick={handleApply} className="whitespace-nowrap">
               Aplicar
             </Button>
           </div>

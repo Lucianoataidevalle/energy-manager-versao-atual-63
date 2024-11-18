@@ -14,6 +14,7 @@ interface MonthSelectorProps {
 }
 
 export const MonthSelector = ({ value, onChange }: MonthSelectorProps) => {
+  // Gera array com os últimos 36 meses (3 anos)
   const getLastThreeYearsMonths = () => {
     const months = [];
     const currentDate = new Date();
@@ -35,7 +36,7 @@ export const MonthSelector = ({ value, onChange }: MonthSelectorProps) => {
     <div className="space-y-1">
       <label className="text-sm font-medium">Mês de Referência</label>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="h-6 text-sm">
+        <SelectTrigger className="h-8">
           <SelectValue placeholder="Selecione o mês" />
         </SelectTrigger>
         <SelectContent>

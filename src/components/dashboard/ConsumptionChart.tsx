@@ -91,7 +91,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
         <CardTitle className="text-lg">Consumo (kWh)</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={280}>
+        <ResponsiveContainer width="100%" height={400}>
           <BarChart 
             data={chartData} 
             barSize={30}

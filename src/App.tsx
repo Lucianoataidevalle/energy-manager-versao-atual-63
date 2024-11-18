@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { DataProvider } from "./contexts/DataContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import Report from "./pages/Report";
 import CompanyRegistration from "./pages/CompanyRegistration";
 import ConsumerUnitRegistration from "./pages/ConsumerUnitRegistration";
 import UserRegistration from "./pages/UserRegistration";
@@ -23,6 +24,7 @@ const App = () => (
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/relatorio" element={<Report />} />
             <Route path="/empresa" element={<CompanyRegistration />} />
             <Route path="/unidade" element={<ConsumerUnitRegistration />} />
             <Route path="/usuario" element={<UserRegistration />} />

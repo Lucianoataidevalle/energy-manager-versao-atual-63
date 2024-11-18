@@ -36,7 +36,6 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
         inv.mes === month
       );
 
-      // Ensure values are numbers, defaulting to 0 if undefined
       const ponta = Number(invoice?.consumoPonta || 0);
       const foraPonta = Number(invoice?.consumoForaPonta || 0);
       const total = ponta + foraPonta;
@@ -56,19 +55,34 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-2 border border-gray-200 rounded shadow">
-          <p className="text-sm font-semibold">{label}</p>
+          <p className="text-sm font-semibold">{`${label}`}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
-              {entry.name}: {formatNumber(Number(entry.value))}
+              {`${entry.name}: ${formatNumber(entry.value)}`}
             </p>
           ))}
           <p className="text-sm font-semibold">
-            Consumo Total: {formatNumber(Number(payload[0].payload.total))}
+            {`Consumo Total: ${formatNumber(payload[0].payload.total)}`}
           </p>
         </div>
       );
     }
     return null;
+  };
+
+  const CustomLabel = ({ x, y, width, value }: any) => {
+    return (
+      <text 
+        x={x + width / 2} 
+        y={y - 10} 
+        fill="#666" 
+        textAnchor="middle"
+        fontSize={12}
+        fontWeight="bold"
+      >
+        {formatNumber(Number(value))}
+      </text>
+    );
   };
 
   return (
@@ -103,18 +117,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
               <LabelList 
                 dataKey="total" 
                 position="top" 
-                content={({ x, y, width, value }: any) => (
-                  <text 
-                    x={x + width / 2} 
-                    y={y - 10} 
-                    fill="#666" 
-                    textAnchor="middle"
-                    fontSize={12}
-                    fontWeight="bold"
-                  >
-                    {formatNumber(Number(value))}
-                  </text>
-                )}
+                content={CustomLabel}
               />
             </Bar>
           </BarChart>

@@ -15,7 +15,9 @@ const Dashboard = () => {
   const { companies, consumerUnits } = useData();
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedUnit, setSelectedUnit] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState(format(subMonths(new Date(), 1), "yyyy-MM"));
+  const [selectedMonth, setSelectedMonth] = useState(
+    format(subMonths(new Date(), 1), "yyyy-MM")
+  );
   const [visibleCharts, setVisibleCharts] = useState([
     "consumption",
     "demand",
@@ -66,7 +68,7 @@ const Dashboard = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <div className="flex-1">
+      <div className="flex-1 md:ml-64">
         <DashboardHeader
           selectedCompany={selectedCompany}
           selectedUnit={selectedUnit}
@@ -77,13 +79,13 @@ const Dashboard = () => {
           visibleCharts={visibleCharts}
           onVisibleChartsChange={setVisibleCharts}
         />
-        <div className="p-4 mt-[280px] md:mt-[240px]">
+        <div className="p-4">
           <div className="grid grid-cols-1 gap-4">
             <DashboardSummary
               selectedCompany={selectedCompany}
               selectedUnit={selectedUnit}
             />
-            {Object.keys(visibleCharts).map((chartId) => (
+            {visibleCharts.map((chartId) => (
               <div key={chartId} className="w-full">
                 {renderChart(chartId)}
               </div>

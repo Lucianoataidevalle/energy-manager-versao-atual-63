@@ -74,7 +74,7 @@ const DashboardHeader = ({
   };
 
   return (
-    <div className="fixed top-0 right-0 left-0 bg-background z-50 border-b">
+    <div className="sticky top-0 bg-background z-40 border-b">
       <div className="p-4 flex flex-col space-y-4">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -91,7 +91,7 @@ const DashboardHeader = ({
         </div>
 
         <div className="flex flex-col space-y-4">
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Empresa</label>
               <Select value={selectedCompany} onValueChange={onCompanyChange}>
@@ -129,7 +129,7 @@ const DashboardHeader = ({
         </div>
 
         <div className="border-t pt-4">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
             {AVAILABLE_CHARTS.map((chart) => (
               <div key={chart.id} className="flex items-center space-x-2">
                 <Checkbox
@@ -147,10 +147,7 @@ const DashboardHeader = ({
             ))}
           </div>
           <div className="mt-4">
-            <Button
-              onClick={handleApply}
-              className="w-full md:w-auto bg-primary text-primary-foreground hover:bg-primary/90"
-            >
+            <Button onClick={handleApply} className="w-full md:w-auto">
               Aplicar
             </Button>
           </div>

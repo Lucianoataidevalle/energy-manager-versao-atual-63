@@ -47,7 +47,6 @@ const Dashboard = () => {
   }, [selectedCompany, consumerUnits]);
 
   const handleVisibleChartsChange = (newCharts: string[]) => {
-    // Maintain the original order of charts when re-adding them
     const orderedCharts = CHART_ORDER.filter(chartId => newCharts.includes(chartId));
     setVisibleCharts(orderedCharts);
   };
@@ -78,7 +77,6 @@ const Dashboard = () => {
       <Sidebar />
       <div className="flex-1 md:ml-64">
         <div className="md:sticky md:top-0 bg-background z-40">
-          <h1 className="text-2xl font-bold p-4 bg-background border-b">Dashboard</h1>
           <DashboardHeader
             selectedCompany={selectedCompany}
             selectedUnit={selectedUnit}

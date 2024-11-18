@@ -101,18 +101,23 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
             <XAxis dataKey="mes" />
             <YAxis tickFormatter={formatNumber} />
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            <Legend formatter={(value) => {
+              if (value === "total") return "Consumo Total";
+              if (value === "foraPonta") return "Consumo Fora Ponta";
+              if (value === "ponta") return "Consumo Ponta";
+              return value;
+            }} />
             <Bar 
               dataKey="foraPonta" 
               stackId="a" 
               fill="#82ca9d" 
-              name="Consumo Fora Ponta"
+              name="foraPonta"
             />
             <Bar 
               dataKey="ponta" 
               stackId="a" 
               fill="#8884d8" 
-              name="Consumo Ponta"
+              name="ponta"
             >
               <LabelList 
                 dataKey="total" 
@@ -120,6 +125,12 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
                 content={CustomLabel}
               />
             </Bar>
+            <Bar 
+              dataKey="total" 
+              fill="none" 
+              name="total" 
+              legendType="none"
+            />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

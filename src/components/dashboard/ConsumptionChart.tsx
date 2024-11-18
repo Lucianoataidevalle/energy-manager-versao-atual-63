@@ -59,11 +59,11 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
           <p className="text-sm font-semibold">{label}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
-              {entry.name}: {formatNumber(entry.value)}
+              {entry.name}: {formatNumber(Number(entry.value))}
             </p>
           ))}
           <p className="text-sm font-semibold">
-            Consumo Total: {formatNumber(payload[0].payload.total)}
+            Consumo Total: {formatNumber(Number(payload[0].payload.total))}
           </p>
         </div>
       );

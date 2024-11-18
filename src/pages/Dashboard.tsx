@@ -68,31 +68,31 @@ const Dashboard = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <div className="flex-1 md:ml-64 overflow-auto">
-        <div className="sticky top-0 bg-background z-40 border-b">
-          <h1 className="text-2xl font-bold p-4">Dashboard</h1>
-        </div>
-        <DashboardHeader
-          selectedCompany={selectedCompany}
-          selectedUnit={selectedUnit}
-          selectedMonth={selectedMonth}
-          onCompanyChange={setSelectedCompany}
-          onUnitChange={setSelectedUnit}
-          onMonthChange={setSelectedMonth}
-          visibleCharts={visibleCharts}
-          onVisibleChartsChange={setVisibleCharts}
-        />
-        <div className="p-4">
-          <div className="grid grid-cols-1 gap-4">
-            <DashboardSummary
-              selectedCompany={selectedCompany}
-              selectedUnit={selectedUnit}
-            />
-            {visibleCharts.map((chartId) => (
-              <div key={chartId} className="w-full">
-                {renderChart(chartId)}
-              </div>
-            ))}
+      <div className="flex-1 md:ml-64">
+        <h1 className="text-2xl font-bold p-4 bg-background border-b">Dashboard</h1>
+        <div className="overflow-auto">
+          <DashboardHeader
+            selectedCompany={selectedCompany}
+            selectedUnit={selectedUnit}
+            selectedMonth={selectedMonth}
+            onCompanyChange={setSelectedCompany}
+            onUnitChange={setSelectedUnit}
+            onMonthChange={setSelectedMonth}
+            visibleCharts={visibleCharts}
+            onVisibleChartsChange={setVisibleCharts}
+          />
+          <div className="p-4">
+            <div className="grid grid-cols-1 gap-4">
+              <DashboardSummary
+                selectedCompany={selectedCompany}
+                selectedUnit={selectedUnit}
+              />
+              {visibleCharts.map((chartId) => (
+                <div key={chartId} className="w-full">
+                  {renderChart(chartId)}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

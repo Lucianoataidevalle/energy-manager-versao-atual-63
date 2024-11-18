@@ -39,7 +39,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
       // Ensure values are numbers, defaulting to 0 if undefined
       const ponta = Number(invoice?.consumoPonta || 0);
       const foraPonta = Number(invoice?.consumoForaPonta || 0);
-      const total = ponta + foraPonta;
+      const total = Number(ponta) + Number(foraPonta);
 
       return {
         mes: formatMonthYear(parseMonthString(month)),
@@ -59,11 +59,11 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
           <p className="text-sm font-semibold">{label}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
-              {entry.name}: {formatNumber(entry.value)}
+              {entry.name}: {formatNumber(Number(entry.value))}
             </p>
           ))}
           <p className="text-sm font-semibold">
-            Consumo Total: {formatNumber(payload[0].payload.total)}
+            Consumo Total: {formatNumber(Number(payload[0].payload.total))}
           </p>
         </div>
       );

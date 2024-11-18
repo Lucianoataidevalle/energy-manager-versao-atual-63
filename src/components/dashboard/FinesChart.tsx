@@ -84,7 +84,7 @@ const FinesChart = ({ selectedCompany, selectedUnit, selectedMonth }: FinesChart
         <CardTitle className="text-lg">Multas/Juros (R$)</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={270}>
+        <ResponsiveContainer width="100%" height={189}>
           <BarChart data={chartData} barSize={30}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />

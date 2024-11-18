@@ -79,7 +79,7 @@ const DashboardHeader = ({
         <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
           <h1 className="text-2xl font-bold whitespace-nowrap">Dashboard</h1>
           
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3 md:max-w-[70%]">
             <div className="space-y-1">
               <label className="text-sm font-medium">Empresa</label>
               <Select value={selectedCompany} onValueChange={onCompanyChange}>

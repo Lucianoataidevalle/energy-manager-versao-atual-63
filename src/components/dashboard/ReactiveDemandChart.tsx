@@ -67,7 +67,7 @@ const ReactiveDemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: R
         <CardTitle className="text-lg">Demanda Reativa (kVAr)</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={270}>
+        <ResponsiveContainer width="100%" height={189}>
           <ComposedChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />

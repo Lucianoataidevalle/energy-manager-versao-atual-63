@@ -39,7 +39,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
       // Ensure values are numbers, defaulting to 0 if undefined
       const ponta = Number(invoice?.consumoPonta || 0);
       const foraPonta = Number(invoice?.consumoForaPonta || 0);
-      const total = ponta + foraPonta;
+      const total = Number(ponta + foraPonta);
 
       return {
         mes: formatMonthYear(parseMonthString(month)),

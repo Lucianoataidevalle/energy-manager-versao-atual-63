@@ -76,10 +76,10 @@ const DashboardHeader = ({
   return (
     <div className="bg-background border-b">
       <div className="p-4">
-        <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
           <h1 className="text-2xl font-bold whitespace-nowrap">Dashboard</h1>
           
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3 md:max-w-[70%] md:ml-auto">
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3 md:max-w-[60%]">
             <div className="space-y-1">
               <label className="text-sm font-medium">Empresa</label>
               <Select value={selectedCompany} onValueChange={onCompanyChange}>
@@ -114,17 +114,6 @@ const DashboardHeader = ({
 
             <MonthSelector value={selectedMonth} onChange={onMonthChange} />
           </div>
-
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-64">
-              {/* Menu content */}
-            </SheetContent>
-          </Sheet>
         </div>
 
         <div className="border-t mt-4 pt-4">

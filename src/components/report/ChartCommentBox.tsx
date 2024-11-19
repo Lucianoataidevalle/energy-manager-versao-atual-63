@@ -24,11 +24,9 @@ const ChartCommentBox = ({ chartId, title }: ChartCommentBoxProps) => {
 
   return (
     <Card>
-      {title && (
-        <CardHeader>
-          <CardTitle className="text-lg">{title}</CardTitle>
-        </CardHeader>
-      )}
+      <CardHeader>
+        <CardTitle className="text-lg">{title || "Observações"}</CardTitle>
+      </CardHeader>
       <CardContent className="space-y-4">
         {isEditing ? (
           <>
@@ -54,14 +52,16 @@ const ChartCommentBox = ({ chartId, title }: ChartCommentBoxProps) => {
                 Nenhum comentário adicionado
               </p>
             )}
-            <div className="flex justify-end">
-              <Button variant="outline" onClick={() => setIsEditing(true)}>
-                Editar
-              </Button>
-            </div>
           </div>
         )}
       </CardContent>
+      {!isEditing && (
+        <div className="flex justify-end p-4">
+          <Button variant="outline" onClick={() => setIsEditing(true)}>
+            Editar
+          </Button>
+        </div>
+      )}
     </Card>
   );
 };

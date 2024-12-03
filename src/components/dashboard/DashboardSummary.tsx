@@ -41,15 +41,16 @@ const DashboardSummary = ({ selectedCompany, selectedUnit, selectedMonth }: Dash
 
   const calculateAvoidableCosts = (invoices: typeof last12Months) => {
     return invoices.reduce((total, invoice) => {
-      return total + (
-        invoice.demandaUltrapassagemForaPonta +
-        invoice.demandaUltrapassagemPonta +
-        invoice.custoEnergiaReativaForaPonta +
-        invoice.custoEnergiaReativaPonta +
-        invoice.custoDemandaReativaForaPonta +
-        invoice.custoDemandaReativaPonta +
-        invoice.multasJuros
+      const costs = (
+        Number(invoice.demandaUltrapassagemForaPonta || 0) +
+        Number(invoice.demandaUltrapassagemPonta || 0) +
+        Number(invoice.custoEnergiaReativaForaPonta || 0) +
+        Number(invoice.custoEnergiaReativaPonta || 0) +
+        Number(invoice.custoDemandaReativaForaPonta || 0) +
+        Number(invoice.custoDemandaReativaPonta || 0) +
+        Number(invoice.multasJuros || 0)
       );
+      return total + (isNaN(costs) ? 0 : costs);
     }, 0);
   };
 
@@ -125,6 +126,7 @@ const DashboardSummary = ({ selectedCompany, selectedUnit, selectedMonth }: Dash
               {currentAvoidableCosts.toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
+                minimumFractionDigits: 2,
               })}
             </p>
             <p className="text-sm text-muted-foreground">Total 12 meses</p>
@@ -132,6 +134,7 @@ const DashboardSummary = ({ selectedCompany, selectedUnit, selectedMonth }: Dash
               {totalAvoidableCosts.toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
+                minimumFractionDigits: 2,
               })}
             </p>
           </div>
@@ -149,6 +152,7 @@ const DashboardSummary = ({ selectedCompany, selectedUnit, selectedMonth }: Dash
               {currentTotal.toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
+                minimumFractionDigits: 2,
               })}
             </p>
             <p className="text-sm text-muted-foreground">Média 12 meses</p>
@@ -156,6 +160,7 @@ const DashboardSummary = ({ selectedCompany, selectedUnit, selectedMonth }: Dash
               {averages.total.toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
+                minimumFractionDigits: 2,
               })}
             </p>
           </div>

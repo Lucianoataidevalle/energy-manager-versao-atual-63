@@ -14,7 +14,7 @@ export const CostsTab = ({
   shouldDisablePeakFields,
 }: CostsTabProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="space-y-2">
         <label className="text-sm font-medium">Consumo Fora Ponta (R$)</label>
         <Input
@@ -176,6 +176,17 @@ export const CostsTab = ({
           step="0.01"
           value={formData.custoEnergiaInjetadaPonta}
           onChange={(e) => setFormData({ ...formData, custoEnergiaInjetadaPonta: e.target.value })}
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Bandeira Tarifária (R$)</label>
+        <Input
+          type="number"
+          step="0.01"
+          value={formData.bandeiraTarifaria}
+          onChange={(e) => setFormData({ ...formData, bandeiraTarifaria: e.target.value })}
           required
         />
       </div>

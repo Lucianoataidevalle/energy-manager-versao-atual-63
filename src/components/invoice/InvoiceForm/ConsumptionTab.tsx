@@ -14,7 +14,7 @@ export const ConsumptionTab = ({
   shouldDisablePeakFields,
 }: ConsumptionTabProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="space-y-2">
         <label className="text-sm font-medium">Consumo Fora Ponta (kWh)</label>
         <Input

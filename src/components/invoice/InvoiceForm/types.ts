@@ -39,4 +39,5 @@ export interface InvoiceFormData {
   custoEnergiaInjetadaPonta: string;
   multasJuros: string;
   valorFatura: string;
+  bandeiraTarifaria: string;
 }

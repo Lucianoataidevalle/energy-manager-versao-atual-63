@@ -162,13 +162,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   fill="#8884d8" 
                   name="Demanda Medida Fora Ponta"
                   barSize={20}
-                />
-                <Bar 
-                  dataKey="demandaUltrapassagemForaPonta" 
-                  stackId="foraPonta"
-                  fill="#483d8b" 
-                  name="Demanda de Ultrapassagem Fora Ponta"
-                  barSize={20}
+                  order={2}
                 />
                 <Bar
                   dataKey="demandaMedidaPonta"
@@ -176,6 +170,15 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   fill="#82ca9d"
                   name="Demanda Medida Ponta"
                   barSize={20}
+                  order={2}
+                />
+                <Bar 
+                  dataKey="demandaUltrapassagemForaPonta" 
+                  stackId="foraPonta"
+                  fill="#483d8b" 
+                  name="Demanda de Ultrapassagem Fora Ponta"
+                  barSize={20}
+                  order={1}
                 />
                 <Bar
                   dataKey="demandaUltrapassagemPonta"
@@ -183,6 +186,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   fill="#2e8b57"
                   name="Demanda de Ultrapassagem Ponta"
                   barSize={20}
+                  order={1}
                 />
               </>
             ) : (
@@ -199,6 +203,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   fill="#8884d8" 
                   name="Demanda Medida"
                   barSize={20}
+                  order={2}
                 />
                 <Bar 
                   dataKey="demandaUltrapassagemForaPonta" 
@@ -206,6 +211,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   fill="#483d8b" 
                   name="Demanda de Ultrapassagem"
                   barSize={20}
+                  order={1}
                 />
               </>
             )}

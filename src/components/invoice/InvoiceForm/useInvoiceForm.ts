@@ -40,6 +40,7 @@ export const useInvoiceForm = (
     custoEnergiaInjetadaPonta: "",
     multasJuros: "",
     valorFatura: "",
+    bandeiraTarifaria: "",
   });
 
   useEffect(() => {
@@ -75,6 +76,7 @@ export const useInvoiceForm = (
         custoEnergiaInjetadaPonta: editingInvoice.custoEnergiaInjetadaPonta?.toString() || "",
         multasJuros: editingInvoice.multasJuros.toString(),
         valorFatura: editingInvoice.valorFatura.toString(),
+        bandeiraTarifaria: editingInvoice.bandeiraTarifaria?.toString() || "",
       });
     }
   }, [editingInvoice]);
@@ -112,6 +114,7 @@ export const useInvoiceForm = (
       custoEnergiaInjetadaPonta: Number(formData.custoEnergiaInjetadaPonta),
       multasJuros: Number(formData.multasJuros),
       valorFatura: Number(formData.valorFatura),
+      bandeiraTarifaria: Number(formData.bandeiraTarifaria),
     };
 
     if (!editingInvoice) {
@@ -153,6 +156,7 @@ export const useInvoiceForm = (
       custoEnergiaInjetadaPonta: "",
       multasJuros: "",
       valorFatura: "",
+      bandeiraTarifaria: "",
     });
   };
 

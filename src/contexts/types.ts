@@ -61,6 +61,7 @@ export interface Invoice {
   custoDemandaReativaPonta: number;
   custoEnergiaInjetadaForaPonta: number;
   custoEnergiaInjetadaPonta: number;
+  bandeiraTarifaria: number;
   multasJuros: number;
   valorFatura: number;
 }

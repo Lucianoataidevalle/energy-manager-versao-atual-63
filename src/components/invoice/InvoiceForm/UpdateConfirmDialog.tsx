@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,27 +10,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 
 interface UpdateConfirmDialogProps {
-  onConfirm: () => void;
+  onConfirm: (e: React.FormEvent) => void;
   isEditing: boolean;
-  confirmTitle?: string;
-  confirmMessage?: string;
-  buttonText?: string;
+  confirmTitle: string;
+  confirmMessage: string;
+  buttonText: string;
 }
 
-export const UpdateConfirmDialog = ({ 
-  onConfirm, 
+export const UpdateConfirmDialog = ({
+  onConfirm,
   isEditing,
-  confirmTitle = "Confirmar Ação",
-  confirmMessage = "Deseja realmente realizar esta ação?",
-  buttonText = "Confirmar"
+  confirmTitle,
+  confirmMessage,
+  buttonText,
 }: UpdateConfirmDialogProps) => {
-  const handleConfirm = () => {
-    onConfirm();
-  };
-
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -40,15 +36,11 @@ export const UpdateConfirmDialog = ({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{confirmTitle}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {confirmMessage}
-          </AlertDialogDescription>
+          <AlertDialogDescription>{confirmMessage}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={handleConfirm}>
-            Confirmar
-          </AlertDialogAction>
+          <AlertDialogAction onClick={onConfirm}>Confirmar</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

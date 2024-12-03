@@ -20,6 +20,23 @@ export interface InvoiceFormData {
   energiaReativaPonta: string;
   demandaReativaForaPonta: string;
   demandaReativaPonta: string;
+  energiaInjetadaForaPonta: string;
+  energiaInjetadaPonta: string;
+  saldoAcumulado: string;
+  custoConsumoForaPonta: string;
+  custoConsumoPonta: string;
+  custoDemandaMedidaForaPonta: string;
+  custoDemandaMedidaPonta: string;
+  custoDemandaIsentaForaPonta: string;
+  custoDemandaIsentaPonta: string;
+  demandaUltrapassagemForaPonta: string;
+  demandaUltrapassagemPonta: string;
+  custoEnergiaReativaForaPonta: string;
+  custoEnergiaReativaPonta: string;
+  custoDemandaReativaForaPonta: string;
+  custoDemandaReativaPonta: string;
+  custoEnergiaInjetadaForaPonta: string;
+  custoEnergiaInjetadaPonta: string;
   multasJuros: string;
   valorFatura: string;
 }

@@ -4,9 +4,10 @@ import { useData } from "@/contexts/DataContext";
 interface DashboardSummaryProps {
   selectedCompany: string;
   selectedUnit: string;
+  selectedMonth: string;
 }
 
-const DashboardSummary = ({ selectedCompany, selectedUnit }: DashboardSummaryProps) => {
+const DashboardSummary = ({ selectedCompany, selectedUnit, selectedMonth }: DashboardSummaryProps) => {
   const { invoices } = useData();
 
   const filteredInvoices = invoices.filter(
@@ -14,10 +15,15 @@ const DashboardSummary = ({ selectedCompany, selectedUnit }: DashboardSummaryPro
       invoice.empresa === selectedCompany && invoice.unidade === selectedUnit
   );
 
-  const calculateAverages = () => {
-    if (filteredInvoices.length === 0) return { consumption: 0, demand: 0, total: 0 };
+  const last12Months = filteredInvoices.slice(-12);
+  const currentMonthInvoice = filteredInvoices.find(
+    (invoice) => invoice.mes === selectedMonth
+  );
 
-    const sum = filteredInvoices.reduce(
+  const calculateAverages = () => {
+    if (last12Months.length === 0) return { consumption: 0, demand: 0, total: 0 };
+
+    const sum = last12Months.reduce(
       (acc, invoice) => ({
         consumption: acc.consumption + (invoice.consumoPonta + invoice.consumoForaPonta),
         demand: acc.demand + (invoice.demandaMedidaForaPonta + invoice.demandaMedidaPonta),
@@ -27,53 +33,132 @@ const DashboardSummary = ({ selectedCompany, selectedUnit }: DashboardSummaryPro
     );
 
     return {
-      consumption: sum.consumption / filteredInvoices.length,
-      demand: sum.demand / filteredInvoices.length,
-      total: sum.total / filteredInvoices.length,
+      consumption: sum.consumption / last12Months.length,
+      demand: sum.demand / last12Months.length,
+      total: sum.total / last12Months.length,
     };
   };
 
+  const calculateAvoidableCosts = (invoices: typeof last12Months) => {
+    return invoices.reduce((total, invoice) => {
+      return total + (
+        invoice.demandaUltrapassagemForaPonta +
+        invoice.demandaUltrapassagemPonta +
+        invoice.custoEnergiaReativaForaPonta +
+        invoice.custoEnergiaReativaPonta +
+        invoice.custoDemandaReativaForaPonta +
+        invoice.custoDemandaReativaPonta +
+        invoice.multasJuros
+      );
+    }, 0);
+  };
+
   const averages = calculateAverages();
+  const currentConsumption = currentMonthInvoice ? 
+    currentMonthInvoice.consumoPonta + currentMonthInvoice.consumoForaPonta : 0;
+  const currentDemand = currentMonthInvoice ? 
+    currentMonthInvoice.demandaMedidaForaPonta + currentMonthInvoice.demandaMedidaPonta : 0;
+  const currentTotal = currentMonthInvoice?.valorFatura || 0;
+  
+  const totalAvoidableCosts = calculateAvoidableCosts(last12Months);
+  const currentAvoidableCosts = currentMonthInvoice ? 
+    calculateAvoidableCosts([currentMonthInvoice]) : 0;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Consumo Médio</CardTitle>
+          <CardTitle className="text-lg">Consumo</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold">
-            {averages.consumption.toLocaleString("pt-BR", {
-              maximumFractionDigits: 0,
-            })}{" "}
-            kWh
-          </p>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Mês Atual</p>
+            <p className="text-2xl font-bold">
+              {currentConsumption.toLocaleString("pt-BR", {
+                maximumFractionDigits: 0,
+              })}{" "}
+              kWh
+            </p>
+            <p className="text-sm text-muted-foreground">Média 12 meses</p>
+            <p className="text-lg font-semibold">
+              {averages.consumption.toLocaleString("pt-BR", {
+                maximumFractionDigits: 0,
+              })}{" "}
+              kWh
+            </p>
+          </div>
         </CardContent>
       </Card>
+
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Demanda Média</CardTitle>
+          <CardTitle className="text-lg">Demanda</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold">
-            {averages.demand.toLocaleString("pt-BR", {
-              maximumFractionDigits: 0,
-            })}{" "}
-            kW
-          </p>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Mês Atual</p>
+            <p className="text-2xl font-bold">
+              {currentDemand.toLocaleString("pt-BR", {
+                maximumFractionDigits: 0,
+              })}{" "}
+              kW
+            </p>
+            <p className="text-sm text-muted-foreground">Média 12 meses</p>
+            <p className="text-lg font-semibold">
+              {averages.demand.toLocaleString("pt-BR", {
+                maximumFractionDigits: 0,
+              })}{" "}
+              kW
+            </p>
+          </div>
         </CardContent>
       </Card>
-      <Card className="sm:col-span-2 lg:col-span-1">
+
+      <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Custo Médio de Faturas</CardTitle>
+          <CardTitle className="text-lg">Custos Evitáveis</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold">
-            {averages.total.toLocaleString("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            })}
-          </p>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Mês Atual</p>
+            <p className="text-2xl font-bold">
+              {currentAvoidableCosts.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </p>
+            <p className="text-sm text-muted-foreground">Total 12 meses</p>
+            <p className="text-lg font-semibold">
+              {totalAvoidableCosts.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Custo de Faturas</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Mês Atual</p>
+            <p className="text-2xl font-bold">
+              {currentTotal.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </p>
+            <p className="text-sm text-muted-foreground">Média 12 meses</p>
+            <p className="text-lg font-semibold">
+              {averages.total.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>

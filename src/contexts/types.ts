@@ -34,16 +34,33 @@ export interface Invoice {
   empresa: string;
   unidade: string;
   mes: string;
+  // Consumption/Generation fields
   consumoForaPonta: number;
   consumoPonta: number;
   demandaMedidaForaPonta: number;
   demandaMedidaPonta: number;
-  demandaUltrapassagemForaPonta: number;
-  demandaUltrapassagemPonta: number;
   energiaReativaForaPonta: number;
   energiaReativaPonta: number;
   demandaReativaForaPonta: number;
   demandaReativaPonta: number;
+  energiaInjetadaForaPonta: number;
+  energiaInjetadaPonta: number;
+  saldoAcumulado: number;
+  // Costs/Compensation fields
+  custoConsumoForaPonta: number;
+  custoConsumoPonta: number;
+  custoDemandaMedidaForaPonta: number;
+  custoDemandaMedidaPonta: number;
+  custoDemandaIsentaForaPonta: number;
+  custoDemandaIsentaPonta: number;
+  demandaUltrapassagemForaPonta: number;
+  demandaUltrapassagemPonta: number;
+  custoEnergiaReativaForaPonta: number;
+  custoEnergiaReativaPonta: number;
+  custoDemandaReativaForaPonta: number;
+  custoDemandaReativaPonta: number;
+  custoEnergiaInjetadaForaPonta: number;
+  custoEnergiaInjetadaPonta: number;
   multasJuros: number;
   valorFatura: number;
 }

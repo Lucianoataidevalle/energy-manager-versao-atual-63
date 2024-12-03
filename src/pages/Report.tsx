@@ -94,6 +94,7 @@ const Report = () => {
             <DashboardSummary
               selectedCompany={selectedCompany}
               selectedUnit={selectedUnit}
+              selectedMonth={selectedMonth}
             />
             {visibleCharts.map((chartId) => (
               <div key={chartId} className="space-y-4">

@@ -8,3 +8,10 @@ export const formatCNPJ = (cnpj: string) => {
     '$1.$2.$3/$4-$5'
   );
 };
+
+export const formatNumber = (value: number) => {
+  return value.toLocaleString('pt-BR', { 
+    minimumFractionDigits: 2, 
+    maximumFractionDigits: 2 
+  });
+};

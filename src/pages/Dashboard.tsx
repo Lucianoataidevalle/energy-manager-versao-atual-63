@@ -93,6 +93,7 @@ const Dashboard = () => {
             <DashboardSummary
               selectedCompany={selectedCompany}
               selectedUnit={selectedUnit}
+              selectedMonth={selectedMonth}
             />
             {visibleCharts.map((chartId) => (
               <div key={chartId} className="w-full">

@@ -77,9 +77,9 @@ export const ConsumptionTab = ({
             <label className="text-sm font-medium">Geração Total (kWh)</label>
             <Input
               type="number"
-              value={Number(formData.energiaInjetadaForaPonta || 0) + Number(formData.energiaInjetadaPonta || 0)}
-              disabled
-              className="bg-gray-100"
+              value={formData.geracaoTotal}
+              onChange={(e) => setFormData({ ...formData, geracaoTotal: e.target.value })}
+              required
             />
           </div>
         </>

@@ -76,6 +76,7 @@ export interface Invoice {
   demandaReativaPonta: number;
   energiaInjetadaForaPonta: number;
   energiaInjetadaPonta: number;
+  geracaoTotal: number;
   saldoAcumulado: number;
   custoConsumoForaPonta: number;
   custoConsumoPonta: number;

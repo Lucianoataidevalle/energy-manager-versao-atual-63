@@ -1,12 +1,27 @@
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Invoice } from '@/contexts/types';
+import { toast } from 'sonner';
 
 const COLLECTION_NAME = 'invoices';
 
 export const invoiceService = {
   async create(invoice: Omit<Invoice, 'id'>) {
     try {
+      // Check if an invoice already exists for this month and unit
+      const q = query(
+        collection(db, COLLECTION_NAME),
+        where('empresa', '==', invoice.empresa),
+        where('unidade', '==', invoice.unidade),
+        where('mes', '==', invoice.mes)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      
+      if (!querySnapshot.empty) {
+        throw new Error('Já existe uma fatura cadastrada para este mês');
+      }
+
       const docRef = await addDoc(collection(db, COLLECTION_NAME), invoice);
       return { ...invoice, id: docRef.id };
     } catch (error) {

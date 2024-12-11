@@ -8,12 +8,14 @@ import BillingChart from "@/components/dashboard/BillingChart";
 import ReactiveEnergyChart from "@/components/dashboard/ReactiveEnergyChart";
 import ReactiveDemandChart from "@/components/dashboard/ReactiveDemandChart";
 import FinesChart from "@/components/dashboard/FinesChart";
+import GenerationChart from "@/components/dashboard/GenerationChart";
 import { useData } from "@/contexts/DataContext";
 import { format, subMonths } from "date-fns";
 
 const CHART_ORDER = [
   "consumption",
   "demand",
+  "generation",
   "billing",
   "reactiveEnergy",
   "reactiveDemand",
@@ -63,6 +65,7 @@ const Dashboard = () => {
     const charts: Record<string, JSX.Element | null> = {
       consumption: <ConsumptionChart {...chartProps} />,
       demand: <DemandChart {...chartProps} />,
+      generation: <GenerationChart {...chartProps} />,
       billing: <BillingChart {...chartProps} />,
       reactiveEnergy: <ReactiveEnergyChart {...chartProps} />,
       reactiveDemand: <ReactiveDemandChart {...chartProps} />,

@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { DataProvider } from "./contexts/DataContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Report from "./pages/Report";
@@ -21,16 +22,18 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/relatorio" element={<Report />} />
-            <Route path="/empresa" element={<CompanyRegistration />} />
-            <Route path="/unidade" element={<ConsumerUnitRegistration />} />
-            <Route path="/usuario" element={<UserRegistration />} />
-            <Route path="/faturas" element={<InvoiceRegistration />} />
-            <Route path="/" element={<Navigate to="/login" replace />} />
-          </Routes>
+          <AuthProvider>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/relatorio" element={<Report />} />
+              <Route path="/empresa" element={<CompanyRegistration />} />
+              <Route path="/unidade" element={<ConsumerUnitRegistration />} />
+              <Route path="/usuario" element={<UserRegistration />} />
+              <Route path="/faturas" element={<InvoiceRegistration />} />
+              <Route path="/" element={<Navigate to="/login" replace />} />
+            </Routes>
+          </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>
     </DataProvider>

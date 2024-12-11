@@ -1,35 +1,40 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
-import { Company, ConsumerUnit, User, Invoice, DataContextType } from "./types";
+import { Company, ConsumerUnit, User, Invoice, GeneratorUnit, DataContextType } from "./types";
 import { companyService } from "@/services/companyService";
 import { consumerUnitService } from "@/services/consumerUnitService";
 import { userService } from "@/services/userService";
 import { invoiceService } from "@/services/invoiceService";
+import { generatorUnitService } from "@/services/generatorUnitService";
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [consumerUnits, setConsumerUnits] = useState<ConsumerUnit[]>([]);
+  const [generatorUnits, setGeneratorUnits] = useState<GeneratorUnit[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
   const [editingConsumerUnit, setEditingConsumerUnit] = useState<ConsumerUnit | null>(null);
+  const [editingGeneratorUnit, setEditingGeneratorUnit] = useState<GeneratorUnit | null>(null);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [editingInvoice, setEditingInvoice] = useState<Invoice | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [companiesData, unitsData, usersData, invoicesData] = await Promise.all([
+        const [companiesData, unitsData, generatorUnitsData, usersData, invoicesData] = await Promise.all([
           companyService.getAll(),
           consumerUnitService.getAll(),
+          generatorUnitService.getAll(),
           userService.getAll(),
           invoiceService.getAll(),
         ]);
 
         setCompanies(companiesData);
         setConsumerUnits(unitsData);
+        setGeneratorUnits(generatorUnitsData);
         setUsers(usersData);
         setInvoices(invoicesData);
       } catch (error) {
@@ -211,31 +216,76 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const addGeneratorUnit = async (unit: Omit<GeneratorUnit, 'id'>) => {
+    try {
+      const newUnit = await generatorUnitService.create(unit);
+      setGeneratorUnits((prev) => [...prev, newUnit]);
+      toast.success("Unidade geradora cadastrada com sucesso!");
+    } catch (error) {
+      console.error('Error adding generator unit:', error);
+      toast.error('Erro ao adicionar unidade geradora');
+      throw error;
+    }
+  };
+
+  const deleteGeneratorUnit = async (id: string) => {
+    try {
+      await generatorUnitService.delete(id);
+      setGeneratorUnits((prev) => prev.filter((unit) => unit.id !== id));
+      toast.success("Unidade geradora excluída com sucesso!");
+    } catch (error) {
+      console.error('Error deleting generator unit:', error);
+      toast.error('Erro ao excluir unidade geradora');
+      throw error;
+    }
+  };
+
+  const editGeneratorUnit = async (id: string, data: Partial<GeneratorUnit>) => {
+    try {
+      await generatorUnitService.update(id, data);
+      setGeneratorUnits((prev) =>
+        prev.map((unit) => (unit.id === id ? { ...unit, ...data } : unit))
+      );
+      setEditingGeneratorUnit(null);
+      toast.success("Unidade geradora atualizada com sucesso!");
+    } catch (error) {
+      console.error('Error updating generator unit:', error);
+      toast.error('Erro ao atualizar unidade geradora');
+      throw error;
+    }
+  };
+
   return (
     <DataContext.Provider
       value={{
         companies,
         consumerUnits,
+        generatorUnits,
         users,
         invoices,
         editingCompany,
         editingConsumerUnit,
+        editingGeneratorUnit,
         editingUser,
         editingInvoice,
         addCompany,
         addConsumerUnit,
+        addGeneratorUnit,
         addUser,
         addInvoice,
         deleteCompany,
         deleteConsumerUnit,
+        deleteGeneratorUnit,
         deleteUser,
         deleteInvoice,
         editCompany,
         editConsumerUnit,
+        editGeneratorUnit,
         editUser,
         editInvoice,
         setEditingCompany,
         setEditingConsumerUnit,
+        setEditingGeneratorUnit,
         setEditingUser,
         setEditingInvoice,
       }}

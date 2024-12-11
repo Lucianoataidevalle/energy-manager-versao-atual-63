@@ -1,8 +1,11 @@
 import Sidebar from "@/components/Sidebar";
 import ConsumerUnitForm from "@/components/consumer-unit/ConsumerUnitForm";
 import ConsumerUnitList from "@/components/consumer-unit/ConsumerUnitList";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ConsumerUnitRegistration = () => {
+  const { isAdmin } = useAuth();
+
   return (
     <div className="flex min-h-screen">
       <Sidebar />
@@ -10,7 +13,7 @@ const ConsumerUnitRegistration = () => {
         <h1 className="text-2xl font-bold mb-8">
           Cadastro de Unidade Consumidora
         </h1>
-        <ConsumerUnitForm />
+        {isAdmin && <ConsumerUnitForm />}
         <ConsumerUnitList />
       </div>
     </div>

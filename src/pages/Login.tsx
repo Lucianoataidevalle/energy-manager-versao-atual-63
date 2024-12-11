@@ -4,28 +4,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
-import { useData } from "@/contexts/DataContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { users } = useData();
+  const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const user = users.find(u => u.email === email);
+    const success = await login(email, password);
     
-    if (user || (email === "admin" && password === "admin")) {
-      toast.success("Login realizado com sucesso!", {
-        position: "top-right",
-      });
+    if (success) {
+      toast.success("Login realizado com sucesso!");
       navigate("/dashboard");
-    } else {
-      toast.error("Credenciais inválidas!", {
-        position: "top-right",
-      });
     }
   };
 

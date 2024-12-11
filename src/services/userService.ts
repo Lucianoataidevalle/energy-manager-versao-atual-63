@@ -46,4 +46,14 @@ export const userService = {
       throw error;
     }
   },
+
+  async updateConsumerUnits(userId: string, unidadesConsumidoras: string[]) {
+    try {
+      await updateDoc(doc(db, COLLECTION_NAME, userId), { unidadesConsumidoras });
+      return { unidadesConsumidoras, id: userId };
+    } catch (error) {
+      console.error('Error updating consumer units:', error);
+      throw error;
+    }
+  }
 };

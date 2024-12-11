@@ -96,7 +96,6 @@ export const useInvoiceForm = (
       'valorFatura'
     ];
 
-    // Add fields based on tariff type
     if (!isGroupB && !isGreenTariff) {
       requiredFields.push(
         'consumoPonta',
@@ -115,84 +114,94 @@ export const useInvoiceForm = (
     return requiredFields.every(field => formData[field as keyof InvoiceFormData] !== "");
   };
 
-  const handleSubmit = () => {
-    const invoiceData = {
-      empresa: formData.empresa,
-      unidade: formData.unidade,
-      mes: formData.mes,
-      consumoForaPonta: Number(formData.consumoForaPonta),
-      consumoPonta: Number(formData.consumoPonta),
-      demandaMedidaForaPonta: Number(formData.demandaMedidaForaPonta),
-      demandaMedidaPonta: Number(formData.demandaMedidaPonta),
-      energiaReativaForaPonta: Number(formData.energiaReativaForaPonta),
-      energiaReativaPonta: Number(formData.energiaReativaPonta),
-      demandaReativaForaPonta: Number(formData.demandaReativaForaPonta),
-      demandaReativaPonta: Number(formData.demandaReativaPonta),
-      energiaInjetadaForaPonta: Number(formData.energiaInjetadaForaPonta),
-      energiaInjetadaPonta: Number(formData.energiaInjetadaPonta),
-      saldoAcumulado: Number(formData.saldoAcumulado),
-      geracaoTotal: Number(formData.geracaoTotal),
-      custoConsumoForaPonta: Number(formData.custoConsumoForaPonta),
-      custoConsumoPonta: Number(formData.custoConsumoPonta),
-      custoDemandaMedidaForaPonta: Number(formData.custoDemandaMedidaForaPonta),
-      custoDemandaMedidaPonta: Number(formData.custoDemandaMedidaPonta),
-      custoDemandaIsentaForaPonta: Number(formData.custoDemandaIsentaForaPonta),
-      custoDemandaIsentaPonta: Number(formData.custoDemandaIsentaPonta),
-      demandaUltrapassagemForaPonta: Number(formData.demandaUltrapassagemForaPonta),
-      demandaUltrapassagemPonta: Number(formData.demandaUltrapassagemPonta),
-      custoEnergiaReativaForaPonta: Number(formData.custoEnergiaReativaForaPonta),
-      custoEnergiaReativaPonta: Number(formData.custoEnergiaReativaPonta),
-      custoDemandaReativaForaPonta: Number(formData.custoDemandaReativaForaPonta),
-      custoDemandaReativaPonta: Number(formData.custoDemandaReativaPonta),
-      custoEnergiaInjetadaForaPonta: Number(formData.custoEnergiaInjetadaForaPonta),
-      custoEnergiaInjetadaPonta: Number(formData.custoEnergiaInjetadaPonta),
-      multasJuros: Number(formData.multasJuros),
-      valorFatura: Number(formData.valorFatura),
-      bandeiraTarifaria: formData.bandeiraTarifaria,
-    };
+  const handleSubmit = async () => {
+    try {
+      const invoiceData = {
+        empresa: formData.empresa,
+        unidade: formData.unidade,
+        mes: formData.mes,
+        consumoForaPonta: Number(formData.consumoForaPonta),
+        consumoPonta: Number(formData.consumoPonta),
+        demandaMedidaForaPonta: Number(formData.demandaMedidaForaPonta),
+        demandaMedidaPonta: Number(formData.demandaMedidaPonta),
+        energiaReativaForaPonta: Number(formData.energiaReativaForaPonta),
+        energiaReativaPonta: Number(formData.energiaReativaPonta),
+        demandaReativaForaPonta: Number(formData.demandaReativaForaPonta),
+        demandaReativaPonta: Number(formData.demandaReativaPonta),
+        energiaInjetadaForaPonta: Number(formData.energiaInjetadaForaPonta),
+        energiaInjetadaPonta: Number(formData.energiaInjetadaPonta),
+        saldoAcumulado: Number(formData.saldoAcumulado),
+        geracaoTotal: Number(formData.geracaoTotal),
+        custoConsumoForaPonta: Number(formData.custoConsumoForaPonta),
+        custoConsumoPonta: Number(formData.custoConsumoPonta),
+        custoDemandaMedidaForaPonta: Number(formData.custoDemandaMedidaForaPonta),
+        custoDemandaMedidaPonta: Number(formData.custoDemandaMedidaPonta),
+        custoDemandaIsentaForaPonta: Number(formData.custoDemandaIsentaForaPonta),
+        custoDemandaIsentaPonta: Number(formData.custoDemandaIsentaPonta),
+        demandaUltrapassagemForaPonta: Number(formData.demandaUltrapassagemForaPonta),
+        demandaUltrapassagemPonta: Number(formData.demandaUltrapassagemPonta),
+        custoEnergiaReativaForaPonta: Number(formData.custoEnergiaReativaForaPonta),
+        custoEnergiaReativaPonta: Number(formData.custoEnergiaReativaPonta),
+        custoDemandaReativaForaPonta: Number(formData.custoDemandaReativaForaPonta),
+        custoDemandaReativaPonta: Number(formData.custoDemandaReativaPonta),
+        custoEnergiaInjetadaForaPonta: Number(formData.custoEnergiaInjetadaForaPonta),
+        custoEnergiaInjetadaPonta: Number(formData.custoEnergiaInjetadaPonta),
+        multasJuros: Number(formData.multasJuros),
+        valorFatura: Number(formData.valorFatura),
+        bandeiraTarifaria: formData.bandeiraTarifaria,
+      };
 
-    if (!editingInvoice) {
-      addInvoice(invoiceData);
-      toast.success("Fatura cadastrada com sucesso!");
-    } else {
-      editInvoice(editingInvoice.id, invoiceData);
-      toast.success("Fatura atualizada com sucesso!");
+      if (!editingInvoice) {
+        await addInvoice(invoiceData);
+        toast.success("Fatura cadastrada com sucesso!");
+      } else {
+        await editInvoice(editingInvoice.id, invoiceData);
+        toast.success("Fatura atualizada com sucesso!");
+      }
+
+      // Reset form after successful submission
+      setFormData({
+        empresa: "",
+        unidade: "",
+        mes: format(subMonths(new Date(), 1), "yyyy-MM"),
+        consumoForaPonta: "",
+        consumoPonta: "",
+        demandaMedidaForaPonta: "",
+        demandaMedidaPonta: "",
+        energiaReativaForaPonta: "",
+        energiaReativaPonta: "",
+        demandaReativaForaPonta: "",
+        demandaReativaPonta: "",
+        energiaInjetadaForaPonta: "",
+        energiaInjetadaPonta: "",
+        saldoAcumulado: "",
+        geracaoTotal: "",
+        custoConsumoForaPonta: "",
+        custoConsumoPonta: "",
+        custoDemandaMedidaForaPonta: "",
+        custoDemandaMedidaPonta: "",
+        custoDemandaIsentaForaPonta: "",
+        custoDemandaIsentaPonta: "",
+        demandaUltrapassagemForaPonta: "",
+        demandaUltrapassagemPonta: "",
+        custoEnergiaReativaForaPonta: "",
+        custoEnergiaReativaPonta: "",
+        custoDemandaReativaForaPonta: "",
+        custoDemandaReativaPonta: "",
+        custoEnergiaInjetadaForaPonta: "",
+        custoEnergiaInjetadaPonta: "",
+        multasJuros: "",
+        valorFatura: "",
+        bandeiraTarifaria: "",
+      });
+    } catch (error) {
+      if (error instanceof Error && error.message === "Já existe uma fatura cadastrada para este mês") {
+        toast.error("Já existe uma fatura cadastrada para este mês e unidade");
+      } else {
+        console.error('Error submitting invoice:', error);
+        toast.error("Erro ao salvar a fatura");
+      }
     }
-
-    setFormData({
-      empresa: "",
-      unidade: "",
-      mes: format(subMonths(new Date(), 1), "yyyy-MM"),
-      consumoForaPonta: "",
-      consumoPonta: "",
-      demandaMedidaForaPonta: "",
-      demandaMedidaPonta: "",
-      energiaReativaForaPonta: "",
-      energiaReativaPonta: "",
-      demandaReativaForaPonta: "",
-      demandaReativaPonta: "",
-      energiaInjetadaForaPonta: "",
-      energiaInjetadaPonta: "",
-      saldoAcumulado: "",
-      geracaoTotal: "",
-      custoConsumoForaPonta: "",
-      custoConsumoPonta: "",
-      custoDemandaMedidaForaPonta: "",
-      custoDemandaMedidaPonta: "",
-      custoDemandaIsentaForaPonta: "",
-      custoDemandaIsentaPonta: "",
-      demandaUltrapassagemForaPonta: "",
-      demandaUltrapassagemPonta: "",
-      custoEnergiaReativaForaPonta: "",
-      custoEnergiaReativaPonta: "",
-      custoDemandaReativaForaPonta: "",
-      custoDemandaReativaPonta: "",
-      custoEnergiaInjetadaForaPonta: "",
-      custoEnergiaInjetadaPonta: "",
-      multasJuros: "",
-      valorFatura: "",
-      bandeiraTarifaria: "",
-    });
   };
 
   return { formData, setFormData, handleSubmit, validateForm };

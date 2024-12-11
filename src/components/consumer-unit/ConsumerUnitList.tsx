@@ -16,7 +16,7 @@ import { useState } from "react";
 
 const ConsumerUnitList = () => {
   const { consumerUnits, deleteConsumerUnit, setEditingConsumerUnit } = useData();
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
   const [filters, setFilters] = useState({
     empresa: "",
     nome: "",
@@ -25,7 +25,12 @@ const ConsumerUnitList = () => {
     grupoSubgrupo: "",
   });
 
-  const filteredUnits = consumerUnits.filter(unit => {
+  // Filter units based on user permissions
+  const userUnits = isAdmin 
+    ? consumerUnits 
+    : consumerUnits.filter(unit => user?.unidadesConsumidoras?.includes(unit.nome));
+
+  const filteredUnits = userUnits.filter(unit => {
     return Object.entries(filters).every(([key, value]) => {
       if (!value) return true;
       const unitValue = unit[key as keyof typeof unit]?.toString().toLowerCase();

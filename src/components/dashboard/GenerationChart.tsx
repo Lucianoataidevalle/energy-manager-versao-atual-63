@@ -42,12 +42,12 @@ const GenerationChart = ({ selectedCompany, selectedUnit, selectedMonth }: Gener
       const monthIndex = new Date(month).getMonth();
       const monthNames = ['janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 
                          'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
-      const estimatedGeneration = generatorUnit?.estimativaGeracao[monthNames[monthIndex]] || 0;
+      const estimatedGeneration = Number(generatorUnit?.estimativaGeracao[monthNames[monthIndex]] || 0);
 
       return {
         mes: formatMonthYear(parseMonthString(month)),
         geracaoTotal: Number(invoice?.geracaoTotal || 0),
-        estimativaGeracao: Number(estimatedGeneration)
+        estimativaGeracao: estimatedGeneration
       };
     });
   };

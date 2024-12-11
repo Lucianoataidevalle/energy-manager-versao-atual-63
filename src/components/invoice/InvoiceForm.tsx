@@ -15,7 +15,7 @@ interface InvoiceFormProps {
 
 const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
   const { consumerUnits } = useData();
-  const { formData, setFormData, handleSubmit } = useInvoiceForm(onCompanyChange, onUnitChange);
+  const { formData, setFormData, handleSubmit, validateForm } = useInvoiceForm(onCompanyChange, onUnitChange);
 
   const availableUnits = consumerUnits.filter((unit) => unit.empresa === formData.empresa);
   const selectedUnit = availableUnits.find(unit => unit.nome === formData.unidade);
@@ -23,6 +23,15 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
   const isGreenTariff = selectedUnit?.modalidadeTarifaria === "Verde";
   const isA3aOrA4 = selectedUnit?.grupoSubgrupo === "A3a" || selectedUnit?.grupoSubgrupo === "A4";
   const shouldDisablePeakFields = isA3aOrA4 && isGreenTariff;
+
+  const handleFormSubmit = () => {
+    const isValid = validateForm();
+    if (!isValid) {
+      toast.error("Por favor, preencha todos os campos obrigatórios");
+      return;
+    }
+    handleSubmit();
+  };
 
   return (
     <Card className="mb-8">
@@ -63,7 +72,7 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
           </Tabs>
 
           <UpdateConfirmDialog
-            onConfirm={handleSubmit}
+            onConfirm={handleFormSubmit}
             isEditing={!!formData.id}
             confirmTitle={formData.id ? "Atualizar Fatura" : "Inserir Fatura"}
             confirmMessage={formData.id 

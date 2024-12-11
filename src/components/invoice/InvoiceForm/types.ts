@@ -1,6 +1,6 @@
-import { ConsumerUnit as ContextConsumerUnit } from '@/contexts/types';
+import { ConsumerUnit } from '@/contexts/types';
 
-export type ConsumerUnit = ContextConsumerUnit;
+export type { ConsumerUnit };
 
 export interface InvoiceFormProps {
   onCompanyChange: (company: string) => void;

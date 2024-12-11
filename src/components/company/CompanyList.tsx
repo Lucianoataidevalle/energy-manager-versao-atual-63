@@ -22,9 +22,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useData } from "@/contexts/DataContext";
 import { formatCNPJ } from "@/utils/formatters";
+import { useAuth } from "@/contexts/AuthContext";
 
 const CompanyList = () => {
   const { companies, deleteCompany, setEditingCompany } = useData();
+  const { isAdmin } = useAuth();
 
   return (
     <Card>
@@ -39,7 +41,7 @@ const CompanyList = () => {
               <TableHead className="text-center">CNPJ</TableHead>
               <TableHead className="text-center">Endereço</TableHead>
               <TableHead className="text-center">Quantidade UC</TableHead>
-              <TableHead className="text-center">Ações</TableHead>
+              {isAdmin && <TableHead className="text-center">Ações</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -49,37 +51,39 @@ const CompanyList = () => {
                 <TableCell className="text-center">{formatCNPJ(company.cnpj)}</TableCell>
                 <TableCell className="text-center">{company.endereco}</TableCell>
                 <TableCell className="text-center">{company.unidades.length}</TableCell>
-                <TableCell className="text-center space-x-2">
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={() => setEditingCompany(company)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
+                {isAdmin && (
+                  <TableCell className="text-center space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => setEditingCompany(company)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="outline" size="icon">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Excluir Empresa</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Deseja realmente excluir esta empresa? Esta ação não pode ser desfeita.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => deleteCompany(company.id)}>
-                          Confirmar
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </TableCell>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" size="icon">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Excluir Empresa</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Deseja realmente excluir esta empresa? Esta ação não pode ser desfeita.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => deleteCompany(company.id)}>
+                            Confirmar
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>

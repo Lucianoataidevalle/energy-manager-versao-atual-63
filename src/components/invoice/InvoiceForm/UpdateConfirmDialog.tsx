@@ -1,22 +1,15 @@
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { useState } from "react";
 
 interface UpdateConfirmDialogProps {
-  onConfirm: (e: React.FormEvent) => void;
+  onConfirm: () => void;
   isEditing: boolean;
   confirmTitle: string;
   confirmMessage: string;
   buttonText: string;
+  buttonIcon?: React.ReactNode;
+  buttonVariant?: string;
 }
 
 export const UpdateConfirmDialog = ({
@@ -25,12 +18,21 @@ export const UpdateConfirmDialog = ({
   confirmTitle,
   confirmMessage,
   buttonText,
+  buttonIcon,
+  buttonVariant = "default",
 }: UpdateConfirmDialogProps) => {
+  const [open, setOpen] = useState(false);
+
+  const handleConfirm = () => {
+    onConfirm();
+    setOpen(false);
+  };
+
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button type="button" className="w-full">
-          {buttonText}
+        <Button variant={buttonVariant as any} type="submit" className="w-full" size={buttonIcon ? "icon" : "default"}>
+          {buttonIcon || buttonText}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -40,7 +42,9 @@ export const UpdateConfirmDialog = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Confirmar</AlertDialogAction>
+          <AlertDialogAction onClick={handleConfirm}>
+            Confirmar
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

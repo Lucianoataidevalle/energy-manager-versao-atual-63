@@ -1,3 +1,4 @@
+import { useData } from "@/contexts/DataContext";
 import {
   Select,
   SelectContent,
@@ -5,17 +6,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useData } from "@/contexts/DataContext";
 
 interface CompanySelectProps {
-  value: string;
-  onChange: (value: string) => void;
+  selectedCompany: string;
+  onCompanyChange: (company: string) => void;
 }
 
-export const CompanySelect = ({ value, onChange }: CompanySelectProps) => {
+export const CompanySelect = ({
+  selectedCompany,
+  onCompanyChange,
+}: CompanySelectProps) => {
   const { companies } = useData();
   
-  // Sort companies alphabetically
   const sortedCompanies = [...companies].sort((a, b) => 
     a.razaoSocial.localeCompare(b.razaoSocial)
   );
@@ -23,9 +25,9 @@ export const CompanySelect = ({ value, onChange }: CompanySelectProps) => {
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium">Empresa</label>
-      <Select value={value} onValueChange={onChange}>
+      <Select value={selectedCompany} onValueChange={onCompanyChange}>
         <SelectTrigger>
-          <SelectValue placeholder="Selecione a empresa" />
+          <SelectValue placeholder="Selecione uma empresa" />
         </SelectTrigger>
         <SelectContent>
           {sortedCompanies.map((company) => (

@@ -1,4 +1,5 @@
 import { Input } from "@/components/ui/input";
+import { useData } from "@/contexts/DataContext";
 
 interface ConsumptionTabProps {
   formData: any;
@@ -13,6 +14,10 @@ export const ConsumptionTab = ({
   isGroupB,
   shouldDisablePeakFields,
 }: ConsumptionTabProps) => {
+  const { consumerUnits } = useData();
+  const selectedUnit = consumerUnits.find(unit => unit.nome === formData.unidade);
+  const showGenerationFields = selectedUnit?.possuiGeracao;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="space-y-2">
@@ -35,6 +40,50 @@ export const ConsumptionTab = ({
           disabled={isGroupB}
         />
       </div>
+
+      {showGenerationFields && (
+        <>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Energia Injetada Fora Ponta (kWh)</label>
+            <Input
+              type="number"
+              value={formData.energiaInjetadaForaPonta}
+              onChange={(e) => setFormData({ ...formData, energiaInjetadaForaPonta: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Energia Injetada Ponta (kWh)</label>
+            <Input
+              type="number"
+              value={formData.energiaInjetadaPonta}
+              onChange={(e) => setFormData({ ...formData, energiaInjetadaPonta: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Saldo Acumulado (kWh)</label>
+            <Input
+              type="number"
+              value={formData.saldoAcumulado}
+              onChange={(e) => setFormData({ ...formData, saldoAcumulado: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Geração Total (kWh)</label>
+            <Input
+              type="number"
+              value={Number(formData.energiaInjetadaForaPonta || 0) + Number(formData.energiaInjetadaPonta || 0)}
+              disabled
+              className="bg-gray-100"
+            />
+          </div>
+        </>
+      )}
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Demanda Medida Fora Ponta (kW)</label>
@@ -99,36 +148,6 @@ export const ConsumptionTab = ({
           onChange={(e) => setFormData({ ...formData, demandaReativaPonta: e.target.value })}
           required
           disabled={isGroupB || shouldDisablePeakFields}
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Energia Injetada Fora Ponta (kWh)</label>
-        <Input
-          type="number"
-          value={formData.energiaInjetadaForaPonta}
-          onChange={(e) => setFormData({ ...formData, energiaInjetadaForaPonta: e.target.value })}
-          required
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Energia Injetada Ponta (kWh)</label>
-        <Input
-          type="number"
-          value={formData.energiaInjetadaPonta}
-          onChange={(e) => setFormData({ ...formData, energiaInjetadaPonta: e.target.value })}
-          required
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Saldo Acumulado (kWh)</label>
-        <Input
-          type="number"
-          value={formData.saldoAcumulado}
-          onChange={(e) => setFormData({ ...formData, saldoAcumulado: e.target.value })}
-          required
         />
       </div>
     </div>

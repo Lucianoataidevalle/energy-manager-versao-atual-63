@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CompanySelect } from "./form/CompanySelect";
+import { BasicInfo } from "./form/BasicInfo";
+import { GroupSubgroupSelect } from "./form/GroupSubgroupSelect";
+import { TariffFields } from "./form/TariffFields";
+import { GenerationFields } from "./form/GenerationFields";
 
 const ConsumerUnitForm = () => {
-  const { companies, addConsumerUnit, editingConsumerUnit, editConsumerUnit } = useData();
+  const { addConsumerUnit, editingConsumerUnit, editConsumerUnit, setEditingConsumerUnit } = useData();
   const [formData, setFormData] = useState({
     empresa: "",
     nome: "",
@@ -20,13 +22,19 @@ const ConsumerUnitForm = () => {
     distribuidora: "",
     grupoSubgrupo: "",
     modalidadeTarifaria: "",
+    possuiGeracao: false,
+    modalidadeCompensacao: "",
   });
 
   const [showModalidadeTarifaria, setShowModalidadeTarifaria] = useState(false);
 
   useEffect(() => {
     if (editingConsumerUnit) {
-      setFormData(editingConsumerUnit);
+      setFormData({
+        ...editingConsumerUnit,
+        possuiGeracao: editingConsumerUnit.possuiGeracao || false,
+        modalidadeCompensacao: editingConsumerUnit.modalidadeCompensacao || "",
+      });
       setShowModalidadeTarifaria(["A3a", "A4"].includes(editingConsumerUnit.grupoSubgrupo));
     }
   }, [editingConsumerUnit]);
@@ -43,6 +51,10 @@ const ConsumerUnitForm = () => {
     setShowModalidadeTarifaria(["A3a", "A4"].includes(value));
   };
 
+  const handleFieldChange = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingConsumerUnit) {
@@ -53,6 +65,10 @@ const ConsumerUnitForm = () => {
       toast.success("Unidade consumidora atualizada com sucesso!");
     }
 
+    handleCancel();
+  };
+
+  const handleCancel = () => {
     setFormData({
       empresa: "",
       nome: "",
@@ -64,9 +80,15 @@ const ConsumerUnitForm = () => {
       distribuidora: "",
       grupoSubgrupo: "",
       modalidadeTarifaria: "",
+      possuiGeracao: false,
+      modalidadeCompensacao: "",
     });
     setShowModalidadeTarifaria(false);
+    setEditingConsumerUnit(null);
   };
+
+  const showDemandaContratada = formData.grupoSubgrupo === "B" || formData.modalidadeTarifaria === "Verde";
+  const isAzulTariff = formData.modalidadeTarifaria === "Azul";
 
   return (
     <Card>
@@ -76,145 +98,45 @@ const ConsumerUnitForm = () => {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="empresa">Empresa</Label>
-              <Select
-                value={formData.empresa}
-                onValueChange={(value) => setFormData({ ...formData, empresa: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione uma empresa" />
-                </SelectTrigger>
-                <SelectContent>
-                  {companies.map((company) => (
-                    <SelectItem
-                      key={company.id}
-                      value={company.razaoSocial}
-                    >
-                      {company.razaoSocial}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <CompanySelect
+              value={formData.empresa}
+              onChange={(value) => handleFieldChange("empresa", value)}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="nome">Nome da UC</Label>
-              <Input
-                id="nome"
-                value={formData.nome}
-                onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                required
-              />
-            </div>
+            <BasicInfo
+              formData={formData}
+              onChange={handleFieldChange}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="numero">Número da UC</Label>
-              <Input
-                id="numero"
-                value={formData.numero}
-                onChange={(e) => setFormData({ ...formData, numero: e.target.value })}
-                required
-              />
-            </div>
+            <GroupSubgroupSelect
+              value={formData.grupoSubgrupo}
+              onChange={handleGrupoSubgrupoChange}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="endereco">Endereço da UC</Label>
-              <Input
-                id="endereco"
-                value={formData.endereco}
-                onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
-                required
-              />
-            </div>
+            <TariffFields
+              formData={formData}
+              showModalidadeTarifaria={showModalidadeTarifaria}
+              onChange={handleFieldChange}
+              isAzulTariff={isAzulTariff}
+              showDemandaContratada={showDemandaContratada}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="distribuidora">Distribuidora de Energia</Label>
-              <Input
-                id="distribuidora"
-                value={formData.distribuidora}
-                onChange={(e) => setFormData({ ...formData, distribuidora: e.target.value })}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="grupoSubgrupo">Grupo/Subgrupo</Label>
-              <Select
-                value={formData.grupoSubgrupo}
-                onValueChange={handleGrupoSubgrupoChange}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o grupo/subgrupo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="B">B</SelectItem>
-                  <SelectItem value="A3a">A3a</SelectItem>
-                  <SelectItem value="A4">A4</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {showModalidadeTarifaria && (
-              <div className="space-y-2">
-                <Label htmlFor="modalidadeTarifaria">Modalidade Tarifária</Label>
-                <Select
-                  value={formData.modalidadeTarifaria}
-                  onValueChange={(value) => setFormData({ ...formData, modalidadeTarifaria: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione a modalidade tarifária" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Verde">Verde</SelectItem>
-                    <SelectItem value="Azul">Azul</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
-            {(formData.grupoSubgrupo === "B" || formData.modalidadeTarifaria === "Verde") && (
-              <div className="space-y-2">
-                <Label htmlFor="demandaContratada">Demanda Contratada (kW)</Label>
-                <Input
-                  id="demandaContratada"
-                  type="number"
-                  value={formData.demandaContratada}
-                  onChange={(e) => setFormData({ ...formData, demandaContratada: e.target.value })}
-                  required
-                />
-              </div>
-            )}
-
-            {formData.modalidadeTarifaria === "Azul" && (
-              <>
-                <div className="space-y-2">
-                  <Label htmlFor="demandaContratadaForaPonta">Demanda Contratada Fora Ponta (kW)</Label>
-                  <Input
-                    id="demandaContratadaForaPonta"
-                    type="number"
-                    value={formData.demandaContratadaForaPonta}
-                    onChange={(e) => setFormData({ ...formData, demandaContratadaForaPonta: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="demandaContratadaPonta">Demanda Contratada Ponta (kW)</Label>
-                  <Input
-                    id="demandaContratadaPonta"
-                    type="number"
-                    value={formData.demandaContratadaPonta}
-                    onChange={(e) => setFormData({ ...formData, demandaContratadaPonta: e.target.value })}
-                    required
-                  />
-                </div>
-              </>
-            )}
+            <GenerationFields
+              formData={formData}
+              onChange={handleFieldChange}
+            />
           </div>
 
-          <Button type="submit" className="w-full">
-            {editingConsumerUnit ? "Atualizar UC" : "Cadastrar UC"}
-          </Button>
+          <div className="flex gap-2">
+            <Button type="submit" className="flex-1">
+              {editingConsumerUnit ? "Atualizar UC" : "Cadastrar UC"}
+            </Button>
+            {editingConsumerUnit && (
+              <Button type="button" variant="outline" onClick={handleCancel}>
+                Cancelar Edição
+              </Button>
+            )}
+          </div>
         </form>
       </CardContent>
     </Card>

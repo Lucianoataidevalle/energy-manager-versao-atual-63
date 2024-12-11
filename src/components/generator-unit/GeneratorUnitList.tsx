@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useData } from "@/contexts/DataContext";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -13,21 +12,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Pencil, Trash2 } from "lucide-react";
 import { UpdateConfirmDialog } from "../invoice/InvoiceForm/UpdateConfirmDialog";
+import { useState } from "react";
 
-const ConsumerUnitList = () => {
-  const { consumerUnits, deleteConsumerUnit, setEditingConsumerUnit } = useData();
+const GeneratorUnitList = () => {
+  const { generatorUnits, deleteGeneratorUnit, setEditingGeneratorUnit } = useData();
   const { isAdmin } = useAuth();
   const [filters, setFilters] = useState({
     empresa: "",
-    nome: "",
-    numero: "",
-    endereco: "",
-    grupoSubgrupo: "",
-    modalidadeTarifaria: "",
-    distribuidora: "",
+    unidadeConsumidora: "",
+    tipoGeracao: "",
+    potenciaInstalada: "",
+    tipoConexao: "",
   });
 
-  const filteredUnits = consumerUnits.filter(unit => {
+  const filteredUnits = generatorUnits.filter(unit => {
     return Object.entries(filters).every(([key, value]) => {
       if (!value) return true;
       const unitValue = unit[key as keyof typeof unit]?.toString().toLowerCase();
@@ -54,51 +52,33 @@ const ConsumerUnitList = () => {
             </TableHead>
             <TableHead>
               <Input
-                placeholder="Filtrar nome"
-                value={filters.nome}
-                onChange={(e) => handleFilterChange("nome", e.target.value)}
+                placeholder="Filtrar unidade consumidora"
+                value={filters.unidadeConsumidora}
+                onChange={(e) => handleFilterChange("unidadeConsumidora", e.target.value)}
                 className="max-w-sm"
               />
             </TableHead>
             <TableHead>
               <Input
-                placeholder="Filtrar número UC"
-                value={filters.numero}
-                onChange={(e) => handleFilterChange("numero", e.target.value)}
+                placeholder="Filtrar tipo de geração"
+                value={filters.tipoGeracao}
+                onChange={(e) => handleFilterChange("tipoGeracao", e.target.value)}
                 className="max-w-sm"
               />
             </TableHead>
             <TableHead>
               <Input
-                placeholder="Filtrar endereço"
-                value={filters.endereco}
-                onChange={(e) => handleFilterChange("endereco", e.target.value)}
-                className="max-w-sm"
-              />
-            </TableHead>
-            <TableHead>Demanda Contratada Ponta (kW)</TableHead>
-            <TableHead>Demanda Contratada Fora Ponta (kW)</TableHead>
-            <TableHead>
-              <Input
-                placeholder="Filtrar grupo/subgrupo"
-                value={filters.grupoSubgrupo}
-                onChange={(e) => handleFilterChange("grupoSubgrupo", e.target.value)}
+                placeholder="Filtrar potência"
+                value={filters.potenciaInstalada}
+                onChange={(e) => handleFilterChange("potenciaInstalada", e.target.value)}
                 className="max-w-sm"
               />
             </TableHead>
             <TableHead>
               <Input
-                placeholder="Filtrar modalidade"
-                value={filters.modalidadeTarifaria}
-                onChange={(e) => handleFilterChange("modalidadeTarifaria", e.target.value)}
-                className="max-w-sm"
-              />
-            </TableHead>
-            <TableHead>
-              <Input
-                placeholder="Filtrar distribuidora"
-                value={filters.distribuidora}
-                onChange={(e) => handleFilterChange("distribuidora", e.target.value)}
+                placeholder="Filtrar tipo de conexão"
+                value={filters.tipoConexao}
+                onChange={(e) => handleFilterChange("tipoConexao", e.target.value)}
                 className="max-w-sm"
               />
             </TableHead>
@@ -109,28 +89,24 @@ const ConsumerUnitList = () => {
           {filteredUnits.map((unit) => (
             <TableRow key={unit.id}>
               <TableCell>{unit.empresa}</TableCell>
-              <TableCell>{unit.nome}</TableCell>
-              <TableCell>{unit.numero}</TableCell>
-              <TableCell>{unit.endereco}</TableCell>
-              <TableCell>{unit.demandaContratadaPonta}</TableCell>
-              <TableCell>{unit.demandaContratadaForaPonta}</TableCell>
-              <TableCell>{unit.grupoSubgrupo}</TableCell>
-              <TableCell>{unit.modalidadeTarifaria}</TableCell>
-              <TableCell>{unit.distribuidora}</TableCell>
+              <TableCell>{unit.unidadeConsumidora}</TableCell>
+              <TableCell>{unit.tipoGeracao}</TableCell>
+              <TableCell>{unit.potenciaInstalada}</TableCell>
+              <TableCell>{unit.tipoConexao}</TableCell>
               {isAdmin && (
                 <TableCell className="space-x-2">
                   <Button 
                     variant="outline" 
                     size="icon"
-                    onClick={() => setEditingConsumerUnit(unit)}
+                    onClick={() => setEditingGeneratorUnit(unit)}
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
                   <UpdateConfirmDialog
-                    onConfirm={() => deleteConsumerUnit(unit.id)}
+                    onConfirm={() => deleteGeneratorUnit(unit.id)}
                     isEditing={false}
-                    confirmTitle="Excluir Unidade Consumidora"
-                    confirmMessage="Deseja realmente excluir esta unidade consumidora? Esta ação não pode ser desfeita."
+                    confirmTitle="Excluir Unidade Geradora"
+                    confirmMessage="Deseja realmente excluir esta unidade geradora? Esta ação não pode ser desfeita."
                     buttonText=""
                     buttonIcon={<Trash2 className="h-4 w-4" />}
                     buttonVariant="outline"
@@ -145,4 +121,4 @@ const ConsumerUnitList = () => {
   );
 };
 
-export default ConsumerUnitList;
+export default GeneratorUnitList;

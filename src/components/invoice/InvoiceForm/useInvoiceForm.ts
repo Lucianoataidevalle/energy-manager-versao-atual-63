@@ -8,7 +8,7 @@ export const useInvoiceForm = (
   onCompanyChange: (company: string) => void,
   onUnitChange: (unit: string) => void
 ) => {
-  const { addInvoice, editingInvoice, editInvoice } = useData();
+  const { addInvoice, editingInvoice, editInvoice, consumerUnits } = useData();
   const [formData, setFormData] = useState<InvoiceFormData>({
     empresa: "",
     unidade: "",
@@ -76,13 +76,44 @@ export const useInvoiceForm = (
         custoEnergiaInjetadaPonta: editingInvoice.custoEnergiaInjetadaPonta?.toString() || "",
         multasJuros: editingInvoice.multasJuros.toString(),
         valorFatura: editingInvoice.valorFatura.toString(),
-        bandeiraTarifaria: editingInvoice.bandeiraTarifaria?.toString() || "",
+        bandeiraTarifaria: editingInvoice.bandeiraTarifaria,
       });
     }
   }, [editingInvoice]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const validateForm = () => {
+    const selectedUnit = consumerUnits.find(unit => unit.nome === formData.unidade);
+    const isGreenTariff = selectedUnit?.modalidadeTarifaria === "Verde";
+    const isGroupB = selectedUnit?.grupoSubgrupo === "B";
+
+    const requiredFields = [
+      'empresa',
+      'unidade',
+      'mes',
+      'consumoForaPonta',
+      'valorFatura'
+    ];
+
+    // Add fields based on tariff type
+    if (!isGroupB && !isGreenTariff) {
+      requiredFields.push(
+        'consumoPonta',
+        'demandaMedidaForaPonta',
+        'demandaMedidaPonta'
+      );
+    }
+
+    if (!isGroupB && isGreenTariff) {
+      requiredFields.push(
+        'consumoPonta',
+        'demandaMedidaForaPonta'
+      );
+    }
+
+    return requiredFields.every(field => formData[field as keyof InvoiceFormData] !== "");
+  };
+
+  const handleSubmit = () => {
     const invoiceData = {
       empresa: formData.empresa,
       unidade: formData.unidade,
@@ -114,7 +145,7 @@ export const useInvoiceForm = (
       custoEnergiaInjetadaPonta: Number(formData.custoEnergiaInjetadaPonta),
       multasJuros: Number(formData.multasJuros),
       valorFatura: Number(formData.valorFatura),
-      bandeiraTarifaria: Number(formData.bandeiraTarifaria),
+      bandeiraTarifaria: formData.bandeiraTarifaria,
     };
 
     if (!editingInvoice) {
@@ -160,5 +191,5 @@ export const useInvoiceForm = (
     });
   };
 
-  return { formData, setFormData, handleSubmit };
+  return { formData, setFormData, handleSubmit, validateForm };
 };

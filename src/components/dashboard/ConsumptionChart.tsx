@@ -95,16 +95,24 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
           <BarChart 
             data={chartData} 
             barSize={30}
-            margin={{ top: 40, right: 30, left: 20, bottom: 5 }}
+            margin={{ top: 40, right: 40, left: 40, bottom: 20 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="mes" />
-            <YAxis tickFormatter={formatNumber} />
+            <XAxis 
+              dataKey="mes" 
+              interval={0} 
+              tickMargin={10}
+              axisLine={{ strokeWidth: 2 }}
+            />
+            <YAxis 
+              tickFormatter={formatNumber}
+              axisLine={{ strokeWidth: 2 }}
+            />
             <Tooltip content={<CustomTooltip />} />
             <Legend formatter={(value) => {
-              if (value === "total") return "Consumo Total";
-              if (value === "foraPonta") return "Consumo Fora Ponta";
-              if (value === "ponta") return "Consumo Ponta";
+              if (value === "total") return "Total";
+              if (value === "foraPonta") return "Fora Ponta";
+              if (value === "ponta") return "Ponta";
               return value;
             }} />
             <Bar 

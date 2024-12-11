@@ -51,19 +51,19 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   type="monotone"
                   dataKey="demandaContratadaForaPonta"
                   stroke="#ff7300"
-                  name="Demanda Contratada Fora Ponta"
+                  name="Contratada Fora Ponta"
                 />
                 <Line
                   type="monotone"
                   dataKey="demandaContratadaPonta"
                   stroke="#ff0000"
-                  name="Demanda Contratada Ponta"
+                  name="Contratada Ponta"
                 />
                 <Bar 
                   dataKey="demandaMedidaForaPonta" 
                   stackId="foraPonta"
                   fill="#8884d8" 
-                  name="Demanda Medida Fora Ponta"
+                  name="Medida Fora Ponta"
                   barSize={20}
                   order={2}
                 />
@@ -71,7 +71,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   dataKey="demandaMedidaPonta"
                   stackId="ponta"
                   fill="#82ca9d"
-                  name="Demanda Medida Ponta"
+                  name="Medida Ponta"
                   barSize={20}
                   order={2}
                 />
@@ -79,7 +79,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   dataKey="demandaUltrapassagemForaPonta" 
                   stackId="foraPonta"
                   fill="#483d8b" 
-                  name="Demanda de Ultrapassagem Fora Ponta"
+                  name="Ultrapassagem Fora Ponta"
                   barSize={20}
                   order={1}
                 />
@@ -87,7 +87,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   dataKey="demandaUltrapassagemPonta"
                   stackId="ponta"
                   fill="#2e8b57"
-                  name="Demanda de Ultrapassagem Ponta"
+                  name="Ultrapassagem Ponta"
                   barSize={20}
                   order={1}
                 />
@@ -98,13 +98,13 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   type="monotone"
                   dataKey="demandaContratada"
                   stroke="#ff7300"
-                  name="Demanda Contratada"
+                  name="Contratada"
                 />
                 <Bar 
                   dataKey="demandaMedidaForaPonta" 
                   stackId="demanda"
                   fill="#8884d8" 
-                  name="Demanda Medida"
+                  name="Medida"
                   barSize={20}
                   order={2}
                 />
@@ -112,7 +112,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
                   dataKey="demandaUltrapassagemForaPonta" 
                   stackId="demanda"
                   fill="#483d8b" 
-                  name="Demanda de Ultrapassagem"
+                  name="Ultrapassagem"
                   barSize={20}
                   order={1}
                 />

@@ -18,7 +18,7 @@ import {
 import { useData } from "@/contexts/DataContext";
 
 const CompanyForm = () => {
-  const { editingCompany, editCompany, addCompany } = useData();
+  const { editingCompany, editCompany, addCompany, setEditingCompany } = useData();
   const [formData, setFormData] = useState({
     razaoSocial: "",
     cnpj: "",
@@ -68,12 +68,18 @@ const CompanyForm = () => {
       if (editingCompany?.id) {
         await editCompany(editingCompany.id, formData);
         toast.success("Empresa atualizada com sucesso!");
-        setFormData({ razaoSocial: "", cnpj: "", endereco: "" });
+        handleCancel();
       }
     } catch (error) {
       console.error('Error updating company:', error);
       toast.error("Erro ao atualizar empresa");
     }
+  };
+
+  const handleCancel = () => {
+    setEditingCompany(null);
+    setFormData({ razaoSocial: "", cnpj: "", endereco: "" });
+    toast.info("Edição cancelada");
   };
 
   return (
@@ -125,33 +131,40 @@ const CompanyForm = () => {
               required
             />
           </div>
-          {editingCompany ? (
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button type="button" className="w-full">
-                  Atualizar Empresa
+          <div className="flex gap-2">
+            {editingCompany ? (
+              <>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button type="button" className="flex-1">
+                      Atualizar Empresa
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Atualizar Empresa</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Deseja realmente atualizar esta empresa?
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleUpdate}>
+                        Confirmar
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+                <Button type="button" variant="outline" onClick={handleCancel}>
+                  Cancelar Edição
                 </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Atualizar Empresa</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Deseja realmente atualizar esta empresa?
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleUpdate}>
-                    Confirmar
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          ) : (
-            <Button type="submit" className="w-full">
-              Cadastrar Empresa
-            </Button>
-          )}
+              </>
+            ) : (
+              <Button type="submit" className="w-full">
+                Cadastrar Empresa
+              </Button>
+            )}
+          </div>
         </form>
       </CardContent>
     </Card>

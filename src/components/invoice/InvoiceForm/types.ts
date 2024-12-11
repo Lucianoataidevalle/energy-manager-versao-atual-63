@@ -23,6 +23,7 @@ export interface InvoiceFormData {
   energiaInjetadaForaPonta: string;
   energiaInjetadaPonta: string;
   saldoAcumulado: string;
+  geracaoTotal: string;
   custoConsumoForaPonta: string;
   custoConsumoPonta: string;
   custoDemandaMedidaForaPonta: string;

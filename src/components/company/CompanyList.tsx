@@ -26,7 +26,12 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const CompanyList = () => {
   const { companies, deleteCompany, setEditingCompany } = useData();
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
+
+  // Filter companies based on user permissions
+  const userCompanies = isAdmin 
+    ? companies 
+    : companies.filter(company => user?.empresas?.includes(company.razaoSocial));
 
   return (
     <Card>
@@ -45,7 +50,7 @@ const CompanyList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {companies.map((company) => (
+            {userCompanies.map((company) => (
               <TableRow key={company.id}>
                 <TableCell className="text-center">{company.razaoSocial}</TableCell>
                 <TableCell className="text-center">{formatCNPJ(company.cnpj)}</TableCell>

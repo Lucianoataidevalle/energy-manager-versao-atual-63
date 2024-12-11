@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Pencil, Trash2 } from "lucide-react";
-import { UpdateConfirmDialog } from "../invoice/InvoiceForm/UpdateConfirmDialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 
 const GeneratorUnitList = () => {
@@ -38,86 +38,91 @@ const GeneratorUnitList = () => {
   };
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>
-              <Input
-                placeholder="Filtrar empresa"
-                value={filters.empresa}
-                onChange={(e) => handleFilterChange("empresa", e.target.value)}
-                className="max-w-sm"
-              />
-            </TableHead>
-            <TableHead>
-              <Input
-                placeholder="Filtrar unidade consumidora"
-                value={filters.unidadeConsumidora}
-                onChange={(e) => handleFilterChange("unidadeConsumidora", e.target.value)}
-                className="max-w-sm"
-              />
-            </TableHead>
-            <TableHead>
-              <Input
-                placeholder="Filtrar tipo de geração"
-                value={filters.tipoGeracao}
-                onChange={(e) => handleFilterChange("tipoGeracao", e.target.value)}
-                className="max-w-sm"
-              />
-            </TableHead>
-            <TableHead>
-              <Input
-                placeholder="Filtrar potência"
-                value={filters.potenciaInstalada}
-                onChange={(e) => handleFilterChange("potenciaInstalada", e.target.value)}
-                className="max-w-sm"
-              />
-            </TableHead>
-            <TableHead>
-              <Input
-                placeholder="Filtrar tipo de conexão"
-                value={filters.tipoConexao}
-                onChange={(e) => handleFilterChange("tipoConexao", e.target.value)}
-                className="max-w-sm"
-              />
-            </TableHead>
-            {isAdmin && <TableHead>Ações</TableHead>}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredUnits.map((unit) => (
-            <TableRow key={unit.id}>
-              <TableCell>{unit.empresa}</TableCell>
-              <TableCell>{unit.unidadeConsumidora}</TableCell>
-              <TableCell>{unit.tipoGeracao}</TableCell>
-              <TableCell>{unit.potenciaInstalada}</TableCell>
-              <TableCell>{unit.tipoConexao}</TableCell>
-              {isAdmin && (
-                <TableCell className="space-x-2">
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={() => setEditingGeneratorUnit(unit)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <UpdateConfirmDialog
-                    onConfirm={() => deleteGeneratorUnit(unit.id)}
-                    isEditing={false}
-                    confirmTitle="Excluir Unidade Geradora"
-                    confirmMessage="Deseja realmente excluir esta unidade geradora? Esta ação não pode ser desfeita."
-                    buttonText=""
-                    buttonIcon={<Trash2 className="h-4 w-4" />}
-                    buttonVariant="outline"
+    <Card>
+      <CardHeader>
+        <CardTitle>Lista de Unidades Geradoras</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>
+                  <Input
+                    placeholder="Filtrar empresa"
+                    value={filters.empresa}
+                    onChange={(e) => handleFilterChange("empresa", e.target.value)}
+                    className="max-w-sm"
                   />
-                </TableCell>
-              )}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+                </TableHead>
+                <TableHead>
+                  <Input
+                    placeholder="Filtrar unidade consumidora"
+                    value={filters.unidadeConsumidora}
+                    onChange={(e) => handleFilterChange("unidadeConsumidora", e.target.value)}
+                    className="max-w-sm"
+                  />
+                </TableHead>
+                <TableHead>
+                  <Input
+                    placeholder="Filtrar tipo de geração"
+                    value={filters.tipoGeracao}
+                    onChange={(e) => handleFilterChange("tipoGeracao", e.target.value)}
+                    className="max-w-sm"
+                  />
+                </TableHead>
+                <TableHead>
+                  <Input
+                    placeholder="Filtrar potência"
+                    value={filters.potenciaInstalada}
+                    onChange={(e) => handleFilterChange("potenciaInstalada", e.target.value)}
+                    className="max-w-sm"
+                  />
+                </TableHead>
+                <TableHead>
+                  <Input
+                    placeholder="Filtrar tipo de conexão"
+                    value={filters.tipoConexao}
+                    onChange={(e) => handleFilterChange("tipoConexao", e.target.value)}
+                    className="max-w-sm"
+                  />
+                </TableHead>
+                {isAdmin && <TableHead>Ações</TableHead>}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredUnits.map((unit) => (
+                <TableRow key={unit.id}>
+                  <TableCell>{unit.empresa}</TableCell>
+                  <TableCell>{unit.unidadeConsumidora}</TableCell>
+                  <TableCell>{unit.tipoGeracao}</TableCell>
+                  <TableCell>{unit.potenciaInstalada}</TableCell>
+                  <TableCell>{unit.tipoConexao}</TableCell>
+                  {isAdmin && (
+                    <TableCell className="space-x-2">
+                      <Button 
+                        variant="outline" 
+                        size="icon"
+                        onClick={() => setEditingGeneratorUnit(unit)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => deleteGeneratorUnit(unit.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

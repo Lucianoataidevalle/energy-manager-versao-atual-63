@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Report from "./pages/Report";
 import CompanyRegistration from "./pages/CompanyRegistration";
 import ConsumerUnitRegistration from "./pages/ConsumerUnitRegistration";
+import GeneratorUnitRegistration from "./pages/GeneratorUnitRegistration";
 import UserRegistration from "./pages/UserRegistration";
 import InvoiceRegistration from "./pages/InvoiceRegistration";
 
@@ -29,6 +30,7 @@ const App = () => (
               <Route path="/relatorio" element={<Report />} />
               <Route path="/empresa" element={<CompanyRegistration />} />
               <Route path="/unidade" element={<ConsumerUnitRegistration />} />
+              <Route path="/unidade-geradora" element={<GeneratorUnitRegistration />} />
               <Route path="/usuario" element={<UserRegistration />} />
               <Route path="/faturas" element={<InvoiceRegistration />} />
               <Route path="/" element={<Navigate to="/login" replace />} />

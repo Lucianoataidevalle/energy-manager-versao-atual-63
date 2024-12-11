@@ -10,6 +10,7 @@ import ReactiveDemandChart from "@/components/dashboard/ReactiveDemandChart";
 import FinesChart from "@/components/dashboard/FinesChart";
 import GenerationChart from "@/components/dashboard/GenerationChart";
 import { useData } from "@/contexts/DataContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { format, subMonths } from "date-fns";
 
 const CHART_ORDER = [
@@ -24,6 +25,7 @@ const CHART_ORDER = [
 
 const Dashboard = () => {
   const { companies, consumerUnits } = useData();
+  const { user, isAdmin } = useAuth();
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedUnit, setSelectedUnit] = useState("");
   const [selectedMonth, setSelectedMonth] = useState(
@@ -31,22 +33,33 @@ const Dashboard = () => {
   );
   const [visibleCharts, setVisibleCharts] = useState(CHART_ORDER);
 
-  useEffect(() => {
-    if (companies.length > 0 && !selectedCompany) {
-      setSelectedCompany(companies[0].razaoSocial);
-    }
-  }, [companies]);
+  // Filter units based on user permissions
+  const userUnits = isAdmin 
+    ? consumerUnits 
+    : consumerUnits.filter(unit => user?.unidadesConsumidoras?.includes(unit.numero));
 
   useEffect(() => {
-    if (selectedCompany && consumerUnits.length > 0 && !selectedUnit) {
-      const companyUnits = consumerUnits.filter(
+    if (companies.length > 0 && !selectedCompany) {
+      // Only show companies that have units the user has access to
+      const userCompanies = companies.filter(company => 
+        userUnits.some(unit => unit.empresa === company.razaoSocial)
+      );
+      if (userCompanies.length > 0) {
+        setSelectedCompany(userCompanies[0].razaoSocial);
+      }
+    }
+  }, [companies, userUnits]);
+
+  useEffect(() => {
+    if (selectedCompany && userUnits.length > 0 && !selectedUnit) {
+      const companyUnits = userUnits.filter(
         (unit) => unit.empresa === selectedCompany
       );
       if (companyUnits.length > 0) {
         setSelectedUnit(companyUnits[0].nome);
       }
     }
-  }, [selectedCompany, consumerUnits]);
+  }, [selectedCompany, userUnits]);
 
   const handleVisibleChartsChange = (newCharts: string[]) => {
     const orderedCharts = CHART_ORDER.filter(chartId => newCharts.includes(chartId));

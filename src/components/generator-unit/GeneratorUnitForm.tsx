@@ -39,20 +39,7 @@ const GeneratorUnitForm = () => {
         tipoGeracao: editingGeneratorUnit.tipoGeracao,
         potenciaInstalada: editingGeneratorUnit.potenciaInstalada,
         tipoConexao: editingGeneratorUnit.tipoConexao,
-        estimativaGeracao: {
-          janeiro: editingGeneratorUnit.estimativaGeracao.janeiro,
-          fevereiro: editingGeneratorUnit.estimativaGeracao.fevereiro,
-          marco: editingGeneratorUnit.estimativaGeracao.marco,
-          abril: editingGeneratorUnit.estimativaGeracao.abril,
-          maio: editingGeneratorUnit.estimativaGeracao.maio,
-          junho: editingGeneratorUnit.estimativaGeracao.junho,
-          julho: editingGeneratorUnit.estimativaGeracao.julho,
-          agosto: editingGeneratorUnit.estimativaGeracao.agosto,
-          setembro: editingGeneratorUnit.estimativaGeracao.setembro,
-          outubro: editingGeneratorUnit.estimativaGeracao.outubro,
-          novembro: editingGeneratorUnit.estimativaGeracao.novembro,
-          dezembro: editingGeneratorUnit.estimativaGeracao.dezembro,
-        },
+        estimativaGeracao: editingGeneratorUnit.estimativaGeracao,
       });
     }
   }, [editingGeneratorUnit]);
@@ -69,12 +56,12 @@ const GeneratorUnitForm = () => {
     if (editingGeneratorUnit) {
       editGeneratorUnit(editingGeneratorUnit.id, formData);
       toast.success("Unidade geradora atualizada com sucesso!");
+      handleCancel();
     } else {
       addGeneratorUnit(formData);
       toast.success("Unidade geradora cadastrada com sucesso!");
+      handleCancel();
     }
-    
-    handleCancel();
   };
 
   const handleCancel = () => {

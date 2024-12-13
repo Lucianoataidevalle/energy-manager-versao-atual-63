@@ -33,7 +33,27 @@ const GeneratorUnitForm = () => {
 
   useEffect(() => {
     if (editingGeneratorUnit) {
-      setFormData(editingGeneratorUnit);
+      setFormData({
+        empresa: editingGeneratorUnit.empresa,
+        unidadeConsumidora: editingGeneratorUnit.unidadeConsumidora,
+        tipoGeracao: editingGeneratorUnit.tipoGeracao,
+        potenciaInstalada: editingGeneratorUnit.potenciaInstalada,
+        tipoConexao: editingGeneratorUnit.tipoConexao,
+        estimativaGeracao: {
+          janeiro: editingGeneratorUnit.estimativaGeracao.janeiro,
+          fevereiro: editingGeneratorUnit.estimativaGeracao.fevereiro,
+          marco: editingGeneratorUnit.estimativaGeracao.marco,
+          abril: editingGeneratorUnit.estimativaGeracao.abril,
+          maio: editingGeneratorUnit.estimativaGeracao.maio,
+          junho: editingGeneratorUnit.estimativaGeracao.junho,
+          julho: editingGeneratorUnit.estimativaGeracao.julho,
+          agosto: editingGeneratorUnit.estimativaGeracao.agosto,
+          setembro: editingGeneratorUnit.estimativaGeracao.setembro,
+          outubro: editingGeneratorUnit.estimativaGeracao.outubro,
+          novembro: editingGeneratorUnit.estimativaGeracao.novembro,
+          dezembro: editingGeneratorUnit.estimativaGeracao.dezembro,
+        },
+      });
     }
   }, [editingGeneratorUnit]);
 

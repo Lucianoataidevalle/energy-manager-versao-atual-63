@@ -8,6 +8,7 @@ import {
   Zap,
   User,
   LogOut,
+  Sun,
 } from "lucide-react";
 import {
   Accordion,
@@ -17,9 +18,21 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useData } from "@/contexts/DataContext";
 
 export const SidebarContent = ({ handleLogout }: { handleLogout: () => void }) => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
+  const { companies, consumerUnits } = useData();
+
+  // Filter companies based on user permissions
+  const userCompanies = isAdmin 
+    ? companies 
+    : companies.filter(company => user?.empresas?.includes(company.razaoSocial));
+
+  // Filter consumer units based on user permissions
+  const userUnits = isAdmin 
+    ? consumerUnits 
+    : consumerUnits.filter(unit => user?.unidadesConsumidoras?.includes(unit.numero));
 
   return (
     <div className="flex flex-col h-full">
@@ -44,27 +57,42 @@ export const SidebarContent = ({ handleLogout }: { handleLogout: () => void }) =
             </AccordionTrigger>
             <AccordionContent>
               <div className="flex flex-col space-y-2 pl-8">
-                <Link
-                  to="/empresa"
-                  className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded"
-                >
-                  <Building2 size={20} />
-                  <span>Empresa</span>
-                </Link>
-                <Link
-                  to="/unidade"
-                  className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded"
-                >
-                  <Zap size={20} />
-                  <span>Unidade Consumidora</span>
-                </Link>
-                <Link
-                  to="/usuario"
-                  className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded"
-                >
-                  <User size={20} />
-                  <span>Usuário</span>
-                </Link>
+                {(isAdmin || userCompanies.length > 0) && (
+                  <Link
+                    to="/empresa"
+                    className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded"
+                  >
+                    <Building2 size={20} />
+                    <span>Empresa</span>
+                  </Link>
+                )}
+                {(isAdmin || userUnits.length > 0) && (
+                  <>
+                    <Link
+                      to="/unidade"
+                      className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded"
+                    >
+                      <Zap size={20} />
+                      <span>Unidade Consumidora</span>
+                    </Link>
+                    <Link
+                      to="/unidade-geradora"
+                      className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded"
+                    >
+                      <Sun size={20} />
+                      <span>Unidade Geradora</span>
+                    </Link>
+                  </>
+                )}
+                {isAdmin && (
+                  <Link
+                    to="/usuario"
+                    className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded"
+                  >
+                    <User size={20} />
+                    <span>Usuário</span>
+                  </Link>
+                )}
               </div>
             </AccordionContent>
           </AccordionItem>

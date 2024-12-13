@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CompanyUnitSelect } from "./form/CompanyUnitSelect";
 import { GenerationTypeFields } from "./form/GenerationTypeFields";
 import { MonthlyGenerationFields } from "./form/MonthlyGenerationFields";
+import { FormActions } from "./form/FormActions";
 
 const GeneratorUnitForm = () => {
   const { addGeneratorUnit, editingGeneratorUnit, editGeneratorUnit, setEditingGeneratorUnit } = useData();
@@ -115,16 +115,10 @@ const GeneratorUnitForm = () => {
             <MonthlyGenerationFields formData={formData} setFormData={setFormData} />
           </div>
 
-          <div className="flex gap-4">
-            <Button type="submit" className="flex-1">
-              {editingGeneratorUnit ? "Atualizar Unidade Geradora" : "Cadastrar Unidade Geradora"}
-            </Button>
-            {editingGeneratorUnit && (
-              <Button type="button" variant="outline" onClick={handleCancel} className="flex-1">
-                Cancelar Edição
-              </Button>
-            )}
-          </div>
+          <FormActions 
+            isEditing={!!editingGeneratorUnit} 
+            onCancel={handleCancel}
+          />
         </form>
       </CardContent>
     </Card>

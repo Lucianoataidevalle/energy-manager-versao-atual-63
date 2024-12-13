@@ -16,30 +16,33 @@ import InvoiceRegistration from "./pages/InvoiceRegistration";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <DataProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AuthProvider>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/relatorio" element={<Report />} />
-              <Route path="/empresa" element={<CompanyRegistration />} />
-              <Route path="/unidade" element={<ConsumerUnitRegistration />} />
-              <Route path="/unidade-geradora" element={<GeneratorUnitRegistration />} />
-              <Route path="/usuario" element={<UserRegistration />} />
-              <Route path="/faturas" element={<InvoiceRegistration />} />
-              <Route path="/" element={<Navigate to="/login" replace />} />
-            </Routes>
-          </AuthProvider>
-        </BrowserRouter>
-      </TooltipProvider>
-    </DataProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <DataProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AuthProvider>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/relatorio" element={<Report />} />
+                <Route path="/empresa" element={<CompanyRegistration />} />
+                <Route path="/unidade" element={<ConsumerUnitRegistration />} />
+                <Route path="/unidade-geradora" element={<GeneratorUnitRegistration />} />
+                <Route path="/usuario" element={<UserRegistration />} />
+                <Route path="/faturas" element={<InvoiceRegistration />} />
+                <Route path="/" element={<Navigate to="/login" replace />} />
+                <Route path="*" element={<Navigate to="/login" replace />} />
+              </Routes>
+            </AuthProvider>
+          </BrowserRouter>
+        </TooltipProvider>
+      </DataProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

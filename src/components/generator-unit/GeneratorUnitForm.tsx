@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { GenerationTypeFields } from "./form/GenerationTypeFields";
 import { MonthlyGenerationFields } from "./form/MonthlyGenerationFields";
 
 const GeneratorUnitForm = () => {
-  const { addGeneratorUnit } = useData();
+  const { addGeneratorUnit, editingGeneratorUnit, editGeneratorUnit, setEditingGeneratorUnit } = useData();
   const [formData, setFormData] = useState({
     empresa: "",
     unidadeConsumidora: "",
@@ -31,6 +31,12 @@ const GeneratorUnitForm = () => {
     },
   });
 
+  useEffect(() => {
+    if (editingGeneratorUnit) {
+      setFormData(editingGeneratorUnit);
+    }
+  }, [editingGeneratorUnit]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -40,9 +46,18 @@ const GeneratorUnitForm = () => {
       return;
     }
 
-    addGeneratorUnit(formData);
-    toast.success("Unidade geradora cadastrada com sucesso!");
+    if (editingGeneratorUnit) {
+      editGeneratorUnit(editingGeneratorUnit.id, formData);
+      toast.success("Unidade geradora atualizada com sucesso!");
+    } else {
+      addGeneratorUnit(formData);
+      toast.success("Unidade geradora cadastrada com sucesso!");
+    }
     
+    handleCancel();
+  };
+
+  const handleCancel = () => {
     setFormData({
       empresa: "",
       unidadeConsumidora: "",
@@ -64,6 +79,7 @@ const GeneratorUnitForm = () => {
         dezembro: "",
       },
     });
+    setEditingGeneratorUnit(null);
   };
 
   return (
@@ -79,9 +95,16 @@ const GeneratorUnitForm = () => {
             <MonthlyGenerationFields formData={formData} setFormData={setFormData} />
           </div>
 
-          <Button type="submit" className="w-full">
-            Cadastrar Unidade Geradora
-          </Button>
+          <div className="flex gap-4">
+            <Button type="submit" className="flex-1">
+              {editingGeneratorUnit ? "Atualizar Unidade Geradora" : "Cadastrar Unidade Geradora"}
+            </Button>
+            {editingGeneratorUnit && (
+              <Button type="button" variant="outline" onClick={handleCancel} className="flex-1">
+                Cancelar Edição
+              </Button>
+            )}
+          </div>
         </form>
       </CardContent>
     </Card>

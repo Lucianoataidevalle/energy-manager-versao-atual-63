@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Pencil, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -23,15 +24,35 @@ import {
 import { useData } from "@/contexts/DataContext";
 import { formatCNPJ } from "@/utils/formatters";
 import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
 
 const CompanyList = () => {
-  const { companies, deleteCompany, setEditingCompany } = useData();
+  const { companies, consumerUnits, deleteCompany, setEditingCompany } = useData();
   const { isAdmin, user } = useAuth();
+  const [filters, setFilters] = useState({
+    razaoSocial: "",
+    cnpj: "",
+    endereco: "",
+  });
 
   // Filter companies based on user permissions
   const userCompanies = isAdmin 
     ? companies 
     : companies.filter(company => user?.empresas?.includes(company.razaoSocial));
+
+  // Apply filters
+  const filteredCompanies = userCompanies.filter(company => {
+    return Object.entries(filters).every(([key, value]) => {
+      if (!value) return true;
+      const companyValue = company[key as keyof typeof company]?.toString().toLowerCase();
+      return companyValue?.includes(value.toLowerCase());
+    });
+  });
+
+  // Get UC count for each company
+  const getUCCount = (companyName: string) => {
+    return consumerUnits.filter(unit => unit.empresa === companyName).length;
+  };
 
   return (
     <Card>
@@ -42,20 +63,41 @@ const CompanyList = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">Razão Social</TableHead>
-              <TableHead className="text-center">CNPJ</TableHead>
-              <TableHead className="text-center">Endereço</TableHead>
+              <TableHead>
+                <Input
+                  placeholder="Filtrar razão social"
+                  value={filters.razaoSocial}
+                  onChange={(e) => setFilters(prev => ({ ...prev, razaoSocial: e.target.value }))}
+                  className="max-w-sm"
+                />
+              </TableHead>
+              <TableHead>
+                <Input
+                  placeholder="Filtrar CNPJ"
+                  value={filters.cnpj}
+                  onChange={(e) => setFilters(prev => ({ ...prev, cnpj: e.target.value }))}
+                  className="max-w-sm"
+                />
+              </TableHead>
+              <TableHead>
+                <Input
+                  placeholder="Filtrar endereço"
+                  value={filters.endereco}
+                  onChange={(e) => setFilters(prev => ({ ...prev, endereco: e.target.value }))}
+                  className="max-w-sm"
+                />
+              </TableHead>
               <TableHead className="text-center">Quantidade UC</TableHead>
               {isAdmin && <TableHead className="text-center">Ações</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {userCompanies.map((company) => (
+            {filteredCompanies.map((company) => (
               <TableRow key={company.id}>
                 <TableCell className="text-center">{company.razaoSocial}</TableCell>
                 <TableCell className="text-center">{formatCNPJ(company.cnpj)}</TableCell>
                 <TableCell className="text-center">{company.endereco}</TableCell>
-                <TableCell className="text-center">{company.unidades.length}</TableCell>
+                <TableCell className="text-center">{getUCCount(company.razaoSocial)}</TableCell>
                 {isAdmin && (
                   <TableCell className="text-center space-x-2">
                     <Button 

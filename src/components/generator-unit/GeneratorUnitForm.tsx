@@ -31,6 +31,7 @@ const GeneratorUnitForm = () => {
     },
   });
 
+  // Load editing data when editingGeneratorUnit changes
   useEffect(() => {
     if (editingGeneratorUnit) {
       setFormData({

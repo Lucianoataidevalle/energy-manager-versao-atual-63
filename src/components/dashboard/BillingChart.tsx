@@ -69,7 +69,7 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
           <p className="text-sm font-semibold">{label}</p>
           {payload.map((entry: any) => (
             <p key={entry.name} className="text-sm" style={{ color: entry.color }}>
-              {entry.name}: R$ {formatNumber(entry.value)}
+              Valor Total: R$ {formatNumber(entry.value)}
             </p>
           ))}
         </div>
@@ -94,13 +94,6 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
               dataKey="valor"
               fill="#8884d8"
               name="Valor Total"
-              label={{
-                position: "top",
-                formatter: (value: number) => `R$ ${formatNumber(value)}`,
-                fontSize: 12,
-                fontWeight: "bold",
-                fill: "#666"
-              }}
             />
           </BarChart>
         </ResponsiveContainer>

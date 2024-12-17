@@ -37,7 +37,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
         <ResponsiveContainer width="100%" height={280}>
           <ComposedChart 
             data={chartData}
-            margin={{ top: 40, right: 30, left: 20, bottom: 5 }}
+            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="mes" />

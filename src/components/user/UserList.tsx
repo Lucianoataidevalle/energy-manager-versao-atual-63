@@ -69,8 +69,8 @@ const UserList = () => {
           </TableHeader>
           <TableBody>
             {sortedUsers.map((user) => (
-              <>
-                <TableRow key={user.id}>
+              <Collapsible key={user.id}>
+                <TableRow>
                   <TableCell>
                     <CollapsibleTrigger
                       onClick={() => toggleUser(user.id)}
@@ -110,9 +110,7 @@ const UserList = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell colSpan={5}>
-                    <CollapsibleContent
-                      className={openUsers.includes(user.id) ? "block" : "hidden"}
-                    >
+                    <CollapsibleContent>
                       <div className="pl-6 py-2">
                         {getUserCompanies(user).map(company => (
                           <div key={company.id} className="mb-4">
@@ -130,7 +128,7 @@ const UserList = () => {
                     </CollapsibleContent>
                   </TableCell>
                 </TableRow>
-              </>
+              </Collapsible>
             ))}
           </TableBody>
         </Table>

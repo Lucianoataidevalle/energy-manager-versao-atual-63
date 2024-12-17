@@ -16,34 +16,31 @@ import { useState } from "react";
 
 const ConsumerUnitList = () => {
   const { consumerUnits, deleteConsumerUnit, setEditingConsumerUnit } = useData();
-  const { isAdmin, user } = useAuth();
+  const { isAdmin } = useAuth();
   const [filters, setFilters] = useState({
     empresa: "",
-    nome: "",
-    numero: "",
-    distribuidora: "",
-    grupoSubgrupo: "",
+    unidadeConsumidora: "",
+    tipoGeracao: "",
+    potenciaInstalada: "",
+    tipoConexao: "",
   });
 
-  // Filter units based on user permissions
-  const userUnits = isAdmin 
-    ? consumerUnits 
-    : consumerUnits.filter(unit => user?.unidadesConsumidoras?.includes(unit.nome));
-
-  const filteredUnits = userUnits.filter(unit => {
-    return Object.entries(filters).every(([key, value]) => {
-      if (!value) return true;
-      const unitValue = unit[key as keyof typeof unit]?.toString().toLowerCase();
-      return unitValue?.includes(value.toLowerCase());
-    });
-  });
+  const filteredUnits = consumerUnits
+    .filter(unit => {
+      return Object.entries(filters).every(([key, value]) => {
+        if (!value) return true;
+        const unitValue = unit[key as keyof typeof unit]?.toString().toLowerCase();
+        return unitValue?.includes(value.toLowerCase());
+      });
+    })
+    .sort((a, b) => a.nome.localeCompare(b.nome)); // Sort units alphabetically by name
 
   const handleFilterChange = (field: keyof typeof filters, value: string) => {
     setFilters(prev => ({ ...prev, [field]: value }));
   };
 
   return (
-    <Card className="mt-12">
+    <Card>
       <CardHeader>
         <CardTitle>Lista de Unidades Consumidoras</CardTitle>
       </CardHeader>
@@ -62,33 +59,33 @@ const ConsumerUnitList = () => {
                 </TableHead>
                 <TableHead>
                   <Input
-                    placeholder="Filtrar nome"
-                    value={filters.nome}
-                    onChange={(e) => handleFilterChange("nome", e.target.value)}
+                    placeholder="Filtrar unidade consumidora"
+                    value={filters.unidadeConsumidora}
+                    onChange={(e) => handleFilterChange("unidadeConsumidora", e.target.value)}
                     className="max-w-sm"
                   />
                 </TableHead>
                 <TableHead>
                   <Input
-                    placeholder="Filtrar número"
-                    value={filters.numero}
-                    onChange={(e) => handleFilterChange("numero", e.target.value)}
+                    placeholder="Filtrar tipo de geração"
+                    value={filters.tipoGeracao}
+                    onChange={(e) => handleFilterChange("tipoGeracao", e.target.value)}
                     className="max-w-sm"
                   />
                 </TableHead>
                 <TableHead>
                   <Input
-                    placeholder="Filtrar distribuidora"
-                    value={filters.distribuidora}
-                    onChange={(e) => handleFilterChange("distribuidora", e.target.value)}
+                    placeholder="Filtrar potência"
+                    value={filters.potenciaInstalada}
+                    onChange={(e) => handleFilterChange("potenciaInstalada", e.target.value)}
                     className="max-w-sm"
                   />
                 </TableHead>
                 <TableHead>
                   <Input
-                    placeholder="Filtrar grupo/subgrupo"
-                    value={filters.grupoSubgrupo}
-                    onChange={(e) => handleFilterChange("grupoSubgrupo", e.target.value)}
+                    placeholder="Filtrar tipo de conexão"
+                    value={filters.tipoConexao}
+                    onChange={(e) => handleFilterChange("tipoConexao", e.target.value)}
                     className="max-w-sm"
                   />
                 </TableHead>
@@ -99,10 +96,10 @@ const ConsumerUnitList = () => {
               {filteredUnits.map((unit) => (
                 <TableRow key={unit.id}>
                   <TableCell>{unit.empresa}</TableCell>
-                  <TableCell>{unit.nome}</TableCell>
-                  <TableCell>{unit.numero}</TableCell>
-                  <TableCell>{unit.distribuidora}</TableCell>
-                  <TableCell>{unit.grupoSubgrupo}</TableCell>
+                  <TableCell>{unit.unidadeConsumidora}</TableCell>
+                  <TableCell>{unit.tipoGeracao}</TableCell>
+                  <TableCell>{unit.potenciaInstalada}</TableCell>
+                  <TableCell>{unit.tipoConexao}</TableCell>
                   {isAdmin && (
                     <TableCell className="space-x-2">
                       <Button 

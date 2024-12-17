@@ -95,6 +95,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
         </ResponsiveContainer>
       </CardContent>
     </Card>
+  );
 };
 
 export default ConsumptionChart;

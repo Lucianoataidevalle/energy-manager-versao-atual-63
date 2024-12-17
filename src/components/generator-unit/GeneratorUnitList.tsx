@@ -25,15 +25,13 @@ const GeneratorUnitList = () => {
     tipoConexao: "",
   });
 
-  const filteredUnits = generatorUnits
-    .filter(unit => {
-      return Object.entries(filters).every(([key, value]) => {
-        if (!value) return true;
-        const unitValue = unit[key as keyof typeof unit]?.toString().toLowerCase();
-        return unitValue?.includes(value.toLowerCase());
-      });
-    })
-    .sort((a, b) => a.empresa.localeCompare(b.empresa));
+  const filteredUnits = generatorUnits.filter(unit => {
+    return Object.entries(filters).every(([key, value]) => {
+      if (!value) return true;
+      const unitValue = unit[key as keyof typeof unit]?.toString().toLowerCase();
+      return unitValue?.includes(value.toLowerCase());
+    });
+  });
 
   const handleFilterChange = (field: keyof typeof filters, value: string) => {
     setFilters(prev => ({ ...prev, [field]: value }));

@@ -61,11 +61,11 @@ export const UCAssociationForm = ({
 
   const handleSubmit = async () => {
     try {
-      await userService.updateConsumerUnits(userId, selectedUnidades);
+      await userService.updateAssociations(userId, selectedEmpresas, selectedUnidades);
       onUpdate(selectedEmpresas, selectedUnidades);
       toast.success("Vínculos atualizados com sucesso!");
     } catch (error) {
-      console.error('Error updating consumer units:', error);
+      console.error('Error updating associations:', error);
       toast.error("Erro ao atualizar vínculos");
     }
   };

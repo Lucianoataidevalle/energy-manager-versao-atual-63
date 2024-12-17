@@ -47,12 +47,15 @@ export const userService = {
     }
   },
 
-  async updateConsumerUnits(userId: string, unidadesConsumidoras: string[]) {
+  async updateAssociations(userId: string, empresas: string[], unidadesConsumidoras: string[]) {
     try {
-      await updateDoc(doc(db, COLLECTION_NAME, userId), { unidadesConsumidoras });
-      return { unidadesConsumidoras, id: userId };
+      await updateDoc(doc(db, COLLECTION_NAME, userId), { 
+        empresas,
+        unidadesConsumidoras 
+      });
+      return { empresas, unidadesConsumidoras, id: userId };
     } catch (error) {
-      console.error('Error updating consumer units:', error);
+      console.error('Error updating associations:', error);
       throw error;
     }
   }

@@ -19,17 +19,19 @@ const UserList = () => {
   const renderAssociations = (empresas: string[], unidades: string[]) => {
     const associations: string[] = [];
     
-    // Add companies
+    // Group consumer units by company
     empresas.forEach(empresa => {
       associations.push(empresa);
-    });
-    
-    // Add consumer units with indentation
-    unidades.forEach(unidade => {
-      const unit = consumerUnits.find(u => u.numero === unidade);
-      if (unit) {
+      
+      // Find all consumer units that belong to this company
+      const companyUnits = consumerUnits
+        .filter(unit => unit.empresa === empresa && unidades.includes(unit.numero))
+        .sort((a, b) => a.nome.localeCompare(b.nome));
+      
+      // Add the company's consumer units with indentation
+      companyUnits.forEach(unit => {
         associations.push(`└─ ${unit.nome} (${unit.numero})`);
-      }
+      });
     });
 
     return associations.map((item, index) => (

@@ -42,13 +42,10 @@ const DashboardHeader = ({
             selectedUnit={selectedUnit}
             onUnitChange={onUnitChange}
           />
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">Mês de Referência</label>
-            <MonthSelect
-              selectedMonth={selectedMonth}
-              onMonthChange={onMonthChange}
-            />
-          </div>
+          <MonthSelect
+            selectedMonth={selectedMonth}
+            onMonthChange={onMonthChange}
+          />
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium">Gráficos</label>
             <MultipleChartSelect

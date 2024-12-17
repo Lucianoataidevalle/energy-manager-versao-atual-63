@@ -8,7 +8,6 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  LabelList,
 } from "recharts";
 import { useData } from "@/contexts/DataContext";
 import { formatMonthYear, parseMonthString, getMonthsByScreenSize } from "@/utils/dateUtils";
@@ -58,31 +57,13 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
           <p className="text-sm font-semibold">{`${label}`}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
-              {`${entry.name}: ${formatNumber(entry.value)}`}
+              {`${entry.name === "foraPonta" ? "Fora Ponta" : "Ponta"}: ${formatNumber(entry.value)}`}
             </p>
           ))}
-          <p className="text-sm font-semibold">
-            {`Consumo Total: ${formatNumber(payload[0].payload.total)}`}
-          </p>
         </div>
       );
     }
     return null;
-  };
-
-  const CustomLabel = ({ x, y, width, value }: any) => {
-    return (
-      <text 
-        x={x + width / 2} 
-        y={y - 10} 
-        fill="#666" 
-        textAnchor="middle"
-        fontSize={12}
-        fontWeight="bold"
-      >
-        {formatNumber(Number(value))}
-      </text>
-    );
   };
 
   return (
@@ -95,7 +76,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
           <BarChart 
             data={chartData} 
             barSize={30}
-            margin={{ top: 40, right: 40, left: 40, bottom: 20 }}
+            margin={{ top: 20, right: 40, left: 40, bottom: 20 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
@@ -103,6 +84,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
               interval={0} 
               tickMargin={10}
               axisLine={{ strokeWidth: 2 }}
+              padding={{ left: 30, right: 30 }}
             />
             <YAxis 
               tickFormatter={formatNumber}
@@ -110,7 +92,6 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
             />
             <Tooltip content={<CustomTooltip />} />
             <Legend formatter={(value) => {
-              if (value === "total") return "Total";
               if (value === "foraPonta") return "Fora Ponta";
               if (value === "ponta") return "Ponta";
               return value;
@@ -126,18 +107,6 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
               stackId="a" 
               fill="#8884d8" 
               name="ponta"
-            >
-              <LabelList 
-                dataKey="total" 
-                position="top" 
-                content={CustomLabel}
-              />
-            </Bar>
-            <Bar 
-              dataKey="total" 
-              fill="none" 
-              name="total" 
-              legendType="none"
             />
           </BarChart>
         </ResponsiveContainer>

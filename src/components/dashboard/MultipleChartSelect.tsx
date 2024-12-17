@@ -30,6 +30,7 @@ export const MultipleChartSelect = ({
   const chartOptions = useMemo(() => [
     { id: "consumption", label: "Consumo" },
     { id: "demand", label: "Demanda" },
+    { id: "generation", label: "Geração" },
     { id: "billing", label: "Faturamento" },
     { id: "reactiveEnergy", label: "Energia Reativa" },
     { id: "reactiveDemand", label: "Demanda Reativa" },
@@ -51,13 +52,13 @@ export const MultipleChartSelect = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
         >
           {`${visibleCharts.length} gráfico(s) selecionado(s)`}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-full p-0">
         <Command>
           <CommandInput placeholder="Buscar gráfico..." />
           <CommandList>

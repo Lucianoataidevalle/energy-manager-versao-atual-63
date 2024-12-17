@@ -29,11 +29,14 @@ const ConsumerUnitList = () => {
     .filter(unit => {
       return Object.entries(filters).every(([key, value]) => {
         if (!value) return true;
+        if (key === "unidadeConsumidora") {
+          return unit.nome?.toString().toLowerCase().includes(value.toLowerCase());
+        }
         const unitValue = unit[key as keyof typeof unit]?.toString().toLowerCase();
         return unitValue?.includes(value.toLowerCase());
       });
     })
-    .sort((a, b) => a.nome.localeCompare(b.nome)); // Sort units alphabetically by name
+    .sort((a, b) => a.nome.localeCompare(b.nome));
 
   const handleFilterChange = (field: keyof typeof filters, value: string) => {
     setFilters(prev => ({ ...prev, [field]: value }));
@@ -96,10 +99,10 @@ const ConsumerUnitList = () => {
               {filteredUnits.map((unit) => (
                 <TableRow key={unit.id}>
                   <TableCell>{unit.empresa}</TableCell>
-                  <TableCell>{unit.unidadeConsumidora}</TableCell>
-                  <TableCell>{unit.tipoGeracao}</TableCell>
-                  <TableCell>{unit.potenciaInstalada}</TableCell>
-                  <TableCell>{unit.tipoConexao}</TableCell>
+                  <TableCell>{unit.nome}</TableCell>
+                  <TableCell>{unit.grupoSubgrupo}</TableCell>
+                  <TableCell>{unit.demandaContratada}</TableCell>
+                  <TableCell>{unit.modalidadeTarifaria}</TableCell>
                   {isAdmin && (
                     <TableCell className="space-x-2">
                       <Button 

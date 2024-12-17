@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useData } from "@/contexts/DataContext";
-import { formatMonthYear, parseMonthString, getMonthsByScreenSize } from "@/utils/dateUtils";
+import { formatMonthYear, parseMonthString } from "@/utils/dateUtils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatNumber } from "@/utils/formatters";
 
@@ -23,9 +23,9 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
   const { invoices } = useData();
   const selectedDate = parseMonthString(selectedMonth);
   const chartData = invoices
-    .filter(invoice => invoice.empresa === selectedCompany && invoice.unidadeConsumidora === selectedUnit)
+    .filter(invoice => invoice.empresa === selectedCompany && invoice.unidade === selectedUnit)
     .map(invoice => ({
-      mes: formatMonthYear(invoice.data),
+      mes: formatMonthYear(invoice.mes),
       foraPonta: invoice.consumoForaPonta,
       ponta: invoice.consumoPonta,
     }));

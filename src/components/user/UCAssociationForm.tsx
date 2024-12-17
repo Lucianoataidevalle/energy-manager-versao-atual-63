@@ -4,6 +4,14 @@ import { Button } from "@/components/ui/button";
 import { useData } from "@/contexts/DataContext";
 import { toast } from "sonner";
 import { userService } from "@/services/userService";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 interface UCAssociationFormProps {
   userId: string;
@@ -27,10 +35,10 @@ export const UCAssociationForm = ({
     setSelectedUnidades(currentUnidades);
   }, [currentEmpresas, currentUnidades]);
 
-  const handleEmpresaChange = (empresa: string) => {
-    const newSelectedEmpresas = selectedEmpresas.includes(empresa)
-      ? selectedEmpresas.filter((e) => e !== empresa)
-      : [...selectedEmpresas, empresa];
+  const handleEmpresaChange = (empresa: string, checked: boolean) => {
+    const newSelectedEmpresas = checked
+      ? [...selectedEmpresas, empresa]
+      : selectedEmpresas.filter((e) => e !== empresa);
     
     setSelectedEmpresas(newSelectedEmpresas);
     
@@ -43,11 +51,11 @@ export const UCAssociationForm = ({
     setSelectedUnidades(newSelectedUnidades);
   };
 
-  const handleUnidadeChange = (unidade: string) => {
+  const handleUnidadeChange = (unidade: string, checked: boolean) => {
     setSelectedUnidades(
-      selectedUnidades.includes(unidade)
-        ? selectedUnidades.filter((u) => u !== unidade)
-        : [...selectedUnidades, unidade]
+      checked
+        ? [...selectedUnidades, unidade]
+        : selectedUnidades.filter((u) => u !== unidade)
     );
   };
 
@@ -56,9 +64,6 @@ export const UCAssociationForm = ({
       await userService.updateConsumerUnits(userId, selectedUnidades);
       onUpdate(selectedEmpresas, selectedUnidades);
       toast.success("Vínculos atualizados com sucesso!");
-      // Clear selections after successful update
-      setSelectedEmpresas([]);
-      setSelectedUnidades([]);
     } catch (error) {
       console.error('Error updating consumer units:', error);
       toast.error("Erro ao atualizar vínculos");
@@ -70,11 +75,6 @@ export const UCAssociationForm = ({
     a.razaoSocial.localeCompare(b.razaoSocial)
   );
 
-  // Sort consumer units alphabetically
-  const sortedUnits = consumerUnits
-    .filter((uc) => selectedEmpresas.includes(uc.empresa))
-    .sort((a, b) => a.nome.localeCompare(b.nome));
-
   return (
     <Card className="mt-8">
       <CardHeader>
@@ -82,47 +82,59 @@ export const UCAssociationForm = ({
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Empresas</label>
-            <div className="grid grid-cols-2 gap-2">
-              {sortedCompanies.map((company) => (
-                <div
-                  key={company.id}
-                  className="flex items-center space-x-2 p-2 border rounded"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedEmpresas.includes(company.razaoSocial)}
-                    onChange={() => handleEmpresaChange(company.razaoSocial)}
-                    className="rounded border-gray-300"
-                  />
-                  <span>{company.razaoSocial}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <Accordion type="multiple" className="w-full">
+            {sortedCompanies.map((company) => {
+              // Get and sort consumer units for this company
+              const companyUnits = consumerUnits
+                .filter((uc) => uc.empresa === company.razaoSocial)
+                .sort((a, b) => a.nome.localeCompare(b.nome));
 
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Unidades Consumidoras
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              {sortedUnits.map((unit) => (
-                <div
-                  key={unit.id}
-                  className="flex items-center space-x-2 p-2 border rounded"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedUnidades.includes(unit.numero)}
-                    onChange={() => handleUnidadeChange(unit.numero)}
-                    className="rounded border-gray-300"
-                  />
-                  <span>{`${unit.nome} (${unit.numero})`}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+              return (
+                <AccordionItem value={company.id} key={company.id}>
+                  <AccordionTrigger className="hover:no-underline">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`company-${company.id}`}
+                        checked={selectedEmpresas.includes(company.razaoSocial)}
+                        onCheckedChange={(checked) => 
+                          handleEmpresaChange(company.razaoSocial, checked === true)
+                        }
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <Label
+                        htmlFor={`company-${company.id}`}
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        {company.razaoSocial}
+                      </Label>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="pl-6 space-y-2">
+                      {companyUnits.map((unit) => (
+                        <div key={unit.id} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`unit-${unit.id}`}
+                            checked={selectedUnidades.includes(unit.numero)}
+                            onCheckedChange={(checked) => 
+                              handleUnidadeChange(unit.numero, checked === true)
+                            }
+                            disabled={!selectedEmpresas.includes(company.razaoSocial)}
+                          />
+                          <Label
+                            htmlFor={`unit-${unit.id}`}
+                            className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            {`${unit.nome} (${unit.numero})`}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
 
           <Button onClick={handleSubmit} className="w-full">
             Atualizar Vínculos

@@ -14,7 +14,9 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const UserList = () => {
   const { users, deleteUser, setEditingUser, companies, consumerUnits } = useData();
-  const { isAdmin } = useAuth();
+  const { isAdmin, user: currentUser } = useAuth();
+
+  const displayUsers = isAdmin ? users : users.filter(u => u.id === currentUser?.id);
 
   const renderAssociations = (empresas: string[], unidades: string[]) => {
     const associations: string[] = [];
@@ -42,7 +44,7 @@ const UserList = () => {
   };
 
   return (
-    <Card className="mt-16">
+    <Card>
       <CardHeader>
         <CardTitle>Lista de Usuários</CardTitle>
       </CardHeader>
@@ -59,7 +61,7 @@ const UserList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user) => (
+            {displayUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>{user.nome}</TableCell>
                 <TableCell className="align-top">

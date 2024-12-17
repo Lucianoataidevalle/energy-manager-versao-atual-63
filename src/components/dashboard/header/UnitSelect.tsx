@@ -1,4 +1,5 @@
 import { useData } from "@/contexts/DataContext";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Select,
   SelectContent,
@@ -19,8 +20,15 @@ export const UnitSelect = ({
   onUnitChange,
 }: UnitSelectProps) => {
   const { consumerUnits } = useData();
+  const { user, isAdmin } = useAuth();
   
-  const filteredUnits = consumerUnits
+  const userUnits = isAdmin 
+    ? consumerUnits 
+    : consumerUnits.filter(unit => 
+        user?.unidadesConsumidoras?.includes(unit.numero)
+      );
+  
+  const filteredUnits = userUnits
     .filter((unit) => unit.empresa === selectedCompany)
     .sort((a, b) => a.nome.localeCompare(b.nome));
 

@@ -16,7 +16,7 @@ import { useState } from "react";
 
 const GeneratorUnitList = () => {
   const { generatorUnits, deleteGeneratorUnit, setEditingGeneratorUnit } = useData();
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
   const [filters, setFilters] = useState({
     empresa: "",
     unidadeConsumidora: "",
@@ -25,13 +25,30 @@ const GeneratorUnitList = () => {
     tipoConexao: "",
   });
 
-  const filteredUnits = generatorUnits.filter(unit => {
+  // Filter units based on user permissions
+  const userUnits = isAdmin 
+    ? generatorUnits 
+    : generatorUnits.filter(unit => 
+        user?.empresas?.includes(unit.empresa) || 
+        user?.unidadesConsumidoras?.includes(unit.unidadeConsumidora)
+      );
+
+  const filteredUnits = userUnits.filter(unit => {
     return Object.entries(filters).every(([key, value]) => {
       if (!value) return true;
       const unitValue = unit[key as keyof typeof unit]?.toString().toLowerCase();
       return unitValue?.includes(value.toLowerCase());
     });
   });
+
+  // Group units by company
+  const groupedUnits = filteredUnits.reduce((acc, unit) => {
+    if (!acc[unit.empresa]) {
+      acc[unit.empresa] = [];
+    }
+    acc[unit.empresa].push(unit);
+    return acc;
+  }, {} as Record<string, typeof filteredUnits>);
 
   const handleFilterChange = (field: keyof typeof filters, value: string) => {
     setFilters(prev => ({ ...prev, [field]: value }));
@@ -91,32 +108,41 @@ const GeneratorUnitList = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredUnits.map((unit) => (
-                <TableRow key={unit.id}>
-                  <TableCell>{unit.empresa}</TableCell>
-                  <TableCell>{unit.unidadeConsumidora}</TableCell>
-                  <TableCell>{unit.tipoGeracao}</TableCell>
-                  <TableCell>{unit.potenciaInstalada}</TableCell>
-                  <TableCell>{unit.tipoConexao}</TableCell>
-                  {isAdmin && (
-                    <TableCell className="space-x-2">
-                      <Button 
-                        variant="outline" 
-                        size="icon"
-                        onClick={() => setEditingGeneratorUnit(unit)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => deleteGeneratorUnit(unit.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+              {Object.entries(groupedUnits).map(([empresa, units]) => (
+                <>
+                  <TableRow key={empresa} className="bg-muted/50">
+                    <TableCell colSpan={isAdmin ? 6 : 5} className="font-medium">
+                      {empresa}
                     </TableCell>
-                  )}
-                </TableRow>
+                  </TableRow>
+                  {units.map((unit) => (
+                    <TableRow key={unit.id}>
+                      <TableCell>{unit.empresa}</TableCell>
+                      <TableCell>{unit.unidadeConsumidora}</TableCell>
+                      <TableCell>{unit.tipoGeracao}</TableCell>
+                      <TableCell>{unit.potenciaInstalada}</TableCell>
+                      <TableCell>{unit.tipoConexao}</TableCell>
+                      {isAdmin && (
+                        <TableCell className="space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="icon"
+                            onClick={() => setEditingGeneratorUnit(unit)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => deleteGeneratorUnit(unit.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  ))}
+                </>
               ))}
             </TableBody>
           </Table>

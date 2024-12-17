@@ -1,4 +1,5 @@
 import { useData } from "@/contexts/DataContext";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Select,
   SelectContent,
@@ -17,8 +18,15 @@ export const CompanySelect = ({
   onCompanyChange,
 }: CompanySelectProps) => {
   const { companies } = useData();
+  const { user, isAdmin } = useAuth();
   
-  const sortedCompanies = [...companies].sort((a, b) => 
+  const userCompanies = isAdmin 
+    ? companies 
+    : companies.filter(company => 
+        user?.empresas?.includes(company.razaoSocial)
+      );
+  
+  const sortedCompanies = [...userCompanies].sort((a, b) => 
     a.razaoSocial.localeCompare(b.razaoSocial)
   );
 

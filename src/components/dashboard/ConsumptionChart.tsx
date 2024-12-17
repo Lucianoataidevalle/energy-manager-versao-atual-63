@@ -25,7 +25,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
   const chartData = invoices
     .filter(invoice => invoice.empresa === selectedCompany && invoice.unidade === selectedUnit)
     .map(invoice => ({
-      mes: formatMonthYear(invoice.mes),
+      mes: formatMonthYear(parseMonthString(invoice.mes)),
       foraPonta: invoice.consumoForaPonta,
       ponta: invoice.consumoPonta,
     }));

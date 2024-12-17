@@ -22,7 +22,7 @@ export const CompanyRepresentation = ({ formData, onChange }: CompanyRepresentat
 
   return (
     <div className="space-y-4 border-t pt-4">
-      <h3 className="font-medium">Empresa Representada</h3>
+      <h3 className="font-medium">Empresa</h3>
       <div className="space-y-2">
         <label htmlFor="empresaNome">Nome da Empresa</label>
         <Input

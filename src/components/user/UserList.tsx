@@ -13,8 +13,31 @@ import { useData } from "@/contexts/DataContext";
 import { useAuth } from "@/contexts/AuthContext";
 
 const UserList = () => {
-  const { users, deleteUser, setEditingUser } = useData();
+  const { users, deleteUser, setEditingUser, companies, consumerUnits } = useData();
   const { isAdmin } = useAuth();
+
+  const renderAssociations = (empresas: string[], unidades: string[]) => {
+    const associations: string[] = [];
+    
+    // Add companies
+    empresas.forEach(empresa => {
+      associations.push(empresa);
+    });
+    
+    // Add consumer units with indentation
+    unidades.forEach(unidade => {
+      const unit = consumerUnits.find(u => u.numero === unidade);
+      if (unit) {
+        associations.push(`└─ ${unit.nome} (${unit.numero})`);
+      }
+    });
+
+    return associations.map((item, index) => (
+      <div key={index} className="whitespace-nowrap">
+        {item}
+      </div>
+    ));
+  };
 
   return (
     <Card className="mt-16">
@@ -26,6 +49,7 @@ const UserList = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
+              <TableHead>Empresa/UC</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Telefone</TableHead>
               <TableHead>Tipo</TableHead>
@@ -36,6 +60,9 @@ const UserList = () => {
             {users.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>{user.nome}</TableCell>
+                <TableCell className="align-top">
+                  {renderAssociations(user.empresas || [], user.unidadesConsumidoras || [])}
+                </TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.fone}</TableCell>
                 <TableCell>

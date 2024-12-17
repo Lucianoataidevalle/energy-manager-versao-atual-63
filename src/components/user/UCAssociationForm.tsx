@@ -78,7 +78,7 @@ export const UCAssociationForm = ({
   return (
     <Card className="mt-8">
       <CardHeader>
-        <CardTitle>Vínculo de UCs</CardTitle>
+        <CardTitle>Vínculo com Empresa/UC</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">

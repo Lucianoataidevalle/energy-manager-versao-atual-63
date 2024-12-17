@@ -28,7 +28,10 @@ const ConsumerUnitList = () => {
   // Filter units based on user permissions
   const userUnits = isAdmin 
     ? consumerUnits 
-    : consumerUnits.filter(unit => user?.unidadesConsumidoras?.includes(unit.nome));
+    : consumerUnits.filter(unit => 
+        user?.empresas?.includes(unit.empresa) || 
+        user?.unidadesConsumidoras?.includes(unit.nome)
+      );
 
   const filteredUnits = userUnits.filter(unit => {
     return Object.entries(filters).every(([key, value]) => {
@@ -37,6 +40,15 @@ const ConsumerUnitList = () => {
       return unitValue?.includes(value.toLowerCase());
     });
   });
+
+  // Group units by company
+  const groupedUnits = filteredUnits.reduce((acc, unit) => {
+    if (!acc[unit.empresa]) {
+      acc[unit.empresa] = [];
+    }
+    acc[unit.empresa].push(unit);
+    return acc;
+  }, {} as Record<string, typeof filteredUnits>);
 
   const handleFilterChange = (field: keyof typeof filters, value: string) => {
     setFilters(prev => ({ ...prev, [field]: value }));
@@ -96,32 +108,41 @@ const ConsumerUnitList = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredUnits.map((unit) => (
-                <TableRow key={unit.id}>
-                  <TableCell>{unit.empresa}</TableCell>
-                  <TableCell>{unit.nome}</TableCell>
-                  <TableCell>{unit.numero}</TableCell>
-                  <TableCell>{unit.distribuidora}</TableCell>
-                  <TableCell>{unit.grupoSubgrupo}</TableCell>
-                  {isAdmin && (
-                    <TableCell className="space-x-2">
-                      <Button 
-                        variant="outline" 
-                        size="icon"
-                        onClick={() => setEditingConsumerUnit(unit)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => deleteConsumerUnit(unit.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+              {Object.entries(groupedUnits).map(([empresa, units]) => (
+                <>
+                  <TableRow key={empresa} className="bg-muted/50">
+                    <TableCell colSpan={isAdmin ? 6 : 5} className="font-medium">
+                      {empresa}
                     </TableCell>
-                  )}
-                </TableRow>
+                  </TableRow>
+                  {units.map((unit) => (
+                    <TableRow key={unit.id}>
+                      <TableCell>{unit.empresa}</TableCell>
+                      <TableCell>{unit.nome}</TableCell>
+                      <TableCell>{unit.numero}</TableCell>
+                      <TableCell>{unit.distribuidora}</TableCell>
+                      <TableCell>{unit.grupoSubgrupo}</TableCell>
+                      {isAdmin && (
+                        <TableCell className="space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="icon"
+                            onClick={() => setEditingConsumerUnit(unit)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => deleteConsumerUnit(unit.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  ))}
+                </>
               ))}
             </TableBody>
           </Table>

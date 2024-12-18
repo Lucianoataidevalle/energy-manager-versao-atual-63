@@ -112,29 +112,31 @@ const Report = () => {
     const chart = charts[chartId];
     if (!chart) return null;
 
-    // Get the chart data by accessing the component's internal data
+    // Get the chart data
     let chartData;
+    const chartComponent = chart.component.type(chartProps);
+    
     switch (chartId) {
       case "consumption":
-        chartData = chart.component.type({ ...chartProps }).props.data;
+        chartData = chartComponent.props.data || [];
         break;
       case "demand":
-        chartData = chart.component.type({ ...chartProps }).props.data;
+        chartData = chartComponent.props.data || [];
         break;
       case "generation":
-        chartData = chart.component.type({ ...chartProps }).props.data;
+        chartData = chartComponent.props.data || [];
         break;
       case "billing":
-        chartData = chart.component.type({ ...chartProps }).props.data;
+        chartData = chartComponent.props.data || [];
         break;
       case "reactiveEnergy":
-        chartData = chart.component.type({ ...chartProps }).props.data;
+        chartData = chartComponent.props.data || [];
         break;
       case "reactiveDemand":
-        chartData = chart.component.type({ ...chartProps }).props.data;
+        chartData = chartComponent.props.data || [];
         break;
       case "fines":
-        chartData = chart.component.type({ ...chartProps }).props.data;
+        chartData = chartComponent.props.data || [];
         break;
       default:
         chartData = [];

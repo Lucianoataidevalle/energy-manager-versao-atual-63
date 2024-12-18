@@ -10,6 +10,10 @@ interface CompanySelectProps {
 export const CompanySelect = ({ value, onChange }: CompanySelectProps) => {
   const { companies } = useData();
 
+  const sortedCompanies = [...companies].sort((a, b) => 
+    a.razaoSocial.localeCompare(b.razaoSocial)
+  );
+
   return (
     <div className="space-y-2">
       <Label htmlFor="empresa">Empresa</Label>
@@ -18,7 +22,7 @@ export const CompanySelect = ({ value, onChange }: CompanySelectProps) => {
           <SelectValue placeholder="Selecione uma empresa" />
         </SelectTrigger>
         <SelectContent>
-          {companies.map((company) => (
+          {sortedCompanies.map((company) => (
             <SelectItem key={company.id} value={company.razaoSocial}>
               {company.razaoSocial}
             </SelectItem>

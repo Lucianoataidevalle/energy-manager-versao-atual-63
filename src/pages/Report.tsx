@@ -32,23 +32,6 @@ const Report = () => {
   );
   const [visibleCharts, setVisibleCharts] = useState(CHART_ORDER);
 
-  useEffect(() => {
-    if (companies.length > 0 && !selectedCompany) {
-      setSelectedCompany(companies[0].razaoSocial);
-    }
-  }, [companies]);
-
-  useEffect(() => {
-    if (selectedCompany && consumerUnits.length > 0 && !selectedUnit) {
-      const companyUnits = consumerUnits.filter(
-        (unit) => unit.empresa === selectedCompany
-      );
-      if (companyUnits.length > 0) {
-        setSelectedUnit(companyUnits[0].nome);
-      }
-    }
-  }, [selectedCompany, consumerUnits]);
-
   const handleVisibleChartsChange = (newCharts: string[]) => {
     const orderedCharts = CHART_ORDER.filter(chartId => newCharts.includes(chartId));
     setVisibleCharts(orderedCharts);

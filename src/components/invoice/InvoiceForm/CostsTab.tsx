@@ -1,4 +1,4 @@
-import { Input } from "@/components/ui/input";
+import { NumberInput } from "@/components/shared/NumberInput";
 
 interface CostsTabProps {
   formData: any;
@@ -17,22 +17,19 @@ export const CostsTab = ({
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="space-y-2">
         <label className="text-sm font-medium">Consumo Fora Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.custoConsumoForaPonta}
-          onChange={(e) => setFormData({ ...formData, custoConsumoForaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, custoConsumoForaPonta: value })}
           required
+          disabled={isGroupB}
         />
       </div>
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Consumo Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.custoConsumoPonta}
-          onChange={(e) => setFormData({ ...formData, custoConsumoPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, custoConsumoPonta: value })}
           required
           disabled={isGroupB}
         />
@@ -40,11 +37,9 @@ export const CostsTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Demanda Medida Fora Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.custoDemandaMedidaForaPonta}
-          onChange={(e) => setFormData({ ...formData, custoDemandaMedidaForaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, custoDemandaMedidaForaPonta: value })}
           required
           disabled={isGroupB}
         />
@@ -52,11 +47,9 @@ export const CostsTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Demanda Medida Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.custoDemandaMedidaPonta}
-          onChange={(e) => setFormData({ ...formData, custoDemandaMedidaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, custoDemandaMedidaPonta: value })}
           required
           disabled={isGroupB || shouldDisablePeakFields}
         />
@@ -64,11 +57,9 @@ export const CostsTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Demanda Isenta Fora Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.custoDemandaIsentaForaPonta}
-          onChange={(e) => setFormData({ ...formData, custoDemandaIsentaForaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, custoDemandaIsentaForaPonta: value })}
           required
           disabled={isGroupB}
         />
@@ -76,11 +67,9 @@ export const CostsTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Demanda Isenta Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.custoDemandaIsentaPonta}
-          onChange={(e) => setFormData({ ...formData, custoDemandaIsentaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, custoDemandaIsentaPonta: value })}
           required
           disabled={isGroupB || shouldDisablePeakFields}
         />
@@ -88,11 +77,9 @@ export const CostsTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Demanda Ultrapassagem Fora Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.demandaUltrapassagemForaPonta}
-          onChange={(e) => setFormData({ ...formData, demandaUltrapassagemForaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, demandaUltrapassagemForaPonta: value })}
           required
           disabled={isGroupB}
         />
@@ -100,11 +87,9 @@ export const CostsTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Demanda Ultrapassagem Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.demandaUltrapassagemPonta}
-          onChange={(e) => setFormData({ ...formData, demandaUltrapassagemPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, demandaUltrapassagemPonta: value })}
           required
           disabled={isGroupB || shouldDisablePeakFields}
         />
@@ -112,11 +97,9 @@ export const CostsTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Energia Reativa Fora Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.custoEnergiaReativaForaPonta}
-          onChange={(e) => setFormData({ ...formData, custoEnergiaReativaForaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, custoEnergiaReativaForaPonta: value })}
           required
           disabled={isGroupB}
         />
@@ -124,11 +107,9 @@ export const CostsTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Energia Reativa Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.custoEnergiaReativaPonta}
-          onChange={(e) => setFormData({ ...formData, custoEnergiaReativaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, custoEnergiaReativaPonta: value })}
           required
           disabled={isGroupB}
         />
@@ -136,11 +117,9 @@ export const CostsTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Demanda Reativa Fora Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.custoDemandaReativaForaPonta}
-          onChange={(e) => setFormData({ ...formData, custoDemandaReativaForaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, custoDemandaReativaForaPonta: value })}
           required
           disabled={isGroupB}
         />
@@ -148,11 +127,9 @@ export const CostsTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Demanda Reativa Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.custoDemandaReativaPonta}
-          onChange={(e) => setFormData({ ...formData, custoDemandaReativaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, custoDemandaReativaPonta: value })}
           required
           disabled={isGroupB || shouldDisablePeakFields}
         />
@@ -160,55 +137,45 @@ export const CostsTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Energia Injetada Fora Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.custoEnergiaInjetadaForaPonta}
-          onChange={(e) => setFormData({ ...formData, custoEnergiaInjetadaForaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, custoEnergiaInjetadaForaPonta: value })}
           required
         />
       </div>
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Energia Injetada Ponta (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.custoEnergiaInjetadaPonta}
-          onChange={(e) => setFormData({ ...formData, custoEnergiaInjetadaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, custoEnergiaInjetadaPonta: value })}
           required
         />
       </div>
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Bandeira Tarifária (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.bandeiraTarifaria}
-          onChange={(e) => setFormData({ ...formData, bandeiraTarifaria: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, bandeiraTarifaria: value })}
           required
         />
       </div>
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Multas/Juros (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.multasJuros}
-          onChange={(e) => setFormData({ ...formData, multasJuros: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, multasJuros: value })}
           required
         />
       </div>
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Valor da Fatura (R$)</label>
-        <Input
-          type="number"
-          step="0.01"
+        <NumberInput
           value={formData.valorFatura}
-          onChange={(e) => setFormData({ ...formData, valorFatura: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, valorFatura: value })}
           required
         />
       </div>

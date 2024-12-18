@@ -1,4 +1,4 @@
-import { Input } from "@/components/ui/input";
+import { NumberInput } from "@/components/shared/NumberInput";
 import { useData } from "@/contexts/DataContext";
 
 interface ConsumptionTabProps {
@@ -22,20 +22,18 @@ export const ConsumptionTab = ({
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="space-y-2">
         <label className="text-sm font-medium">Consumo Fora Ponta (kWh)</label>
-        <Input
-          type="number"
+        <NumberInput
           value={formData.consumoForaPonta}
-          onChange={(e) => setFormData({ ...formData, consumoForaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, consumoForaPonta: value })}
           required
         />
       </div>
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Consumo Ponta (kWh)</label>
-        <Input
-          type="number"
+        <NumberInput
           value={formData.consumoPonta}
-          onChange={(e) => setFormData({ ...formData, consumoPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, consumoPonta: value })}
           required
           disabled={isGroupB}
         />
@@ -45,40 +43,36 @@ export const ConsumptionTab = ({
         <>
           <div className="space-y-2">
             <label className="text-sm font-medium">Energia Injetada Fora Ponta (kWh)</label>
-            <Input
-              type="number"
+            <NumberInput
               value={formData.energiaInjetadaForaPonta}
-              onChange={(e) => setFormData({ ...formData, energiaInjetadaForaPonta: e.target.value })}
+              onChange={(value) => setFormData({ ...formData, energiaInjetadaForaPonta: value })}
               required
             />
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Energia Injetada Ponta (kWh)</label>
-            <Input
-              type="number"
+            <NumberInput
               value={formData.energiaInjetadaPonta}
-              onChange={(e) => setFormData({ ...formData, energiaInjetadaPonta: e.target.value })}
+              onChange={(value) => setFormData({ ...formData, energiaInjetadaPonta: value })}
               required
             />
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Saldo Acumulado (kWh)</label>
-            <Input
-              type="number"
+            <NumberInput
               value={formData.saldoAcumulado}
-              onChange={(e) => setFormData({ ...formData, saldoAcumulado: e.target.value })}
+              onChange={(value) => setFormData({ ...formData, saldoAcumulado: value })}
               required
             />
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Geração Total (kWh)</label>
-            <Input
-              type="number"
+            <NumberInput
               value={formData.geracaoTotal}
-              onChange={(e) => setFormData({ ...formData, geracaoTotal: e.target.value })}
+              onChange={(value) => setFormData({ ...formData, geracaoTotal: value })}
               required
             />
           </div>
@@ -87,10 +81,9 @@ export const ConsumptionTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Demanda Medida Fora Ponta (kW)</label>
-        <Input
-          type="number"
+        <NumberInput
           value={formData.demandaMedidaForaPonta}
-          onChange={(e) => setFormData({ ...formData, demandaMedidaForaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, demandaMedidaForaPonta: value })}
           required
           disabled={isGroupB}
         />
@@ -98,10 +91,9 @@ export const ConsumptionTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Demanda Medida Ponta (kW)</label>
-        <Input
-          type="number"
+        <NumberInput
           value={formData.demandaMedidaPonta}
-          onChange={(e) => setFormData({ ...formData, demandaMedidaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, demandaMedidaPonta: value })}
           required
           disabled={isGroupB || shouldDisablePeakFields}
         />
@@ -109,10 +101,9 @@ export const ConsumptionTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Energia Reativa Fora Ponta (kVArh)</label>
-        <Input
-          type="number"
+        <NumberInput
           value={formData.energiaReativaForaPonta}
-          onChange={(e) => setFormData({ ...formData, energiaReativaForaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, energiaReativaForaPonta: value })}
           required
           disabled={isGroupB}
         />
@@ -120,10 +111,9 @@ export const ConsumptionTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Energia Reativa Ponta (kVArh)</label>
-        <Input
-          type="number"
+        <NumberInput
           value={formData.energiaReativaPonta}
-          onChange={(e) => setFormData({ ...formData, energiaReativaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, energiaReativaPonta: value })}
           required
           disabled={isGroupB}
         />
@@ -131,10 +121,9 @@ export const ConsumptionTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Demanda Reativa Fora Ponta (kVAr)</label>
-        <Input
-          type="number"
+        <NumberInput
           value={formData.demandaReativaForaPonta}
-          onChange={(e) => setFormData({ ...formData, demandaReativaForaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, demandaReativaForaPonta: value })}
           required
           disabled={isGroupB}
         />
@@ -142,10 +131,9 @@ export const ConsumptionTab = ({
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Demanda Reativa Ponta (kVAr)</label>
-        <Input
-          type="number"
+        <NumberInput
           value={formData.demandaReativaPonta}
-          onChange={(e) => setFormData({ ...formData, demandaReativaPonta: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, demandaReativaPonta: value })}
           required
           disabled={isGroupB || shouldDisablePeakFields}
         />

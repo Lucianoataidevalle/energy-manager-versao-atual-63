@@ -23,9 +23,11 @@ export const NumberInput = ({
         onChange(newValue);
       }
     } else {
-      // Format as Brazilian number
-      const formattedValue = formatNumberInput(newValue);
-      onChange(formattedValue);
+      // Only allow numbers, commas, dots, and minus sign
+      if (newValue === "" || /^-?\d*\.?\d*,?\d*$/.test(newValue)) {
+        const formattedValue = formatNumberInput(newValue);
+        onChange(formattedValue);
+      }
     }
   };
 

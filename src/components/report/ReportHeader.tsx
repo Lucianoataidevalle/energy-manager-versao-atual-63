@@ -30,15 +30,9 @@ const ReportHeader = ({
       <div className="flex flex-col gap-4 p-4">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Relatório</h1>
-          <div className="flex items-center gap-2">
-            <MultipleChartSelect
-              visibleCharts={visibleCharts}
-              onVisibleChartsChange={onVisibleChartsChange}
-            />
-            <FullscreenButton />
-          </div>
+          <FullscreenButton />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <CompanySelect
             selectedCompany={selectedCompany}
             onCompanyChange={onCompanyChange}
@@ -52,6 +46,13 @@ const ReportHeader = ({
             selectedMonth={selectedMonth}
             onMonthChange={onMonthChange}
           />
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium">Gráficos</label>
+            <MultipleChartSelect
+              visibleCharts={visibleCharts}
+              onVisibleChartsChange={onVisibleChartsChange}
+            />
+          </div>
         </div>
       </div>
     </div>

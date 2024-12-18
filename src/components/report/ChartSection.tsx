@@ -16,7 +16,7 @@ interface ChartSectionProps {
 
 const ChartSection = ({ chartId, chartComponent, data, columns }: ChartSectionProps) => {
   return (
-    <Card className="p-6 space-y-4">
+    <Card className="p-6 space-y-4 bg-gray-50">
       <CardContent className="space-y-6 p-0">
         {chartComponent}
         <ChartDataTable data={data} columns={columns} />

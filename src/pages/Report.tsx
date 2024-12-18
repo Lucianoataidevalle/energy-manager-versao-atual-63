@@ -16,6 +16,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import ChartSection from "@/components/report/ChartSection";
 import { getChartConfigurations } from "@/components/report/ChartConfigurations";
 import { calculateChartData } from "@/components/report/ChartDataCalculator";
+import { Button } from "@/components/ui/button";
+import { Printer } from "lucide-react";
+import { generatePDF } from "@/utils/pdfGenerator";
+import { useToast } from "@/components/ui/use-toast";
 
 const CHART_ORDER = [
   "consumption",
@@ -29,6 +33,7 @@ const CHART_ORDER = [
 
 const Report = () => {
   const { companies, consumerUnits, invoices, generatorUnits } = useData();
+  const { toast } = useToast();
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedUnit, setSelectedUnit] = useState("");
   const [selectedMonth, setSelectedMonth] = useState(
@@ -39,6 +44,33 @@ const Report = () => {
   const handleVisibleChartsChange = (newCharts: string[]) => {
     const orderedCharts = CHART_ORDER.filter(chartId => newCharts.includes(chartId));
     setVisibleCharts(orderedCharts);
+  };
+
+  const handlePrintReport = async () => {
+    if (!selectedCompany || !selectedUnit) {
+      toast({
+        title: "Atenção",
+        description: "Selecione uma empresa e uma unidade consumidora para gerar o relatório.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const company = companies.find(c => c.id === selectedCompany);
+    const unit = consumerUnits.find(u => u.id === selectedUnit);
+
+    if (!company || !unit) return;
+
+    toast({
+      title: "Gerando PDF",
+      description: "Aguarde enquanto o relatório é gerado..."
+    });
+
+    await generatePDF(
+      company.name,
+      unit.name,
+      selectedMonth
+    );
   };
 
   const renderChartWithTable = (chartId: string) => {
@@ -99,7 +131,7 @@ const Report = () => {
           />
         </div>
         <div className="p-4">
-          <div className="grid grid-cols-1 gap-4">
+          <div id="report-content" className="grid grid-cols-1 gap-4">
             <DashboardSummary
               selectedCompany={selectedCompany}
               selectedUnit={selectedUnit}
@@ -111,6 +143,12 @@ const Report = () => {
                 <ChartCommentBox chartId="finalConsiderations" title="Considerações Finais" />
               </CardContent>
             </Card>
+          </div>
+          <div className="mt-8 flex justify-end">
+            <Button onClick={handlePrintReport} className="gap-2">
+              <Printer className="h-4 w-4" />
+              Imprimir Relatório
+            </Button>
           </div>
         </div>
       </div>

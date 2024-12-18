@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { ComponentPropsWithoutRef } from "react";
+import { formatNumberInput, parseFormattedNumber } from "@/utils/numberFormat";
 
 type NumberInputProps = Omit<ComponentPropsWithoutRef<'input'>, 'onChange'> & {
   value: string;
@@ -15,16 +16,16 @@ export const NumberInput = ({
 }: NumberInputProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
+    
     if (allowSpecialChars) {
       // Allow numbers and special characters (/, -)
       if (newValue === "" || /^[0-9/\-]*$/.test(newValue)) {
         onChange(newValue);
       }
     } else {
-      // Allow only numbers
-      if (newValue === "" || /^\d*$/.test(newValue)) {
-        onChange(newValue);
-      }
+      // Format as Brazilian number
+      const formattedValue = formatNumberInput(newValue);
+      onChange(formattedValue);
     }
   };
 

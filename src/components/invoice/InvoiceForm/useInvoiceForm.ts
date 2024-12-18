@@ -3,12 +3,13 @@ import { format, subMonths } from "date-fns";
 import { toast } from "sonner";
 import { useData } from "@/contexts/DataContext";
 import { InvoiceFormData } from "./types";
+import { parseFormattedNumber } from "@/utils/numberFormat";
 
 export const useInvoiceForm = (
   onCompanyChange: (company: string) => void,
   onUnitChange: (unit: string) => void
 ) => {
-  const { addInvoice, editingInvoice, editInvoice, consumerUnits } = useData();
+  const { addInvoice, editInvoice, editingInvoice, consumerUnits } = useData();
   const [formData, setFormData] = useState<InvoiceFormData>({
     empresa: "",
     unidade: "",
@@ -120,34 +121,34 @@ export const useInvoiceForm = (
         empresa: formData.empresa,
         unidade: formData.unidade,
         mes: formData.mes,
-        consumoForaPonta: Number(formData.consumoForaPonta),
-        consumoPonta: Number(formData.consumoPonta),
-        demandaMedidaForaPonta: Number(formData.demandaMedidaForaPonta),
-        demandaMedidaPonta: Number(formData.demandaMedidaPonta),
-        energiaReativaForaPonta: Number(formData.energiaReativaForaPonta),
-        energiaReativaPonta: Number(formData.energiaReativaPonta),
-        demandaReativaForaPonta: Number(formData.demandaReativaForaPonta),
-        demandaReativaPonta: Number(formData.demandaReativaPonta),
-        energiaInjetadaForaPonta: Number(formData.energiaInjetadaForaPonta),
-        energiaInjetadaPonta: Number(formData.energiaInjetadaPonta),
-        saldoAcumulado: Number(formData.saldoAcumulado),
-        geracaoTotal: Number(formData.geracaoTotal),
-        custoConsumoForaPonta: Number(formData.custoConsumoForaPonta),
-        custoConsumoPonta: Number(formData.custoConsumoPonta),
-        custoDemandaMedidaForaPonta: Number(formData.custoDemandaMedidaForaPonta),
-        custoDemandaMedidaPonta: Number(formData.custoDemandaMedidaPonta),
-        custoDemandaIsentaForaPonta: Number(formData.custoDemandaIsentaForaPonta),
-        custoDemandaIsentaPonta: Number(formData.custoDemandaIsentaPonta),
-        demandaUltrapassagemForaPonta: Number(formData.demandaUltrapassagemForaPonta),
-        demandaUltrapassagemPonta: Number(formData.demandaUltrapassagemPonta),
-        custoEnergiaReativaForaPonta: Number(formData.custoEnergiaReativaForaPonta),
-        custoEnergiaReativaPonta: Number(formData.custoEnergiaReativaPonta),
-        custoDemandaReativaForaPonta: Number(formData.custoDemandaReativaForaPonta),
-        custoDemandaReativaPonta: Number(formData.custoDemandaReativaPonta),
-        custoEnergiaInjetadaForaPonta: Number(formData.custoEnergiaInjetadaForaPonta),
-        custoEnergiaInjetadaPonta: Number(formData.custoEnergiaInjetadaPonta),
-        multasJuros: Number(formData.multasJuros),
-        valorFatura: Number(formData.valorFatura),
+        consumoForaPonta: parseFormattedNumber(formData.consumoForaPonta),
+        consumoPonta: parseFormattedNumber(formData.consumoPonta),
+        demandaMedidaForaPonta: parseFormattedNumber(formData.demandaMedidaForaPonta),
+        demandaMedidaPonta: parseFormattedNumber(formData.demandaMedidaPonta),
+        energiaReativaForaPonta: parseFormattedNumber(formData.energiaReativaForaPonta),
+        energiaReativaPonta: parseFormattedNumber(formData.energiaReativaPonta),
+        demandaReativaForaPonta: parseFormattedNumber(formData.demandaReativaForaPonta),
+        demandaReativaPonta: parseFormattedNumber(formData.demandaReativaPonta),
+        energiaInjetadaForaPonta: parseFormattedNumber(formData.energiaInjetadaForaPonta),
+        energiaInjetadaPonta: parseFormattedNumber(formData.energiaInjetadaPonta),
+        saldoAcumulado: parseFormattedNumber(formData.saldoAcumulado),
+        geracaoTotal: parseFormattedNumber(formData.geracaoTotal),
+        custoConsumoForaPonta: parseFormattedNumber(formData.custoConsumoForaPonta),
+        custoConsumoPonta: parseFormattedNumber(formData.custoConsumoPonta),
+        custoDemandaMedidaForaPonta: parseFormattedNumber(formData.custoDemandaMedidaForaPonta),
+        custoDemandaMedidaPonta: parseFormattedNumber(formData.custoDemandaMedidaPonta),
+        custoDemandaIsentaForaPonta: parseFormattedNumber(formData.custoDemandaIsentaForaPonta),
+        custoDemandaIsentaPonta: parseFormattedNumber(formData.custoDemandaIsentaPonta),
+        demandaUltrapassagemForaPonta: parseFormattedNumber(formData.demandaUltrapassagemForaPonta),
+        demandaUltrapassagemPonta: parseFormattedNumber(formData.demandaUltrapassagemPonta),
+        custoEnergiaReativaForaPonta: parseFormattedNumber(formData.custoEnergiaReativaForaPonta),
+        custoEnergiaReativaPonta: parseFormattedNumber(formData.custoEnergiaReativaPonta),
+        custoDemandaReativaForaPonta: parseFormattedNumber(formData.custoDemandaReativaForaPonta),
+        custoDemandaReativaPonta: parseFormattedNumber(formData.custoDemandaReativaPonta),
+        custoEnergiaInjetadaForaPonta: parseFormattedNumber(formData.custoEnergiaInjetadaForaPonta),
+        custoEnergiaInjetadaPonta: parseFormattedNumber(formData.custoEnergiaInjetadaPonta),
+        multasJuros: parseFormattedNumber(formData.multasJuros),
+        valorFatura: parseFormattedNumber(formData.valorFatura),
         bandeiraTarifaria: formData.bandeiraTarifaria,
       };
 

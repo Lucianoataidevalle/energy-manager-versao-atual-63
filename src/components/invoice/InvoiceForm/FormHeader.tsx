@@ -7,6 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { MonthSelect } from "@/components/dashboard/header/MonthSelect";
+import { format, subMonths } from "date-fns";
 
 interface FormHeaderProps {
   formData: any;
@@ -32,11 +34,17 @@ export const FormHeader = ({
         user?.empresas?.includes(company.razaoSocial)
       );
 
+  const userUnits = isAdmin
+    ? availableUnits
+    : availableUnits.filter(unit =>
+        user?.unidadesConsumidoras?.includes(unit.numero)
+      );
+
   const sortedCompanies = [...userCompanies].sort((a, b) => 
     a.razaoSocial.localeCompare(b.razaoSocial)
   );
 
-  const sortedUnits = [...availableUnits].sort((a, b) => 
+  const sortedUnits = [...userUnits].sort((a, b) => 
     a.nome.localeCompare(b.nome)
   );
 
@@ -50,8 +58,12 @@ export const FormHeader = ({
     onUnitChange(value);
   };
 
+  const handleMonthChange = (value: string) => {
+    setFormData({ ...formData, mes: value });
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       <div className="space-y-2">
         <label className="text-sm font-medium">Empresa</label>
         <Select value={formData.empresa} onValueChange={handleCompanyChange}>
@@ -83,6 +95,11 @@ export const FormHeader = ({
           </SelectContent>
         </Select>
       </div>
+
+      <MonthSelect
+        selectedMonth={formData.mes}
+        onMonthChange={handleMonthChange}
+      />
     </div>
   );
 };

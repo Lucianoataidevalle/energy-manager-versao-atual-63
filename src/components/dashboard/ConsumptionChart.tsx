@@ -61,7 +61,7 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
             </p>
           ))}
           <p className="text-sm font-semibold mt-1">
-            {`Consumo Total: ${formatNumber(payload[0].payload.total)}`}
+            {`Total: ${formatNumber(payload[0].payload.total)}`}
           </p>
         </div>
       );

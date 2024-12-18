@@ -75,6 +75,12 @@ export const generatePDF = async (
         height: 300px !important;
         margin-bottom: 20px;
       }
+
+      .chart-section .recharts-responsive-container {
+        width: 100% !important;
+        min-width: 800px !important;
+        max-width: none !important;
+      }
       
       .chart-section table {
         width: 100%;

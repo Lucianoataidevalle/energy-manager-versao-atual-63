@@ -38,7 +38,7 @@ export const generatePDF = async (
       compress: true,
       hotfixes: ['px_scaling']
     },
-    pagebreak: { mode: 'avoid-all' }
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
   };
 
   try {
@@ -58,45 +58,70 @@ export const generatePDF = async (
         page-break-after: always;
         margin-bottom: 0;
       }
+      
       .grid-cols-1:first-of-type .card {
         margin: 5px;
         padding: 10px;
+        font-size: 11px;
       }
 
       /* Pages 2-8: Charts with Data and Comments */
       .chart-section {
         page-break-before: always;
         page-break-after: always;
-        page-break-inside: avoid;
+        page-break-inside: avoid !important;
+        margin: 0 !important;
+        padding: 10px !important;
+        height: calc(100vh - 20mm) !important;
+        display: flex !important;
+        flex-direction: column !important;
       }
       
       .chart-section .recharts-wrapper {
         width: 100% !important;
-        height: 300px !important;
-        margin-bottom: 20px;
+        height: 45vh !important;
+        margin-bottom: 10px !important;
       }
 
       .chart-section .recharts-responsive-container {
         width: 100% !important;
-        min-width: 800px !important;
+        height: 100% !important;
+        min-width: none !important;
         max-width: none !important;
       }
       
       .chart-section table {
-        width: 100%;
-        font-size: 11px;
-        margin: 10px 0;
+        width: 100% !important;
+        font-size: 10px !important;
+        margin: 5px 0 !important;
+        border-collapse: collapse !important;
+      }
+      
+      .chart-section table th,
+      .chart-section table td {
+        padding: 4px !important;
+        line-height: 1.2 !important;
       }
       
       .chart-section .comment-box {
-        margin-top: 10px;
-        min-height: 100px;
+        margin-top: 5px !important;
+        font-size: 11px !important;
+        flex: 1 !important;
+        min-height: 0 !important;
+      }
+
+      .chart-section .comment-box .card-header {
+        padding: 8px !important;
+      }
+
+      .chart-section .comment-box .card-content {
+        padding: 8px !important;
       }
 
       /* Page 9: Final Considerations */
       .final-considerations {
         page-break-before: always;
-        min-height: 400px;
+        min-height: 0 !important;
         margin: 20px;
         padding: 20px;
       }

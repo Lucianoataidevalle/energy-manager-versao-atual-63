@@ -1,14 +1,19 @@
-import { CompanySelect } from "./CompanySelect";
-import { UnitSelect } from "./UnitSelect";
-import { MonthSelector } from "@/components/shared/MonthSelector";
-import { ConsumerUnit } from "./types";
+import { useData } from "@/contexts/DataContext";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface FormHeaderProps {
   formData: any;
   setFormData: (data: any) => void;
   onCompanyChange: (company: string) => void;
   onUnitChange: (unit: string) => void;
-  availableUnits: ConsumerUnit[];
+  availableUnits: any[];
 }
 
 export const FormHeader = ({
@@ -18,27 +23,66 @@ export const FormHeader = ({
   onUnitChange,
   availableUnits,
 }: FormHeaderProps) => {
+  const { companies } = useData();
+  const { user, isAdmin } = useAuth();
+
+  const userCompanies = isAdmin 
+    ? companies 
+    : companies.filter(company => 
+        user?.empresas?.includes(company.razaoSocial)
+      );
+
+  const sortedCompanies = [...userCompanies].sort((a, b) => 
+    a.razaoSocial.localeCompare(b.razaoSocial)
+  );
+
+  const sortedUnits = [...availableUnits].sort((a, b) => 
+    a.nome.localeCompare(b.nome)
+  );
+
+  const handleCompanyChange = (value: string) => {
+    setFormData({ ...formData, empresa: value, unidade: "" });
+    onCompanyChange(value);
+  };
+
+  const handleUnitChange = (value: string) => {
+    setFormData({ ...formData, unidade: value });
+    onUnitChange(value);
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <CompanySelect
-        value={formData.empresa}
-        onChange={(value) => {
-          setFormData({ ...formData, empresa: value, unidade: "" });
-          onCompanyChange(value);
-        }}
-      />
-      <UnitSelect
-        units={availableUnits}
-        value={formData.unidade}
-        onChange={(value) => {
-          setFormData({ ...formData, unidade: value });
-          onUnitChange(value);
-        }}
-      />
-      <MonthSelector
-        value={formData.mes}
-        onChange={(value) => setFormData({ ...formData, mes: value })}
-      />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Empresa</label>
+        <Select value={formData.empresa} onValueChange={handleCompanyChange}>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione uma empresa" />
+          </SelectTrigger>
+          <SelectContent>
+            {sortedCompanies.map((company) => (
+              <SelectItem key={company.id} value={company.razaoSocial}>
+                {company.razaoSocial}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Unidade Consumidora</label>
+        <Select value={formData.unidade} onValueChange={handleUnitChange}>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione uma unidade" />
+          </SelectTrigger>
+          <SelectContent>
+            {sortedUnits.map((unit) => (
+              <SelectItem key={unit.id} value={unit.nome}>
+                {unit.nome}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 };

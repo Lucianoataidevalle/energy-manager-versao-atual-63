@@ -174,7 +174,7 @@ const UserForm = () => {
         </CardContent>
       </Card>
 
-      {(isAdmin || editingUser || currentUser) && (
+      {isAdmin && (editingUser || currentUser) && (
         <UCAssociationForm
           userId={editingUser?.id || currentUser?.id || ''}
           currentEmpresas={formData.empresas}

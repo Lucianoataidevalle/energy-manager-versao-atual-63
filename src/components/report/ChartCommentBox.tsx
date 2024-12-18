@@ -23,7 +23,7 @@ const ChartCommentBox = ({ chartId, title }: ChartCommentBoxProps) => {
   };
 
   return (
-    <Card>
+    <Card className="comment-box" data-chart-id={chartId}>
       <CardHeader>
         <CardTitle className="text-lg">{title || "Observações"}</CardTitle>
       </CardHeader>

@@ -21,20 +21,27 @@ export const generatePDF = async (
   `;
 
   const opt = {
-    margin: [15, 15], // Aumentando as margens para 15mm
+    margin: [15, 15],
     filename: `relatorio-${unitName}-${month}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { 
-      scale: 1.5, // Reduzindo a escala para melhor ajuste
+      scale: 1.5,
       useCORS: true,
       logging: true,
-      windowWidth: 1600, // Ajustando a largura da janela
+      windowWidth: 1600,
       scrollY: -window.scrollY,
       onclone: function(doc) {
-        // Ajustando o tamanho dos gráficos e tabelas
+        // Ajustando o layout das páginas
+        const summaryCards = doc.querySelector('.grid-cols-1');
+        if (summaryCards) {
+          summaryCards.style.pageBreakAfter = 'always';
+        }
+
+        // Configurando cada seção de gráfico
         const sections = doc.querySelectorAll('.card');
-        sections.forEach(section => {
+        sections.forEach((section, index) => {
           section.style.pageBreakInside = 'avoid';
+          section.style.pageBreakBefore = index > 0 ? 'always' : 'auto';
           section.style.marginBottom = '20px';
           section.style.maxWidth = '100%';
           section.style.width = '100%';
@@ -42,7 +49,7 @@ export const generatePDF = async (
           // Ajustando altura dos gráficos
           const charts = section.querySelectorAll('.recharts-wrapper');
           charts.forEach(chart => {
-            chart.style.maxHeight = '500px';
+            chart.style.maxHeight = '400px';
             chart.style.width = '100%';
           });
 
@@ -52,7 +59,28 @@ export const generatePDF = async (
             table.style.width = '100%';
             table.style.maxWidth = '100%';
             table.style.fontSize = '12px';
+            table.style.marginTop = '20px';
           });
+
+          // Ajustando comentários
+          const comments = section.querySelectorAll('.comment-box');
+          comments.forEach(comment => {
+            comment.style.marginTop = '20px';
+            comment.style.minHeight = '150px';
+          });
+        });
+
+        // Configurando considerações finais
+        const finalConsiderations = doc.querySelector('[data-chart-id="finalConsiderations"]');
+        if (finalConsiderations) {
+          finalConsiderations.style.pageBreakBefore = 'always';
+          finalConsiderations.style.minHeight = '500px';
+        }
+
+        // Escondendo elementos que não devem ser impressos
+        const hideElements = doc.querySelectorAll('[data-print-hide="true"]');
+        hideElements.forEach(el => {
+          (el as HTMLElement).style.display = 'none';
         });
       }
     },
@@ -68,12 +96,6 @@ export const generatePDF = async (
   try {
     const clonedElement = element.cloneNode(true) as HTMLElement;
     clonedElement.insertAdjacentHTML('afterbegin', headerHtml);
-    
-    // Escondendo botões de edição antes de gerar o PDF
-    const editButtons = clonedElement.querySelectorAll('[data-print-hide="true"]');
-    editButtons.forEach(button => {
-      (button as HTMLElement).style.display = 'none';
-    });
     
     await html2pdf().set(opt).from(clonedElement).save();
     

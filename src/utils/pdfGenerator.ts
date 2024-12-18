@@ -31,50 +31,60 @@ export const generatePDF = async (
       windowWidth: 1600,
       scrollY: -window.scrollY,
       onclone: function(doc) {
-        // Ajustando o layout das páginas
-        const summaryCards = doc.querySelector('.grid-cols-1');
-        if (summaryCards) {
-          summaryCards.style.pageBreakAfter = 'always';
+        // Página 1: Cards de resumo
+        const summarySection = doc.querySelector('.grid-cols-1');
+        if (summarySection) {
+          summarySection.style.pageBreakAfter = 'always';
+          summarySection.style.marginBottom = '0';
+          const cards = summarySection.querySelectorAll('.card');
+          cards.forEach(card => {
+            (card as HTMLElement).style.margin = '5px';
+            (card as HTMLElement).style.padding = '10px';
+          });
         }
 
-        // Configurando cada seção de gráfico
-        const sections = doc.querySelectorAll('.card');
-        sections.forEach((section, index) => {
-          section.style.pageBreakInside = 'avoid';
-          section.style.pageBreakBefore = index > 0 ? 'always' : 'auto';
-          section.style.marginBottom = '20px';
-          section.style.maxWidth = '100%';
-          section.style.width = '100%';
-          
-          // Ajustando altura dos gráficos
-          const charts = section.querySelectorAll('.recharts-wrapper');
-          charts.forEach(chart => {
-            chart.style.maxHeight = '400px';
-            chart.style.width = '100%';
-          });
+        // Configurando seções de gráficos (páginas 2-8)
+        const chartSections = doc.querySelectorAll('.card:not(.grid-cols-1 .card)');
+        chartSections.forEach((section, index) => {
+          if (index > 0) { // Não aplica no primeiro card que é o resumo
+            section.style.pageBreakBefore = 'always';
+            section.style.pageBreakAfter = 'auto';
+            section.style.pageBreakInside = 'avoid';
+            
+            // Ajustando altura e largura dos gráficos
+            const chart = section.querySelector('.recharts-wrapper');
+            if (chart) {
+              chart.style.height = '300px';
+              chart.style.width = '100%';
+              chart.style.marginBottom = '20px';
+            }
 
-          // Ajustando tabelas
-          const tables = section.querySelectorAll('table');
-          tables.forEach(table => {
-            table.style.width = '100%';
-            table.style.maxWidth = '100%';
-            table.style.fontSize = '12px';
-            table.style.marginTop = '20px';
-          });
+            // Ajustando tabelas
+            const table = section.querySelector('table');
+            if (table) {
+              table.style.width = '100%';
+              table.style.fontSize = '11px';
+              table.style.marginTop = '10px';
+              table.style.marginBottom = '10px';
+            }
 
-          // Ajustando comentários
-          const comments = section.querySelectorAll('.comment-box');
-          comments.forEach(comment => {
-            comment.style.marginTop = '20px';
-            comment.style.minHeight = '150px';
-          });
+            // Ajustando caixa de comentários
+            const commentBox = section.querySelector('.comment-box');
+            if (commentBox) {
+              commentBox.style.marginTop = '10px';
+              commentBox.style.minHeight = '100px';
+              commentBox.style.maxHeight = '150px';
+            }
+          }
         });
 
-        // Configurando considerações finais
+        // Página 9: Considerações Finais
         const finalConsiderations = doc.querySelector('[data-chart-id="finalConsiderations"]');
         if (finalConsiderations) {
           finalConsiderations.style.pageBreakBefore = 'always';
-          finalConsiderations.style.minHeight = '500px';
+          finalConsiderations.style.minHeight = '400px';
+          finalConsiderations.style.margin = '20px';
+          finalConsiderations.style.padding = '20px';
         }
 
         // Escondendo elementos que não devem ser impressos

@@ -31,7 +31,7 @@ const ChartDataTable = ({ data, columns }: ChartDataTableProps) => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="bg-muted">Métrica</TableHead>
+            <TableHead className="bg-muted"></TableHead>
             {months.map((month, index) => (
               <TableHead key={index} className="text-center bg-muted">
                 {month}

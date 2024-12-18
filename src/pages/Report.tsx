@@ -14,6 +14,7 @@ import { format, subMonths } from "date-fns";
 import ChartCommentBox from "@/components/report/ChartCommentBox";
 import ChartDataTable from "@/components/report/ChartDataTable";
 import { formatMonthYear, parseMonthString, getMonthsByScreenSize } from "@/utils/dateUtils";
+import { Card, CardContent } from "@/components/ui/card";
 
 const CHART_ORDER = [
   "consumption",
@@ -222,11 +223,13 @@ const Report = () => {
     const chartData = getChartData(chartId);
 
     return (
-      <div key={chartId} className="space-y-4">
-        {chart.component}
-        <ChartDataTable data={chartData} columns={chart.columns} />
-        <ChartCommentBox chartId={chartId} />
-      </div>
+      <Card key={chartId} className="p-6 space-y-4">
+        <CardContent className="space-y-6 p-0">
+          {chart.component}
+          <ChartDataTable data={chartData} columns={chart.columns} />
+          <ChartCommentBox chartId={chartId} />
+        </CardContent>
+      </Card>
     );
   };
 
@@ -254,9 +257,11 @@ const Report = () => {
               selectedMonth={selectedMonth}
             />
             {visibleCharts.map((chartId) => renderChartWithTable(chartId))}
-            <div className="mt-8">
-              <ChartCommentBox chartId="finalConsiderations" title="Considerações Finais" />
-            </div>
+            <Card className="mt-8">
+              <CardContent>
+                <ChartCommentBox chartId="finalConsiderations" title="Considerações Finais" />
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

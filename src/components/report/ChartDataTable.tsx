@@ -20,10 +20,7 @@ interface ChartDataTableProps {
 const ChartDataTable = ({ data, columns }: ChartDataTableProps) => {
   if (!data || data.length === 0) return null;
 
-  // Get all months from the data
   const months = data.map(item => item.mes);
-
-  // Get all metrics excluding 'mes'
   const metrics = columns.filter(col => col.key !== 'mes');
 
   return (
@@ -31,9 +28,9 @@ const ChartDataTable = ({ data, columns }: ChartDataTableProps) => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="bg-muted"></TableHead>
+            <TableHead></TableHead>
             {months.map((month, index) => (
-              <TableHead key={index} className="text-center bg-muted">
+              <TableHead key={index} className="text-center">
                 {month}
               </TableHead>
             ))}
@@ -42,7 +39,7 @@ const ChartDataTable = ({ data, columns }: ChartDataTableProps) => {
         <TableBody>
           {metrics.map((metric) => (
             <TableRow key={metric.key}>
-              <TableCell className="font-medium bg-muted">
+              <TableCell className="font-medium">
                 {metric.label}
               </TableCell>
               {data.map((item, index) => (

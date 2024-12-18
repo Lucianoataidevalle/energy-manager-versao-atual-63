@@ -13,7 +13,7 @@ export const generatePDF = async (
 
   const headerHtml = `
     <div style="margin-bottom: 20px; padding: 20px; border-bottom: 1px solid #ccc;">
-      <h2 style="margin: 0;">Relatório de Energia</h2>
+      <h1 style="margin: 0; font-size: 24px; font-weight: bold; text-align: center;">Relatório de Gestão de Energia</h1>
       <p style="margin: 10px 0;">Empresa: ${companyName}</p>
       <p style="margin: 10px 0;">Unidade Consumidora: ${unitName}</p>
       <p style="margin: 10px 0;">Mês de Referência: ${month}</p>
@@ -29,12 +29,18 @@ export const generatePDF = async (
       useCORS: true,
       logging: true
     },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
   };
 
   try {
     const clonedElement = element.cloneNode(true) as HTMLElement;
     clonedElement.insertAdjacentHTML('afterbegin', headerHtml);
+    
+    // Hide edit buttons before generating PDF
+    const editButtons = clonedElement.querySelectorAll('[data-print-hide="true"]');
+    editButtons.forEach(button => {
+      (button as HTMLElement).style.display = 'none';
+    });
     
     await html2pdf().set(opt).from(clonedElement).save();
     

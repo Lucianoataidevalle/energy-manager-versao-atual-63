@@ -56,7 +56,7 @@ const ChartCommentBox = ({ chartId, title }: ChartCommentBoxProps) => {
         )}
       </CardContent>
       {!isEditing && (
-        <div className="flex justify-end p-4">
+        <div className="flex justify-end p-4" data-print-hide="true">
           <Button variant="outline" onClick={() => setIsEditing(true)}>
             Editar
           </Button>

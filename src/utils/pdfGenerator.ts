@@ -12,7 +12,7 @@ export const generatePDF = async (
   if (!element) return;
 
   const headerHtml = `
-    <div style="margin-bottom: 20px; padding: 20px; border-bottom: 1px solid #ccc;">
+    <div style="margin-bottom: 20px; padding: 20px;">
       <h1 style="margin: 0; font-size: 24px; font-weight: bold; text-align: center;">Relatório de Gestão de Energia</h1>
       <p style="margin: 10px 0;">Empresa: ${companyName}</p>
       <p style="margin: 10px 0;">Unidade Consumidora: ${unitName}</p>
@@ -21,78 +21,15 @@ export const generatePDF = async (
   `;
 
   const opt = {
-    margin: [15, 15],
+    margin: [10, 10],
     filename: `relatorio-${unitName}-${month}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { 
-      scale: 1.5,
+      scale: 2,
       useCORS: true,
       logging: true,
-      windowWidth: 1600,
-      scrollY: -window.scrollY,
-      onclone: function(doc) {
-        // Página 1: Cards de resumo
-        const summarySection = doc.querySelector('.grid-cols-1');
-        if (summarySection) {
-          summarySection.style.pageBreakAfter = 'always';
-          summarySection.style.marginBottom = '0';
-          const cards = summarySection.querySelectorAll('.card');
-          cards.forEach(card => {
-            (card as HTMLElement).style.margin = '5px';
-            (card as HTMLElement).style.padding = '10px';
-          });
-        }
-
-        // Configurando seções de gráficos (páginas 2-8)
-        const chartSections = doc.querySelectorAll('.card:not(.grid-cols-1 .card)');
-        chartSections.forEach((section, index) => {
-          if (index > 0) { // Não aplica no primeiro card que é o resumo
-            section.style.pageBreakBefore = 'always';
-            section.style.pageBreakAfter = 'auto';
-            section.style.pageBreakInside = 'avoid';
-            
-            // Ajustando altura e largura dos gráficos
-            const chart = section.querySelector('.recharts-wrapper');
-            if (chart) {
-              chart.style.height = '300px';
-              chart.style.width = '100%';
-              chart.style.marginBottom = '20px';
-            }
-
-            // Ajustando tabelas
-            const table = section.querySelector('table');
-            if (table) {
-              table.style.width = '100%';
-              table.style.fontSize = '11px';
-              table.style.marginTop = '10px';
-              table.style.marginBottom = '10px';
-            }
-
-            // Ajustando caixa de comentários
-            const commentBox = section.querySelector('.comment-box');
-            if (commentBox) {
-              commentBox.style.marginTop = '10px';
-              commentBox.style.minHeight = '100px';
-              commentBox.style.maxHeight = '150px';
-            }
-          }
-        });
-
-        // Página 9: Considerações Finais
-        const finalConsiderations = doc.querySelector('[data-chart-id="finalConsiderations"]');
-        if (finalConsiderations) {
-          finalConsiderations.style.pageBreakBefore = 'always';
-          finalConsiderations.style.minHeight = '400px';
-          finalConsiderations.style.margin = '20px';
-          finalConsiderations.style.padding = '20px';
-        }
-
-        // Escondendo elementos que não devem ser impressos
-        const hideElements = doc.querySelectorAll('[data-print-hide="true"]');
-        hideElements.forEach(el => {
-          (el as HTMLElement).style.display = 'none';
-        });
-      }
+      windowWidth: 1920,
+      scrollY: -window.scrollY
     },
     jsPDF: { 
       unit: 'mm', 
@@ -100,13 +37,84 @@ export const generatePDF = async (
       orientation: 'landscape',
       compress: true,
       hotfixes: ['px_scaling']
-    }
+    },
+    pagebreak: { mode: 'avoid-all' }
   };
 
   try {
     const clonedElement = element.cloneNode(true) as HTMLElement;
     clonedElement.insertAdjacentHTML('afterbegin', headerHtml);
-    
+
+    // Style adjustments for PDF generation
+    const style = document.createElement('style');
+    style.textContent = `
+      @page {
+        size: A4 landscape;
+        margin: 10mm;
+      }
+      
+      /* Page 1: Summary Cards */
+      .grid-cols-1:first-of-type {
+        page-break-after: always;
+        margin-bottom: 0;
+      }
+      .grid-cols-1:first-of-type .card {
+        margin: 5px;
+        padding: 10px;
+      }
+
+      /* Pages 2-8: Charts with Data and Comments */
+      .chart-section {
+        page-break-before: always;
+        page-break-after: always;
+        page-break-inside: avoid;
+      }
+      
+      .chart-section .recharts-wrapper {
+        width: 100% !important;
+        height: 300px !important;
+        margin-bottom: 20px;
+      }
+      
+      .chart-section table {
+        width: 100%;
+        font-size: 11px;
+        margin: 10px 0;
+      }
+      
+      .chart-section .comment-box {
+        margin-top: 10px;
+        min-height: 100px;
+      }
+
+      /* Page 9: Final Considerations */
+      .final-considerations {
+        page-break-before: always;
+        min-height: 400px;
+        margin: 20px;
+        padding: 20px;
+      }
+
+      /* Hide elements not meant for printing */
+      [data-print-hide="true"] {
+        display: none !important;
+      }
+    `;
+
+    clonedElement.appendChild(style);
+
+    // Add class for chart sections
+    const chartSections = clonedElement.querySelectorAll('.card:not(.grid-cols-1 .card)');
+    chartSections.forEach(section => {
+      section.classList.add('chart-section');
+    });
+
+    // Add class for final considerations
+    const finalConsiderations = clonedElement.querySelector('[data-chart-id="finalConsiderations"]');
+    if (finalConsiderations) {
+      finalConsiderations.classList.add('final-considerations');
+    }
+
     await html2pdf().set(opt).from(clonedElement).save();
     
     console.log('PDF gerado com sucesso');

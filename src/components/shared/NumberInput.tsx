@@ -23,10 +23,9 @@ export const NumberInput = ({
         onChange(newValue);
       }
     } else {
-      // Only allow numbers, commas, dots, and minus sign
+      // Allow numbers, commas, dots, and minus sign
       if (newValue === "" || /^-?\d*\.?\d*,?\d*$/.test(newValue)) {
-        const formattedValue = formatNumberInput(newValue);
-        onChange(formattedValue);
+        onChange(newValue);
       }
     }
   };

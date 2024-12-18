@@ -1,5 +1,5 @@
 export const formatNumberInput = (value: string): string => {
-  // Remove any non-digit characters except comma and dot
+  // Remove any non-digit characters except comma, dot, and minus sign
   let cleanValue = value.replace(/[^\d,.-]/g, '');
   
   // Handle negative numbers
@@ -8,7 +8,7 @@ export const formatNumberInput = (value: string): string => {
     cleanValue = cleanValue.substring(1);
   }
 
-  // Split into integer and decimal parts
+  // Split into integer and decimal parts using comma
   const parts = cleanValue.split(',');
   let integerPart = parts[0].replace(/\./g, ''); // Remove existing dots
   const decimalPart = parts[1] || '';

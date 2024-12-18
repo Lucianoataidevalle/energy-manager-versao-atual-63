@@ -21,21 +21,38 @@ export const generatePDF = async (
   `;
 
   const opt = {
-    margin: [10, 10],
+    margin: [15, 15], // Aumentando as margens para 15mm
     filename: `relatorio-${unitName}-${month}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { 
-      scale: 2,
+      scale: 1.5, // Reduzindo a escala para melhor ajuste
       useCORS: true,
       logging: true,
-      windowWidth: 1920,
+      windowWidth: 1600, // Ajustando a largura da janela
       scrollY: -window.scrollY,
       onclone: function(doc) {
-        // Ensure each chart section starts on a new page
+        // Ajustando o tamanho dos gráficos e tabelas
         const sections = doc.querySelectorAll('.card');
         sections.forEach(section => {
           section.style.pageBreakInside = 'avoid';
           section.style.marginBottom = '20px';
+          section.style.maxWidth = '100%';
+          section.style.width = '100%';
+          
+          // Ajustando altura dos gráficos
+          const charts = section.querySelectorAll('.recharts-wrapper');
+          charts.forEach(chart => {
+            chart.style.maxHeight = '500px';
+            chart.style.width = '100%';
+          });
+
+          // Ajustando tabelas
+          const tables = section.querySelectorAll('table');
+          tables.forEach(table => {
+            table.style.width = '100%';
+            table.style.maxWidth = '100%';
+            table.style.fontSize = '12px';
+          });
         });
       }
     },
@@ -43,7 +60,8 @@ export const generatePDF = async (
       unit: 'mm', 
       format: 'a4', 
       orientation: 'landscape',
-      compress: true
+      compress: true,
+      hotfixes: ['px_scaling']
     }
   };
 
@@ -51,7 +69,7 @@ export const generatePDF = async (
     const clonedElement = element.cloneNode(true) as HTMLElement;
     clonedElement.insertAdjacentHTML('afterbegin', headerHtml);
     
-    // Hide edit buttons before generating PDF
+    // Escondendo botões de edição antes de gerar o PDF
     const editButtons = clonedElement.querySelectorAll('[data-print-hide="true"]');
     editButtons.forEach(button => {
       (button as HTMLElement).style.display = 'none';
@@ -59,8 +77,8 @@ export const generatePDF = async (
     
     await html2pdf().set(opt).from(clonedElement).save();
     
-    console.log('PDF generated successfully');
+    console.log('PDF gerado com sucesso');
   } catch (error) {
-    console.error('Error generating PDF:', error);
+    console.error('Erro ao gerar PDF:', error);
   }
 };

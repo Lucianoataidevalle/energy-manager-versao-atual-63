@@ -9,9 +9,6 @@ import ReactiveEnergyChart from "@/components/dashboard/ReactiveEnergyChart";
 import ReactiveDemandChart from "@/components/dashboard/ReactiveDemandChart";
 import FinesChart from "@/components/dashboard/FinesChart";
 import GenerationChart from "@/components/dashboard/GenerationChart";
-import { useData } from "@/contexts/DataContext";
-import { format, subMonths } from "date-fns";
-import ChartCommentBox from "@/components/report/ChartCommentBox";
 import { Card, CardContent } from "@/components/ui/card";
 import ChartSection from "@/components/report/ChartSection";
 import { getChartConfigurations } from "@/components/report/ChartConfigurations";
@@ -20,6 +17,9 @@ import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 import { generatePDF } from "@/utils/pdfGenerator";
 import { useToast } from "@/components/ui/use-toast";
+import { useData } from "@/contexts/DataContext";
+import { format, subMonths } from "date-fns";
+import ChartCommentBox from "@/components/report/ChartCommentBox";
 
 const CHART_ORDER = [
   "consumption",
@@ -56,8 +56,8 @@ const Report = () => {
       return;
     }
 
-    const company = companies.find(c => c.id === selectedCompany);
-    const unit = consumerUnits.find(u => u.id === selectedUnit);
+    const company = companies.find(c => c.razaoSocial === selectedCompany);
+    const unit = consumerUnits.find(u => u.nome === selectedUnit);
 
     if (!company || !unit) return;
 
@@ -67,8 +67,8 @@ const Report = () => {
     });
 
     await generatePDF(
-      company.name,
-      unit.name,
+      company.razaoSocial,
+      unit.nome,
       selectedMonth
     );
   };

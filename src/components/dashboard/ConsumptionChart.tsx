@@ -60,6 +60,9 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
               {`${entry.name === "foraPonta" ? "Fora Ponta" : "Ponta"}: ${formatNumber(entry.value)}`}
             </p>
           ))}
+          <p className="text-sm font-semibold mt-1">
+            {`Consumo Total: ${formatNumber(payload[0].payload.total)}`}
+          </p>
         </div>
       );
     }

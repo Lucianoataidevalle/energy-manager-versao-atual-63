@@ -89,7 +89,8 @@ const Report = () => {
         columns: [
           { key: "mes", label: "Mês" },
           { key: "ponta", label: "Energia Reativa Ponta (kVArh)", format: formatNumber },
-          { key: "foraPonta", label: "Energia Reativa Fora Ponta (kVArh)", format: formatNumber }
+          { key: "foraPonta", label: "Energia Reativa Fora Ponta (kVArh)", format: formatNumber },
+          { key: "total", label: "Total (kVArh)", format: formatNumber }
         ]
       },
       reactiveDemand: {
@@ -113,30 +114,30 @@ const Report = () => {
     if (!chart) return null;
 
     // Get the chart data
-    let chartData;
     const chartComponent = chart.component.type(chartProps);
-    
+    let chartData;
+
     switch (chartId) {
       case "consumption":
-        chartData = chartComponent.props.data || [];
+        chartData = chartComponent.getChartData();
         break;
       case "demand":
-        chartData = chartComponent.props.data || [];
+        chartData = chartComponent.getChartData();
         break;
       case "generation":
-        chartData = chartComponent.props.data || [];
+        chartData = chartComponent.getChartData();
         break;
       case "billing":
-        chartData = chartComponent.props.data || [];
+        chartData = chartComponent.getChartData();
         break;
       case "reactiveEnergy":
-        chartData = chartComponent.props.data || [];
+        chartData = chartComponent.getLast12MonthsData();
         break;
       case "reactiveDemand":
-        chartData = chartComponent.props.data || [];
+        chartData = chartComponent.getLast12MonthsData();
         break;
       case "fines":
-        chartData = chartComponent.props.data || [];
+        chartData = chartComponent.getChartData();
         break;
       default:
         chartData = [];

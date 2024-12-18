@@ -27,9 +27,24 @@ export const generatePDF = async (
     html2canvas: { 
       scale: 2,
       useCORS: true,
-      logging: true
+      logging: true,
+      windowWidth: 1920,
+      scrollY: -window.scrollY,
+      onclone: function(doc) {
+        // Ensure each chart section starts on a new page
+        const sections = doc.querySelectorAll('.card');
+        sections.forEach(section => {
+          section.style.pageBreakInside = 'avoid';
+          section.style.marginBottom = '20px';
+        });
+      }
     },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+    jsPDF: { 
+      unit: 'mm', 
+      format: 'a4', 
+      orientation: 'landscape',
+      compress: true
+    }
   };
 
   try {

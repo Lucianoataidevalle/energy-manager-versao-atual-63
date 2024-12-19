@@ -3,7 +3,7 @@ import html2canvas from 'html2canvas';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-const CHART_QUALITY = 2; // Increase for higher quality (2 = 2x resolution)
+const CHART_QUALITY = 3; // Increased from 2 to 3 for better quality
 const PAGE_WIDTH = 297; // A4 landscape in mm
 const PAGE_HEIGHT = 210;
 const MARGIN = 10;
@@ -22,18 +22,31 @@ export const generatePDF = async (
 
   // Set up reusable styles
   const addHeader = (pageNum: number) => {
-    pdf.setFontSize(16);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('Relatório de Gestão de Energia', PAGE_WIDTH / 2, MARGIN + 10, { align: 'center' });
-    
-    pdf.setFontSize(12);
-    pdf.setFont('helvetica', 'normal');
-    pdf.text([
-      `Empresa: ${companyName}`,
-      `Unidade Consumidora: ${unitName}`,
-      `Mês de Referência: ${month}`,
-      `Data de Geração: ${format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}`
-    ], MARGIN, MARGIN + 25);
+    if (pageNum === 1) {
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Relatório de Gestão de Energia', PAGE_WIDTH / 2, MARGIN + 10, { align: 'center' });
+      
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text([
+        `Empresa: ${companyName}`,
+        `Unidade Consumidora: ${unitName}`,
+        `Mês de Referência: ${month}`,
+        `Data de Geração: ${format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}`
+      ], MARGIN, MARGIN + 25);
+    } else {
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Relatório de Gestão de Energia', PAGE_WIDTH / 2, MARGIN + 10, { align: 'center' });
+      
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text([
+        `Empresa: ${companyName}`,
+        `Unidade Consumidora: ${unitName}`
+      ], MARGIN, MARGIN + 25);
+    }
   };
 
   const addFooter = (pageNum: number, totalPages: number) => {
@@ -50,7 +63,8 @@ export const generatePDF = async (
   try {
     // Get all sections that need to be rendered
     const sections = document.querySelectorAll('.chart-section, #report-content > .grid-cols-1:first-of-type');
-    const totalPages = sections.length;
+    const finalConsiderations = document.querySelector('.final-considerations');
+    const totalPages = sections.length + (finalConsiderations ? 1 : 0);
     let currentPage = 1;
 
     // Process each section
@@ -105,6 +119,35 @@ export const generatePDF = async (
       );
 
       currentPage++;
+    }
+
+    // Add final considerations if they exist
+    if (finalConsiderations) {
+      pdf.addPage();
+      addHeader(currentPage);
+      addFooter(currentPage, totalPages);
+
+      const canvas = await html2canvas(finalConsiderations as HTMLElement, {
+        scale: CHART_QUALITY,
+        useCORS: true,
+        logging: false,
+      });
+
+      const contentWidth = PAGE_WIDTH - (2 * MARGIN);
+      const contentHeight = PAGE_HEIGHT - (2 * MARGIN) - 40;
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(contentWidth / imgWidth, contentHeight / imgHeight);
+
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      pdf.addImage(
+        imgData,
+        'JPEG',
+        MARGIN,
+        MARGIN + 35,
+        imgWidth * ratio,
+        imgHeight * ratio
+      );
     }
 
     // Save the PDF

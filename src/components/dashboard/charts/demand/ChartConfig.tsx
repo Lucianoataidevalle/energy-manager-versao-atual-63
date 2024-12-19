@@ -20,7 +20,7 @@ export const calculateDemandaUltrapassagem = (medida: number, contratada: number
 
 export const getChartData = (selectedDate: Date, invoices: any[], selectedCompany: string, selectedUnit: string, getContractedDemandFn: typeof getContractedDemand, consumerUnits: ConsumerUnit[]) => {
   const selectedMonth = selectedDate.toISOString().slice(0, 7);
-  const months = getMonthsByScreenSize(selectedMonth).reverse();
+  const months = getMonthsByScreenSize(selectedMonth);
 
   const { demandaContratada, demandaContratadaPonta, demandaContratadaForaPonta, modalidadeTarifaria } = getContractedDemandFn(consumerUnits, selectedCompany, selectedUnit);
 
@@ -43,9 +43,8 @@ export const getChartData = (selectedDate: Date, invoices: any[], selectedCompan
       ? calculateDemandaUltrapassagem(invoice?.demandaMedidaForaPonta || 0, demandaContratada)
       : 0;
 
-    const monthDate = new Date(month);
     return {
-      mes: formatMonthYear(monthDate),
+      mes: formatMonthYear(new Date(month)),
       demandaMedidaForaPonta: (invoice?.demandaMedidaForaPonta || 0),
       demandaMedidaPonta: (invoice?.demandaMedidaPonta || 0),
       demandaUltrapassagemForaPonta: modalidadeTarifaria === "Verde" ? demandaUltrapassagemVerde : demandaUltrapassagemForaPonta,
@@ -56,5 +55,5 @@ export const getChartData = (selectedDate: Date, invoices: any[], selectedCompan
     };
   });
 
-  return chartData.reverse();
+  return chartData;
 };

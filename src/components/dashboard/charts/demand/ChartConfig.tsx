@@ -1,5 +1,5 @@
 import { ConsumerUnit } from "@/contexts/types";
-import { formatMonthYear } from "@/utils/dateUtils";
+import { formatMonthYear, getMonthsByScreenSize } from "@/utils/dateUtils";
 
 export const getContractedDemand = (consumerUnits: ConsumerUnit[], selectedCompany: string, selectedUnit: string) => {
   const unit = consumerUnits.find(
@@ -19,11 +19,8 @@ export const calculateDemandaUltrapassagem = (medida: number, contratada: number
 };
 
 export const getChartData = (selectedDate: Date, invoices: any[], selectedCompany: string, selectedUnit: string, getContractedDemandFn: typeof getContractedDemand, consumerUnits: ConsumerUnit[]) => {
-  const months = Array.from({ length: 12 }, (_, i) => {
-    const date = new Date(selectedDate);
-    date.setMonth(date.getMonth() - (11 - i)); // Ajustado para ter o mês selecionado como último mês
-    return date.toISOString().slice(0, 7);
-  });
+  const selectedMonth = selectedDate.toISOString().slice(0, 7);
+  const months = getMonthsByScreenSize(selectedMonth);
 
   const { demandaContratada, demandaContratadaPonta, demandaContratadaForaPonta, modalidadeTarifaria } = getContractedDemandFn(consumerUnits, selectedCompany, selectedUnit);
 
@@ -48,7 +45,7 @@ export const getChartData = (selectedDate: Date, invoices: any[], selectedCompan
 
     const monthDate = new Date(month);
     return {
-      mes: formatMonthYear(monthDate), // Usando a mesma função de formatação dos outros gráficos
+      mes: formatMonthYear(monthDate),
       demandaMedidaForaPonta: (invoice?.demandaMedidaForaPonta || 0),
       demandaMedidaPonta: (invoice?.demandaMedidaPonta || 0),
       demandaUltrapassagemForaPonta: modalidadeTarifaria === "Verde" ? demandaUltrapassagemVerde : demandaUltrapassagemForaPonta,

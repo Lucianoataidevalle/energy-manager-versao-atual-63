@@ -138,7 +138,7 @@ const Report = () => {
               selectedMonth={selectedMonth}
             />
             {visibleCharts.map((chartId) => renderChartWithTable(chartId))}
-            <Card className="mt-8">
+            <Card className="mt-8 final-considerations">
               <CardContent>
                 <ChartCommentBox chartId="finalConsiderations" title="Considerações Finais" />
               </CardContent>

@@ -24,7 +24,7 @@ export const getChartData = (selectedDate: Date, invoices: any[], selectedCompan
 
   const { demandaContratada, demandaContratadaPonta, demandaContratadaForaPonta, modalidadeTarifaria } = getContractedDemandFn(consumerUnits, selectedCompany, selectedUnit);
 
-  const chartData = months.map(month => {
+  return months.map(month => {
     const invoice = invoices.find(inv => 
       inv.empresa === selectedCompany && 
       inv.unidade === selectedUnit &&
@@ -54,6 +54,4 @@ export const getChartData = (selectedDate: Date, invoices: any[], selectedCompan
       demandaContratadaForaPonta: modalidadeTarifaria === "Azul" ? demandaContratadaForaPonta : 0
     };
   });
-
-  return chartData;
 };

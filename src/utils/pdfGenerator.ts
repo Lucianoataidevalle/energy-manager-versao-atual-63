@@ -4,8 +4,28 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export const generatePDF = async (company: string, unit: string, month: string) => {
+  // Hide sidebar before capturing
+  const sidebar = document.querySelector('.md\\:fixed');
+  const mobileSidebar = document.querySelector('.md\\:hidden');
+  
+  if (sidebar) {
+    (sidebar as HTMLElement).style.display = 'none';
+  }
+  if (mobileSidebar) {
+    (mobileSidebar as HTMLElement).style.display = 'none';
+  }
+
   const content = document.querySelector('#report-content');
-  if (!content) return;
+  if (!content) {
+    // Restore sidebar visibility
+    if (sidebar) {
+      (sidebar as HTMLElement).style.display = 'flex';
+    }
+    if (mobileSidebar) {
+      (mobileSidebar as HTMLElement).style.display = 'block';
+    }
+    return;
+  }
 
   const pdf = new jsPDF('p', 'mm', 'a4');
   const pageWidth = pdf.internal.pageSize.getWidth();
@@ -19,7 +39,9 @@ export const generatePDF = async (company: string, unit: string, month: string) 
     const headerCanvas = await html2canvas(header as HTMLElement, {
       scale: 2,
       useCORS: true,
-      logging: false
+      logging: false,
+      windowWidth: document.documentElement.clientWidth,
+      windowHeight: document.documentElement.clientHeight,
     });
     const headerImgData = headerCanvas.toDataURL('image/png');
     const headerAspectRatio = headerCanvas.width / headerCanvas.height;
@@ -35,8 +57,8 @@ export const generatePDF = async (company: string, unit: string, month: string) 
       scale: 2,
       useCORS: true,
       logging: false,
-      windowWidth: 1920,
-      windowHeight: 1080
+      windowWidth: document.documentElement.clientWidth,
+      windowHeight: document.documentElement.clientHeight,
     });
     const chartsImgData = chartsCanvas.toDataURL('image/png');
     const chartsAspectRatio = chartsCanvas.width / chartsCanvas.height;
@@ -54,7 +76,9 @@ export const generatePDF = async (company: string, unit: string, month: string) 
     const considerationsCanvas = await html2canvas(finalConsiderations as HTMLElement, {
       scale: 2,
       useCORS: true,
-      logging: false
+      logging: false,
+      windowWidth: document.documentElement.clientWidth,
+      windowHeight: document.documentElement.clientHeight,
     });
     const considerationsImgData = considerationsCanvas.toDataURL('image/png');
     const considerationsAspectRatio = considerationsCanvas.width / considerationsCanvas.height;
@@ -78,4 +102,12 @@ export const generatePDF = async (company: string, unit: string, month: string) 
   const filename = `Relatório_${company}_${unit}_${formattedMonth}.pdf`;
 
   pdf.save(filename);
+
+  // Restore sidebar visibility after PDF generation
+  if (sidebar) {
+    (sidebar as HTMLElement).style.display = 'flex';
+  }
+  if (mobileSidebar) {
+    (mobileSidebar as HTMLElement).style.display = 'block';
+  }
 };

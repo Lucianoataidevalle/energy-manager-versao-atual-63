@@ -71,6 +71,8 @@ export const generatePDF = async (company: string, unit: string, month: string) 
   const companyData = companies.find(c => c.razaoSocial === company);
   const unitData = consumerUnits.find(u => u.nome === unit && u.empresa === company);
   
+  let currentYPosition = 30;
+  
   if (companyData && unitData) {
     pdf.setFontSize(12);
     const identificationText = [
@@ -86,10 +88,9 @@ export const generatePDF = async (company: string, unit: string, month: string) 
       '    1.4.6. Demanda Contratada: ' + unitData.demandaContratada + ' kW'
     ];
 
-    let yPosition = 30;
     identificationText.forEach(text => {
-      pdf.text(text, margins, yPosition);
-      yPosition += 8;
+      pdf.text(text, margins, currentYPosition);
+      currentYPosition += 8;
     });
   }
 
@@ -101,7 +102,7 @@ export const generatePDF = async (company: string, unit: string, month: string) 
     const summaryAspectRatio = summaryCanvas.width / summaryCanvas.height;
     const summaryWidth = pageWidth - 2 * margins;
     const summaryHeight = summaryWidth / summaryAspectRatio;
-    pdf.addImage(summaryImgData, 'PNG', margins, yPosition + 10, summaryWidth, summaryHeight);
+    pdf.addImage(summaryImgData, 'PNG', margins, currentYPosition + 10, summaryWidth, summaryHeight);
   }
 
   // Capture each chart section separately

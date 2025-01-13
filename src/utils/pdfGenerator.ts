@@ -32,26 +32,33 @@ export const generatePDF = async (company: string, unit: string, month: string) 
   const pageHeight = pdf.internal.pageSize.getHeight();
   const margins = 10;
 
+  const canvasOptions = {
+    scale: 2,
+    useCORS: true,
+    allowTaint: true,
+    logging: false,
+    foreignObjectRendering: false,
+    removeContainer: true,
+    windowWidth: document.documentElement.clientWidth,
+    windowHeight: document.documentElement.clientHeight,
+    onclone: (clonedDoc: Document) => {
+      const images = clonedDoc.getElementsByTagName('img');
+      for (let i = 0; i < images.length; i++) {
+        const img = images[i];
+        img.crossOrigin = 'anonymous';
+        // Remove any problematic URLs or protocols
+        if (img.src.startsWith('https://')) {
+          img.src = img.src.replace(/^https:\/\/[^/]+/, '');
+        }
+      }
+    }
+  };
+
   // Capture header only once for first page
   const header = document.querySelector('.report-header');
   let headerHeight = 0;
   if (header) {
-    const headerCanvas = await html2canvas(header as HTMLElement, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      logging: false,
-      windowWidth: document.documentElement.clientWidth,
-      windowHeight: document.documentElement.clientHeight,
-      onclone: (clonedDoc) => {
-        // Ensure all images are loaded in the cloned document
-        const images = clonedDoc.getElementsByTagName('img');
-        for (let i = 0; i < images.length; i++) {
-          const img = images[i];
-          img.crossOrigin = 'anonymous';
-        }
-      }
-    });
+    const headerCanvas = await html2canvas(header as HTMLElement, canvasOptions);
     const headerImgData = headerCanvas.toDataURL('image/png');
     const headerAspectRatio = headerCanvas.width / headerCanvas.height;
     const headerWidth = pageWidth - 2 * margins;
@@ -62,21 +69,7 @@ export const generatePDF = async (company: string, unit: string, month: string) 
   // Capture charts section
   const chartsSection = document.querySelector('#report-content');
   if (chartsSection) {
-    const chartsCanvas = await html2canvas(chartsSection as HTMLElement, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      logging: false,
-      windowWidth: document.documentElement.clientWidth,
-      windowHeight: document.documentElement.clientHeight,
-      onclone: (clonedDoc) => {
-        const images = clonedDoc.getElementsByTagName('img');
-        for (let i = 0; i < images.length; i++) {
-          const img = images[i];
-          img.crossOrigin = 'anonymous';
-        }
-      }
-    });
+    const chartsCanvas = await html2canvas(chartsSection as HTMLElement, canvasOptions);
     const chartsImgData = chartsCanvas.toDataURL('image/png');
     const chartsAspectRatio = chartsCanvas.width / chartsCanvas.height;
     const chartsWidth = pageWidth - 2 * margins;
@@ -90,21 +83,7 @@ export const generatePDF = async (company: string, unit: string, month: string) 
   // Capture final considerations
   const finalConsiderations = document.querySelector('.final-considerations');
   if (finalConsiderations) {
-    const considerationsCanvas = await html2canvas(finalConsiderations as HTMLElement, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      logging: false,
-      windowWidth: document.documentElement.clientWidth,
-      windowHeight: document.documentElement.clientHeight,
-      onclone: (clonedDoc) => {
-        const images = clonedDoc.getElementsByTagName('img');
-        for (let i = 0; i < images.length; i++) {
-          const img = images[i];
-          img.crossOrigin = 'anonymous';
-        }
-      }
-    });
+    const considerationsCanvas = await html2canvas(finalConsiderations as HTMLElement, canvasOptions);
     const considerationsImgData = considerationsCanvas.toDataURL('image/png');
     const considerationsAspectRatio = considerationsCanvas.width / considerationsCanvas.height;
     const considerationsWidth = pageWidth - 2 * margins;

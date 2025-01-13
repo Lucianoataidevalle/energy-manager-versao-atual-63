@@ -11,7 +11,7 @@ export const generatePDF = async (
   companyData: Company | undefined,
   unitData: ConsumerUnit | undefined,
 ) => {
-  // Hide sidebar and edit buttons before capturing
+  // Hide elements that shouldn't appear in the PDF
   const sidebar = document.querySelector('.md\\:fixed');
   const mobileSidebar = document.querySelector('.md\\:hidden');
   const editButtons = document.querySelectorAll('[data-print-hide="true"]');
@@ -47,10 +47,10 @@ export const generatePDF = async (
     pdf.text(selectedCompany, pageWidth / 2, pageHeight / 2, { align: 'center' });
     pdf.text(formattedMonth, pageWidth / 2, (pageHeight / 2) + 10, { align: 'center' });
 
-    // Add consumer identification page with modern layout and summary cards
+    // Add consumer identification page
     pdf.addPage();
     pdf.setFontSize(14);
-    pdf.setTextColor(44, 62, 80); // Dark blue color for headers
+    pdf.setTextColor(44, 62, 80);
     pdf.text('1. Identificação do Consumidor', margins, 20);
     
     let currentYPosition = 35;
@@ -90,28 +90,28 @@ export const generatePDF = async (
       pdf.text(`Subgrupo - Modalidade Tarifária: ${unitData.grupoSubgrupo} - ${unitData.modalidadeTarifaria}`, margins + 5, currentYPosition);
       currentYPosition += 6;
       pdf.text(`Demanda Contratada: ${unitData.demandaContratada} kW`, margins + 5, currentYPosition);
+
+      // Capture and add summary cards
+      const summarySection = document.querySelector('.dashboard-summary');
+      if (summarySection) {
+        const summaryCanvas = await html2canvas(summarySection as HTMLElement, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff'
+        });
+        
+        const summaryImgData = summaryCanvas.toDataURL('image/png');
+        const summaryAspectRatio = summaryCanvas.width / summaryCanvas.height;
+        const summaryWidth = contentWidth;
+        const summaryHeight = summaryWidth / summaryAspectRatio;
+        
+        currentYPosition += 20;
+        pdf.addImage(summaryImgData, 'PNG', margins, currentYPosition, summaryWidth, summaryHeight);
+      }
     }
 
-    // Add summary cards to the same page
-    const summarySection = document.querySelector('.dashboard-summary');
-    if (summarySection) {
-      const summaryCanvas = await html2canvas(summarySection as HTMLElement, {
-        scale: 2,
-        useCORS: true,
-        logging: true,
-        backgroundColor: '#ffffff'
-      });
-      
-      const summaryImgData = summaryCanvas.toDataURL('image/png');
-      const summaryAspectRatio = summaryCanvas.width / summaryCanvas.height;
-      const summaryWidth = pageWidth - 2 * margins;
-      const summaryHeight = summaryWidth / summaryAspectRatio;
-      
-      currentYPosition += 20;
-      pdf.addImage(summaryImgData, 'PNG', margins, currentYPosition, summaryWidth, summaryHeight);
-    }
-
-    // Capture each chart section separately
+    // Capture and add each chart section
     const chartSections = document.querySelectorAll('.chart-section');
     let lastChartSection: HTMLElement | null = null;
 
@@ -120,13 +120,13 @@ export const generatePDF = async (
       const chartCanvas = await html2canvas(section as HTMLElement, {
         scale: 2,
         useCORS: true,
-        logging: true,
+        logging: false,
         backgroundColor: '#ffffff'
       });
       
       const chartImgData = chartCanvas.toDataURL('image/png');
       const chartAspectRatio = chartCanvas.width / chartCanvas.height;
-      const chartWidth = pageWidth - 2 * margins;
+      const chartWidth = contentWidth;
       const chartHeight = chartWidth / chartAspectRatio;
       
       pdf.addImage(chartImgData, 'PNG', margins, margins, chartWidth, chartHeight);
@@ -144,13 +144,13 @@ export const generatePDF = async (
         const considerationsCanvas = await html2canvas(finalConsiderationsSection as HTMLElement, {
           scale: 2,
           useCORS: true,
-          logging: true,
+          logging: false,
           backgroundColor: '#ffffff'
         });
         
         const considerationsImgData = considerationsCanvas.toDataURL('image/png');
         const considerationsAspectRatio = considerationsCanvas.width / considerationsCanvas.height;
-        const considerationsWidth = pageWidth - 2 * margins;
+        const considerationsWidth = contentWidth;
         const considerationsHeight = considerationsWidth / considerationsAspectRatio;
         
         pdf.addImage(considerationsImgData, 'PNG', margins, pageHeight - considerationsHeight - margins, considerationsWidth, considerationsHeight);
@@ -165,7 +165,7 @@ export const generatePDF = async (
   } catch (error) {
     console.error('Error generating PDF:', error);
   } finally {
-    // Restore sidebar and edit buttons visibility
+    // Restore visibility of hidden elements
     if (sidebar) {
       (sidebar as HTMLElement).style.display = 'flex';
     }

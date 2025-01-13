@@ -3,8 +3,8 @@ import jsPDF from 'jspdf';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-export const generatePDF = async (month: string) => {
-  const content = document.querySelector('.print-content');
+export const generatePDF = async (company: string, unit: string, month: string) => {
+  const content = document.querySelector('#report-content');
   if (!content) return;
 
   const pdf = new jsPDF('p', 'mm', 'a4');
@@ -29,7 +29,7 @@ export const generatePDF = async (month: string) => {
   }
 
   // Capture charts section
-  const chartsSection = document.querySelector('.charts-section');
+  const chartsSection = document.querySelector('#report-content');
   if (chartsSection) {
     const chartsCanvas = await html2canvas(chartsSection as HTMLElement, {
       scale: 2,
@@ -73,9 +73,9 @@ export const generatePDF = async (month: string) => {
     );
   }
 
-  // Format filename with month in Portuguese
+  // Format filename with company, unit and month
   const formattedMonth = format(new Date(month), 'MMMM yyyy', { locale: ptBR });
-  const filename = `Relatório_${formattedMonth}.pdf`;
+  const filename = `Relatório_${company}_${unit}_${formattedMonth}.pdf`;
 
   pdf.save(filename);
 };

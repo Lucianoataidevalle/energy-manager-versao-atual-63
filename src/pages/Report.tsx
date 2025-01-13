@@ -56,19 +56,14 @@ const Report = () => {
       return;
     }
 
-    const company = companies.find(c => c.razaoSocial === selectedCompany);
-    const unit = consumerUnits.find(u => u.nome === selectedUnit);
-
-    if (!company || !unit) return;
-
     toast({
       title: "Gerando PDF",
       description: "Aguarde enquanto o relatório é gerado..."
     });
 
     await generatePDF(
-      company.razaoSocial,
-      unit.nome,
+      selectedCompany,
+      selectedUnit,
       selectedMonth
     );
   };

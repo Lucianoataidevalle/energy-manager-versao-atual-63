@@ -33,6 +33,7 @@ export const generatePDF = async (
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
     const margins = 10;
+    const contentWidth = pageWidth - (2 * margins);
 
     // Add cover page
     const formattedMonth = format(new Date(selectedMonth), "MMMM 'de' yyyy", { locale: ptBR });
@@ -42,32 +43,49 @@ export const generatePDF = async (
     pdf.text(selectedCompany, pageWidth / 2, pageHeight / 2, { align: 'center' });
     pdf.text(formattedMonth, pageWidth / 2, (pageHeight / 2) + 10, { align: 'center' });
 
-    // Add consumer identification page
+    // Add consumer identification page with modern layout
     pdf.addPage();
     pdf.setFontSize(14);
+    pdf.setTextColor(44, 62, 80); // Dark blue color for headers
     pdf.text('1. Identificação do Consumidor', margins, 20);
     
-    let currentYPosition = 30;
+    let currentYPosition = 35;
     
     if (companyData && unitData) {
-      pdf.setFontSize(12);
-      const identificationText = [
-        '1.1. Razão Social (sede): ' + companyData.razaoSocial,
-        '1.2. CNPJ: ' + companyData.cnpj,
-        '1.3. Município-Estado: ' + companyData.endereco,
-        '1.4. Identificação da UC:',
-        '    1.4.1. Nome da UC: ' + unitData.nome,
-        '    1.4.2. Endereço: ' + unitData.endereco,
-        '    1.4.3. Distribuidora: ' + unitData.distribuidora,
-        '    1.4.4. Nº da UC: ' + unitData.numero,
-        '    1.4.5. Subgrupo - Modalidade Tarifária: ' + unitData.grupoSubgrupo + ' - ' + unitData.modalidadeTarifaria,
-        '    1.4.6. Demanda Contratada: ' + unitData.demandaContratada + ' kW'
-      ];
+      pdf.setFontSize(11);
+      pdf.setTextColor(52, 73, 94); // Slightly lighter blue for content
 
-      identificationText.forEach(text => {
-        pdf.text(text, margins, currentYPosition);
-        currentYPosition += 8;
-      });
+      // Company Information Section
+      pdf.setFillColor(236, 240, 241); // Light gray background
+      pdf.rect(margins, currentYPosition - 5, contentWidth, 30, 'F');
+      
+      pdf.text('Informações da Empresa', margins + 2, currentYPosition);
+      currentYPosition += 8;
+      pdf.text(`Razão Social: ${companyData.razaoSocial}`, margins + 5, currentYPosition);
+      currentYPosition += 6;
+      pdf.text(`CNPJ: ${companyData.cnpj}`, margins + 5, currentYPosition);
+      currentYPosition += 6;
+      pdf.text(`Endereço: ${companyData.endereco}`, margins + 5, currentYPosition);
+      
+      currentYPosition += 15;
+
+      // Consumer Unit Information Section
+      pdf.setFillColor(236, 240, 241);
+      pdf.rect(margins, currentYPosition - 5, contentWidth, 45, 'F');
+      
+      pdf.text('Informações da Unidade Consumidora', margins + 2, currentYPosition);
+      currentYPosition += 8;
+      pdf.text(`Nome da UC: ${unitData.nome}`, margins + 5, currentYPosition);
+      currentYPosition += 6;
+      pdf.text(`Endereço: ${unitData.endereco}`, margins + 5, currentYPosition);
+      currentYPosition += 6;
+      pdf.text(`Distribuidora: ${unitData.distribuidora}`, margins + 5, currentYPosition);
+      currentYPosition += 6;
+      pdf.text(`Nº da UC: ${unitData.numero}`, margins + 5, currentYPosition);
+      currentYPosition += 6;
+      pdf.text(`Subgrupo - Modalidade Tarifária: ${unitData.grupoSubgrupo} - ${unitData.modalidadeTarifaria}`, margins + 5, currentYPosition);
+      currentYPosition += 6;
+      pdf.text(`Demanda Contratada: ${unitData.demandaContratada} kW`, margins + 5, currentYPosition);
     }
 
     // Capture summary cards
@@ -80,12 +98,13 @@ export const generatePDF = async (
         backgroundColor: '#ffffff'
       });
       
+      pdf.addPage();
       const summaryImgData = summaryCanvas.toDataURL('image/png');
       const summaryAspectRatio = summaryCanvas.width / summaryCanvas.height;
       const summaryWidth = pageWidth - 2 * margins;
       const summaryHeight = summaryWidth / summaryAspectRatio;
       
-      pdf.addImage(summaryImgData, 'PNG', margins, currentYPosition + 10, summaryWidth, summaryHeight);
+      pdf.addImage(summaryImgData, 'PNG', margins, margins, summaryWidth, summaryHeight);
     }
 
     // Capture each chart section separately

@@ -7,9 +7,13 @@ interface DashboardSummaryProps {
   selectedMonth: string;
 }
 
-const DashboardSummary = ({ selectedCompany, selectedUnit, selectedMonth }: DashboardSummaryProps) => {
+const DashboardSummary = ({
+  selectedCompany,
+  selectedUnit,
+  selectedMonth,
+}: DashboardSummaryProps) => {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 dashboard-summary">
       <MainSummarySection
         selectedCompany={selectedCompany}
         selectedUnit={selectedUnit}

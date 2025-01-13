@@ -61,10 +61,15 @@ const Report = () => {
       description: "Aguarde enquanto o relatório é gerado..."
     });
 
+    const companyData = companies.find(c => c.razaoSocial === selectedCompany);
+    const unitData = consumerUnits.find(u => u.nome === selectedUnit && u.empresa === selectedCompany);
+
     await generatePDF(
       selectedCompany,
       selectedUnit,
-      selectedMonth
+      selectedMonth,
+      companyData,
+      unitData
     );
   };
 

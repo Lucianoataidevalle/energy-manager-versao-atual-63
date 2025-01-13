@@ -1,12 +1,16 @@
+import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useData } from '@/contexts/DataContext';
+import { Company, ConsumerUnit } from '@/contexts/types';
 
-export const generatePDF = async (company: string, unit: string, month: string) => {
-  const { companies, consumerUnits } = useData();
-  
+export const generatePDF = async (
+  selectedCompany: string,
+  selectedUnit: string,
+  selectedMonth: string,
+  companyData: Company | undefined,
+  unitData: ConsumerUnit | undefined,
+) => {
   // Hide sidebar before capturing
   const sidebar = document.querySelector('.md\\:fixed');
   const mobileSidebar = document.querySelector('.md\\:hidden');
@@ -31,20 +35,17 @@ export const generatePDF = async (company: string, unit: string, month: string) 
     const margins = 10;
 
     // Add cover page
-    const formattedMonth = format(new Date(month), "MMMM 'de' yyyy", { locale: ptBR });
+    const formattedMonth = format(new Date(selectedMonth), "MMMM 'de' yyyy", { locale: ptBR });
     pdf.setFontSize(24);
     pdf.text('Relatório de Gestão de Energia', pageWidth / 2, pageHeight / 3, { align: 'center' });
     pdf.setFontSize(16);
-    pdf.text(company, pageWidth / 2, pageHeight / 2, { align: 'center' });
+    pdf.text(selectedCompany, pageWidth / 2, pageHeight / 2, { align: 'center' });
     pdf.text(formattedMonth, pageWidth / 2, (pageHeight / 2) + 10, { align: 'center' });
 
     // Add consumer identification page
     pdf.addPage();
     pdf.setFontSize(14);
     pdf.text('1. Identificação do Consumidor', margins, 20);
-    
-    const companyData = companies.find(c => c.razaoSocial === company);
-    const unitData = consumerUnits.find(u => u.nome === unit && u.empresa === company);
     
     let currentYPosition = 30;
     
@@ -107,7 +108,7 @@ export const generatePDF = async (company: string, unit: string, month: string) 
     }
 
     // Save the PDF
-    const filename = `Relatório_${company}_${unit}_${formattedMonth}.pdf`;
+    const filename = `Relatório_${selectedCompany}_${selectedUnit}_${formattedMonth}.pdf`;
     pdf.save(filename);
 
     console.log('PDF generated successfully');

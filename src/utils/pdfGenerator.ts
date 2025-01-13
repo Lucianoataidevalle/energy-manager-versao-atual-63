@@ -39,9 +39,18 @@ export const generatePDF = async (company: string, unit: string, month: string) 
     const headerCanvas = await html2canvas(header as HTMLElement, {
       scale: 2,
       useCORS: true,
+      allowTaint: true,
       logging: false,
       windowWidth: document.documentElement.clientWidth,
       windowHeight: document.documentElement.clientHeight,
+      onclone: (clonedDoc) => {
+        // Ensure all images are loaded in the cloned document
+        const images = clonedDoc.getElementsByTagName('img');
+        for (let i = 0; i < images.length; i++) {
+          const img = images[i];
+          img.crossOrigin = 'anonymous';
+        }
+      }
     });
     const headerImgData = headerCanvas.toDataURL('image/png');
     const headerAspectRatio = headerCanvas.width / headerCanvas.height;
@@ -56,9 +65,17 @@ export const generatePDF = async (company: string, unit: string, month: string) 
     const chartsCanvas = await html2canvas(chartsSection as HTMLElement, {
       scale: 2,
       useCORS: true,
+      allowTaint: true,
       logging: false,
       windowWidth: document.documentElement.clientWidth,
       windowHeight: document.documentElement.clientHeight,
+      onclone: (clonedDoc) => {
+        const images = clonedDoc.getElementsByTagName('img');
+        for (let i = 0; i < images.length; i++) {
+          const img = images[i];
+          img.crossOrigin = 'anonymous';
+        }
+      }
     });
     const chartsImgData = chartsCanvas.toDataURL('image/png');
     const chartsAspectRatio = chartsCanvas.width / chartsCanvas.height;
@@ -76,9 +93,17 @@ export const generatePDF = async (company: string, unit: string, month: string) 
     const considerationsCanvas = await html2canvas(finalConsiderations as HTMLElement, {
       scale: 2,
       useCORS: true,
+      allowTaint: true,
       logging: false,
       windowWidth: document.documentElement.clientWidth,
       windowHeight: document.documentElement.clientHeight,
+      onclone: (clonedDoc) => {
+        const images = clonedDoc.getElementsByTagName('img');
+        for (let i = 0; i < images.length; i++) {
+          const img = images[i];
+          img.crossOrigin = 'anonymous';
+        }
+      }
     });
     const considerationsImgData = considerationsCanvas.toDataURL('image/png');
     const considerationsAspectRatio = considerationsCanvas.width / considerationsCanvas.height;

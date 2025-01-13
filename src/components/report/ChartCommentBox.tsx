@@ -25,7 +25,7 @@ const ChartCommentBox = ({ chartId, title }: ChartCommentBoxProps) => {
   return (
     <Card className="comment-box" data-chart-id={chartId}>
       <CardHeader>
-        <CardTitle className="text-lg">{title || "Observações"}</CardTitle>
+        <CardTitle className="text-lg">{"Observações"}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {isEditing ? (
@@ -36,7 +36,7 @@ const ChartCommentBox = ({ chartId, title }: ChartCommentBoxProps) => {
               placeholder="Digite seu comentário aqui..."
               className="min-h-[100px]"
             />
-            <div className="flex justify-end space-x-2">
+            <div className="flex justify-end space-x-2" data-print-hide="true">
               <Button variant="outline" onClick={() => setIsEditing(false)}>
                 Cancelar
               </Button>

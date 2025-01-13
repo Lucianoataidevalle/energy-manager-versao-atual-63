@@ -11,9 +11,10 @@ export const generatePDF = async (
   companyData: Company | undefined,
   unitData: ConsumerUnit | undefined,
 ) => {
-  // Hide sidebar before capturing
+  // Hide sidebar and edit buttons before capturing
   const sidebar = document.querySelector('.md\\:fixed');
   const mobileSidebar = document.querySelector('.md\\:hidden');
+  const editButtons = document.querySelectorAll('[data-print-hide="true"]');
   
   if (sidebar) {
     (sidebar as HTMLElement).style.display = 'none';
@@ -21,6 +22,9 @@ export const generatePDF = async (
   if (mobileSidebar) {
     (mobileSidebar as HTMLElement).style.display = 'none';
   }
+  editButtons.forEach(button => {
+    (button as HTMLElement).style.display = 'none';
+  });
 
   try {
     const content = document.querySelector('#report-content');
@@ -43,7 +47,7 @@ export const generatePDF = async (
     pdf.text(selectedCompany, pageWidth / 2, pageHeight / 2, { align: 'center' });
     pdf.text(formattedMonth, pageWidth / 2, (pageHeight / 2) + 10, { align: 'center' });
 
-    // Add consumer identification page with modern layout
+    // Add consumer identification page with modern layout and summary cards
     pdf.addPage();
     pdf.setFontSize(14);
     pdf.setTextColor(44, 62, 80); // Dark blue color for headers
@@ -53,10 +57,10 @@ export const generatePDF = async (
     
     if (companyData && unitData) {
       pdf.setFontSize(11);
-      pdf.setTextColor(52, 73, 94); // Slightly lighter blue for content
+      pdf.setTextColor(52, 73, 94);
 
       // Company Information Section
-      pdf.setFillColor(236, 240, 241); // Light gray background
+      pdf.setFillColor(236, 240, 241);
       pdf.rect(margins, currentYPosition - 5, contentWidth, 30, 'F');
       
       pdf.text('Informações da Empresa', margins + 2, currentYPosition);
@@ -88,7 +92,7 @@ export const generatePDF = async (
       pdf.text(`Demanda Contratada: ${unitData.demandaContratada} kW`, margins + 5, currentYPosition);
     }
 
-    // Capture summary cards
+    // Add summary cards to the same page
     const summarySection = document.querySelector('.dashboard-summary');
     if (summarySection) {
       const summaryCanvas = await html2canvas(summarySection as HTMLElement, {
@@ -98,17 +102,19 @@ export const generatePDF = async (
         backgroundColor: '#ffffff'
       });
       
-      pdf.addPage();
       const summaryImgData = summaryCanvas.toDataURL('image/png');
       const summaryAspectRatio = summaryCanvas.width / summaryCanvas.height;
       const summaryWidth = pageWidth - 2 * margins;
       const summaryHeight = summaryWidth / summaryAspectRatio;
       
-      pdf.addImage(summaryImgData, 'PNG', margins, margins, summaryWidth, summaryHeight);
+      currentYPosition += 20;
+      pdf.addImage(summaryImgData, 'PNG', margins, currentYPosition, summaryWidth, summaryHeight);
     }
 
     // Capture each chart section separately
     const chartSections = document.querySelectorAll('.chart-section');
+    let lastChartSection: HTMLElement | null = null;
+
     for (const section of chartSections) {
       pdf.addPage();
       const chartCanvas = await html2canvas(section as HTMLElement, {
@@ -124,6 +130,31 @@ export const generatePDF = async (
       const chartHeight = chartWidth / chartAspectRatio;
       
       pdf.addImage(chartImgData, 'PNG', margins, margins, chartWidth, chartHeight);
+
+      // Keep track of the last chart section (Multas/Juros)
+      if (section.textContent?.includes('Multas/Juros')) {
+        lastChartSection = section as HTMLElement;
+      }
+    }
+
+    // Add final considerations to the Multas/Juros page
+    if (lastChartSection) {
+      const finalConsiderationsSection = document.querySelector('.final-considerations');
+      if (finalConsiderationsSection) {
+        const considerationsCanvas = await html2canvas(finalConsiderationsSection as HTMLElement, {
+          scale: 2,
+          useCORS: true,
+          logging: true,
+          backgroundColor: '#ffffff'
+        });
+        
+        const considerationsImgData = considerationsCanvas.toDataURL('image/png');
+        const considerationsAspectRatio = considerationsCanvas.width / considerationsCanvas.height;
+        const considerationsWidth = pageWidth - 2 * margins;
+        const considerationsHeight = considerationsWidth / considerationsAspectRatio;
+        
+        pdf.addImage(considerationsImgData, 'PNG', margins, pageHeight - considerationsHeight - margins, considerationsWidth, considerationsHeight);
+      }
     }
 
     // Save the PDF
@@ -134,12 +165,15 @@ export const generatePDF = async (
   } catch (error) {
     console.error('Error generating PDF:', error);
   } finally {
-    // Restore sidebar visibility
+    // Restore sidebar and edit buttons visibility
     if (sidebar) {
       (sidebar as HTMLElement).style.display = 'flex';
     }
     if (mobileSidebar) {
       (mobileSidebar as HTMLElement).style.display = 'block';
     }
+    editButtons.forEach(button => {
+      (button as HTMLElement).style.display = 'block';
+    });
   }
 };

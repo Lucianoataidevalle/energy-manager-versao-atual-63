@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useData } from "@/contexts/DataContext";
 
 interface ChartDataTableProps {
   data: any[];
@@ -15,13 +16,36 @@ interface ChartDataTableProps {
     label: string;
     format?: (value: any) => string;
   }[];
+  selectedCompany: string;
+  selectedUnit: string;
+  chartId?: string;
 }
 
-const ChartDataTable = ({ data, columns }: ChartDataTableProps) => {
+const ChartDataTable = ({ data, columns, selectedCompany, selectedUnit, chartId }: ChartDataTableProps) => {
+  const { consumerUnits } = useData();
+  
   if (!data || data.length === 0) return null;
 
   const months = data.map(item => item.mes);
-  const metrics = columns.filter(col => col.key !== 'mes');
+  let metrics = columns.filter(col => col.key !== 'mes');
+
+  // Modify labels and filter metrics for demand chart based on tariff type
+  if (chartId === 'demand') {
+    const unit = consumerUnits.find(
+      unit => unit.empresa === selectedCompany && unit.nome === selectedUnit
+    );
+    const isGreenTariff = unit?.modalidadeTarifaria === 'Verde';
+
+    if (isGreenTariff) {
+      metrics = metrics.filter(metric => metric.key !== 'demandaMedidaPonta');
+      metrics = metrics.map(metric => {
+        if (metric.key === 'demandaMedidaForaPonta') {
+          return { ...metric, label: 'Demanda Medida (kW)' };
+        }
+        return metric;
+      });
+    }
+  }
 
   return (
     <div className="mt-4 border rounded-lg overflow-x-auto">

@@ -22,10 +22,16 @@ const ChartCommentBox = ({ chartId, title }: ChartCommentBoxProps) => {
     });
   };
 
+  const getTitle = () => {
+    if (title) return title;
+    if (chartId === "finalConsiderations") return "Considerações Finais";
+    return "Observações";
+  };
+
   return (
     <Card className="comment-box" data-chart-id={chartId}>
       <CardHeader>
-        <CardTitle className="text-lg">{"Observações"}</CardTitle>
+        <CardTitle className="text-lg">{getTitle()}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {isEditing ? (

@@ -110,6 +110,8 @@ const Report = () => {
         chartComponent={chartComponents[chartId as keyof typeof chartComponents]}
         data={chartData}
         columns={columns}
+        selectedCompany={selectedCompany}
+        selectedUnit={selectedUnit}
       />
     );
   };

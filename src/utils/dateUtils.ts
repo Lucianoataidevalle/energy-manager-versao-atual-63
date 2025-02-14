@@ -18,7 +18,7 @@ export const parseMonthString = (monthString: string) => {
 
 export const getLast3Months = (selectedMonth: string) => {
   const selectedDate = parseMonthString(selectedMonth);
-  return Array.from({ length: 3 }, (_, i) => {
+  return Array.from({ length: 12 }, (_, i) => {
     const date = subMonths(selectedDate, i);
     return format(date, 'yyyy-MM');
   }).reverse();
@@ -33,9 +33,6 @@ export const getLast12Months = (selectedMonth: string) => {
 };
 
 export const getMonthsByScreenSize = (selectedMonth: string) => {
-  if (typeof window !== 'undefined' && window.innerWidth < 768) {
-    return getLast3Months(selectedMonth);
-  }
   return getLast12Months(selectedMonth);
 };
 

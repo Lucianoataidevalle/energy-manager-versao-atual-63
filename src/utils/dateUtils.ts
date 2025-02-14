@@ -19,17 +19,17 @@ export const parseMonthString = (monthString: string) => {
 export const getLast3Months = (selectedMonth: string) => {
   const selectedDate = parseMonthString(selectedMonth);
   return Array.from({ length: 3 }, (_, i) => {
-    const date = subMonths(selectedDate, 2 - i);
+    const date = subMonths(selectedDate, i);
     return format(date, 'yyyy-MM');
-  });
+  }).reverse();
 };
 
 export const getLast12Months = (selectedMonth: string) => {
   const selectedDate = parseMonthString(selectedMonth);
   return Array.from({ length: 12 }, (_, i) => {
-    const date = subMonths(selectedDate, 11 - i);
+    const date = subMonths(selectedDate, i);
     return format(date, 'yyyy-MM');
-  });
+  }).reverse();
 };
 
 export const getMonthsByScreenSize = (selectedMonth: string) => {

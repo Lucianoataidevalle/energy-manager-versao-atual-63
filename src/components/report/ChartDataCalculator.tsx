@@ -1,5 +1,5 @@
-import { getMonthsByScreenSize } from "@/utils/dateUtils";
-import { formatMonthYear, parseMonthString } from "@/utils/dateUtils";
+
+import { getMonthsByScreenSize, formatMonthYear, parseMonthString } from "@/utils/dateUtils";
 
 export const calculateChartData = (
   chartId: string,

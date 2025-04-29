@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ComposedChart,
@@ -12,8 +13,8 @@ import {
 } from "recharts";
 import { useData } from "@/contexts/DataContext";
 import { CustomTooltip } from "./charts/demand/CustomTooltip";
-import { getContractedDemand, getChartData } from "./charts/demand/ChartConfig";
-import { parseMonthString } from "@/utils/dateUtils";
+import { getContractedDemand } from "./charts/demand/ChartConfig";
+import { useDemandChart } from "@/hooks/charts/useDemandChart";
 
 interface DemandChartProps {
   selectedCompany: string;
@@ -22,11 +23,31 @@ interface DemandChartProps {
 }
 
 const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandChartProps) => {
-  const { invoices, consumerUnits } = useData();
-  const selectedDate = parseMonthString(selectedMonth);
-  const chartData = getChartData(selectedDate, invoices, selectedCompany, selectedUnit, getContractedDemand, consumerUnits);
-  const { modalidadeTarifaria } = getContractedDemand(consumerUnits, selectedCompany, selectedUnit);
+  const { consumerUnits } = useData();
+  const chartData = useDemandChart({ selectedCompany, selectedUnit, selectedMonth });
+  const { modalidadeTarifaria, demandaContratada, demandaContratadaPonta, demandaContratadaForaPonta } = 
+    getContractedDemand(consumerUnits, selectedCompany, selectedUnit);
   const isAzul = modalidadeTarifaria === "Azul";
+
+  // Add contracted demand and calculate ultrapassagem to chart data
+  const enhancedChartData = chartData.map(item => {
+    const demandaUltrapassagemForaPonta = isAzul 
+      ? calculateDemandaUltrapassagem(item.demandaMedidaForaPonta, demandaContratadaForaPonta)
+      : calculateDemandaUltrapassagem(item.demandaMedidaForaPonta, demandaContratada);
+    
+    const demandaUltrapassagemPonta = isAzul
+      ? calculateDemandaUltrapassagem(item.demandaMedidaPonta, demandaContratadaPonta)
+      : 0;
+
+    return {
+      ...item,
+      demandaUltrapassagemForaPonta,
+      demandaUltrapassagemPonta,
+      demandaContratada: !isAzul ? demandaContratada : 0,
+      demandaContratadaPonta: isAzul ? demandaContratadaPonta : 0,
+      demandaContratadaForaPonta: isAzul ? demandaContratadaForaPonta : 0
+    };
+  });
 
   return (
     <Card>
@@ -36,7 +57,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
       <CardContent>
         <ResponsiveContainer width="100%" height={280}>
           <ComposedChart 
-            data={chartData}
+            data={enhancedChartData}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
@@ -123,6 +144,12 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: DemandCha
       </CardContent>
     </Card>
   );
+};
+
+// Add the function to calculate demand ultrapassagem
+const calculateDemandaUltrapassagem = (medida: number, contratada: number) => {
+  const limite = contratada * 1.05;
+  return medida > limite ? medida - contratada : 0;
 };
 
 export default DemandChart;

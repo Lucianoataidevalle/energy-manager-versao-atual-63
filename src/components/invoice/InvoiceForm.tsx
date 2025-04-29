@@ -61,6 +61,19 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
                 isGroupB={isGroupB}
                 shouldDisablePeakFields={shouldDisablePeakFields}
               />
+              
+              <div className="mt-6">
+                <UpdateConfirmDialog
+                  onConfirm={handleFormSubmit}
+                  isEditing={!!formData.id}
+                  confirmTitle={formData.id ? "Atualizar Fatura" : "Inserir Fatura"}
+                  confirmMessage={formData.id 
+                    ? "Deseja realmente atualizar esta fatura?"
+                    : "Deseja realmente inserir esta fatura?"
+                  }
+                  buttonText={formData.id ? "Atualizar Fatura" : "Inserir Fatura"}
+                />
+              </div>
             </TabsContent>
             <TabsContent value="costs">
               <CostsTab
@@ -73,17 +86,6 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
               />
             </TabsContent>
           </Tabs>
-
-          <UpdateConfirmDialog
-            onConfirm={handleFormSubmit}
-            isEditing={!!formData.id}
-            confirmTitle={formData.id ? "Atualizar Fatura" : "Inserir Fatura"}
-            confirmMessage={formData.id 
-              ? "Deseja realmente atualizar esta fatura?"
-              : "Deseja realmente inserir esta fatura?"
-            }
-            buttonText={formData.id ? "Atualizar Fatura" : "Inserir Fatura"}
-          />
         </form>
       </CardContent>
     </Card>

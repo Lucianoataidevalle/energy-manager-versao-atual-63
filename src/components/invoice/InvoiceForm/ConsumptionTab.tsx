@@ -185,6 +185,44 @@ export const ConsumptionTab = ({
                 />
               </TableCell>
             </TableRow>
+            
+            {/* Novo campo: Demanda de Ultrapassagem - Fora Ponta */}
+            <TableRow>
+              <TableCell>Demanda de Ultrapassagem - Fora Ponta (kW)</TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.demandaUltrapassagemForaPonta}
+                  onChange={(value) => setFormData({ ...formData, demandaUltrapassagemForaPonta: value })}
+                  disabled={isGroupB}
+                />
+              </TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.custoDemandaUltrapassagemForaPonta}
+                  onChange={(value) => setFormData({ ...formData, custoDemandaUltrapassagemForaPonta: value })}
+                  disabled={isGroupB}
+                />
+              </TableCell>
+            </TableRow>
+
+            {/* Novo campo: Demanda de Ultrapassagem - Ponta */}
+            <TableRow>
+              <TableCell>Demanda de Ultrapassagem - Ponta (kW)</TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.demandaUltrapassagemPonta}
+                  onChange={(value) => setFormData({ ...formData, demandaUltrapassagemPonta: value })}
+                  disabled={isGroupB || shouldDisablePeakFields}
+                />
+              </TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.custoDemandaUltrapassagemPonta}
+                  onChange={(value) => setFormData({ ...formData, custoDemandaUltrapassagemPonta: value })}
+                  disabled={isGroupB || shouldDisablePeakFields}
+                />
+              </TableCell>
+            </TableRow>
 
             <TableRow>
               <TableCell>Energia Reativa Fora Ponta (kVArh)</TableCell>

@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
@@ -50,8 +51,8 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
 
           <Tabs defaultValue="consumption" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="consumption">Consumo/Geração</TabsTrigger>
-              <TabsTrigger value="costs">Custos/Compensação</TabsTrigger>
+              <TabsTrigger value="consumption">Fatura</TabsTrigger>
+              <TabsTrigger value="costs">Histórico de Faturas</TabsTrigger>
             </TabsList>
             <TabsContent value="consumption">
               <ConsumptionTab
@@ -67,6 +68,8 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
                 setFormData={setFormData}
                 isGroupB={isGroupB}
                 shouldDisablePeakFields={shouldDisablePeakFields}
+                selectedCompany={formData.empresa}
+                selectedUnit={formData.unidade}
               />
             </TabsContent>
           </Tabs>

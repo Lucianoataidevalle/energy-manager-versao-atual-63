@@ -1,7 +1,7 @@
+
 import { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import InvoiceForm from "@/components/invoice/InvoiceForm";
-import InvoiceList from "@/components/invoice/InvoiceList";
 
 const InvoiceRegistration = () => {
   const [selectedCompany, setSelectedCompany] = useState("");
@@ -16,7 +16,6 @@ const InvoiceRegistration = () => {
           onCompanyChange={setSelectedCompany}
           onUnitChange={setSelectedUnit}
         />
-        <InvoiceList selectedCompany={selectedCompany} selectedUnit={selectedUnit} />
       </div>
     </div>
   );

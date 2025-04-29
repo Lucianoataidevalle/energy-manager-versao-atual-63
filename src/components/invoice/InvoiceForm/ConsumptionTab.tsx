@@ -9,6 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface ConsumptionTabProps {
   formData: any;
@@ -28,233 +35,278 @@ export const ConsumptionTab = ({
   const showGenerationFields = selectedUnit?.possuiGeracao;
 
   return (
-    <div className="w-full overflow-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-1/3">Descrição</TableHead>
-            <TableHead className="w-1/3 text-center">Quantidade</TableHead>
-            <TableHead className="w-1/3 text-center">Valor (R$)</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell>Consumo Fora Ponta (kWh)</TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.consumoForaPonta}
-                onChange={(value) => setFormData({ ...formData, consumoForaPonta: value })}
-                required
-              />
-            </TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.custoConsumoForaPonta}
-                onChange={(value) => setFormData({ ...formData, custoConsumoForaPonta: value })}
-              />
-            </TableCell>
-          </TableRow>
+    <div className="space-y-6">
+      <div className="w-full overflow-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-1/3">Descrição</TableHead>
+              <TableHead className="w-1/3 text-center">Quantidade</TableHead>
+              <TableHead className="w-1/3 text-center">Valor (R$)</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell>Consumo Fora Ponta (kWh)</TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.consumoForaPonta}
+                  onChange={(value) => setFormData({ ...formData, consumoForaPonta: value })}
+                  required
+                />
+              </TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.custoConsumoForaPonta}
+                  onChange={(value) => setFormData({ ...formData, custoConsumoForaPonta: value })}
+                />
+              </TableCell>
+            </TableRow>
 
-          <TableRow>
-            <TableCell>Consumo Ponta (kWh)</TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.consumoPonta}
-                onChange={(value) => setFormData({ ...formData, consumoPonta: value })}
-                required
-                disabled={isGroupB}
-              />
-            </TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.custoConsumoPonta}
-                onChange={(value) => setFormData({ ...formData, custoConsumoPonta: value })}
-                disabled={isGroupB}
-              />
-            </TableCell>
-          </TableRow>
+            <TableRow>
+              <TableCell>Consumo Ponta (kWh)</TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.consumoPonta}
+                  onChange={(value) => setFormData({ ...formData, consumoPonta: value })}
+                  required
+                  disabled={isGroupB}
+                />
+              </TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.custoConsumoPonta}
+                  onChange={(value) => setFormData({ ...formData, custoConsumoPonta: value })}
+                  disabled={isGroupB}
+                />
+              </TableCell>
+            </TableRow>
 
-          {showGenerationFields && (
-            <>
-              <TableRow>
-                <TableCell>Energia Injetada Fora Ponta (kWh)</TableCell>
-                <TableCell>
-                  <NumberInput
-                    value={formData.energiaInjetadaForaPonta}
-                    onChange={(value) => setFormData({ ...formData, energiaInjetadaForaPonta: value })}
-                    required
-                  />
-                </TableCell>
-                <TableCell>
-                  <NumberInput
-                    value={formData.custoEnergiaInjetadaForaPonta}
-                    onChange={(value) => setFormData({ ...formData, custoEnergiaInjetadaForaPonta: value })}
-                  />
-                </TableCell>
-              </TableRow>
+            {showGenerationFields && (
+              <>
+                <TableRow>
+                  <TableCell>Energia Injetada Fora Ponta (kWh)</TableCell>
+                  <TableCell>
+                    <NumberInput
+                      value={formData.energiaInjetadaForaPonta}
+                      onChange={(value) => setFormData({ ...formData, energiaInjetadaForaPonta: value })}
+                      required
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <NumberInput
+                      value={formData.custoEnergiaInjetadaForaPonta}
+                      onChange={(value) => setFormData({ ...formData, custoEnergiaInjetadaForaPonta: value })}
+                    />
+                  </TableCell>
+                </TableRow>
 
-              <TableRow>
-                <TableCell>Energia Injetada Ponta (kWh)</TableCell>
-                <TableCell>
-                  <NumberInput
-                    value={formData.energiaInjetadaPonta}
-                    onChange={(value) => setFormData({ ...formData, energiaInjetadaPonta: value })}
-                    required
-                  />
-                </TableCell>
-                <TableCell>
-                  <NumberInput
-                    value={formData.custoEnergiaInjetadaPonta}
-                    onChange={(value) => setFormData({ ...formData, custoEnergiaInjetadaPonta: value })}
-                  />
-                </TableCell>
-              </TableRow>
+                <TableRow>
+                  <TableCell>Energia Injetada Ponta (kWh)</TableCell>
+                  <TableCell>
+                    <NumberInput
+                      value={formData.energiaInjetadaPonta}
+                      onChange={(value) => setFormData({ ...formData, energiaInjetadaPonta: value })}
+                      required
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <NumberInput
+                      value={formData.custoEnergiaInjetadaPonta}
+                      onChange={(value) => setFormData({ ...formData, custoEnergiaInjetadaPonta: value })}
+                    />
+                  </TableCell>
+                </TableRow>
 
-              <TableRow>
-                <TableCell>Saldo Acumulado (kWh)</TableCell>
-                <TableCell>
-                  <NumberInput
-                    value={formData.saldoAcumulado}
-                    onChange={(value) => setFormData({ ...formData, saldoAcumulado: value })}
-                    required
-                  />
-                </TableCell>
-                <TableCell>
-                  {/* Sem campo de valor para saldo acumulado */}
-                </TableCell>
-              </TableRow>
+                <TableRow>
+                  <TableCell>Saldo Acumulado (kWh)</TableCell>
+                  <TableCell>
+                    <NumberInput
+                      value={formData.saldoAcumulado}
+                      onChange={(value) => setFormData({ ...formData, saldoAcumulado: value })}
+                      required
+                    />
+                  </TableCell>
+                  <TableCell>
+                    {/* Sem campo de valor para saldo acumulado */}
+                  </TableCell>
+                </TableRow>
 
-              <TableRow>
-                <TableCell>Geração Total (kWh)</TableCell>
-                <TableCell>
-                  <NumberInput
-                    value={formData.geracaoTotal}
-                    onChange={(value) => setFormData({ ...formData, geracaoTotal: value })}
-                    required
-                  />
-                </TableCell>
-                <TableCell>
-                  {/* Sem campo de valor para geração total */}
-                </TableCell>
-              </TableRow>
-            </>
-          )}
+                <TableRow>
+                  <TableCell>Geração Total (kWh)</TableCell>
+                  <TableCell>
+                    <NumberInput
+                      value={formData.geracaoTotal}
+                      onChange={(value) => setFormData({ ...formData, geracaoTotal: value })}
+                      required
+                    />
+                  </TableCell>
+                  <TableCell>
+                    {/* Sem campo de valor para geração total */}
+                  </TableCell>
+                </TableRow>
+              </>
+            )}
 
-          <TableRow>
-            <TableCell>Demanda Medida Fora Ponta (kW)</TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.demandaMedidaForaPonta}
-                onChange={(value) => setFormData({ ...formData, demandaMedidaForaPonta: value })}
-                required
-                disabled={isGroupB}
-              />
-            </TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.custoDemandaMedidaForaPonta}
-                onChange={(value) => setFormData({ ...formData, custoDemandaMedidaForaPonta: value })}
-                disabled={isGroupB}
-              />
-            </TableCell>
-          </TableRow>
+            <TableRow>
+              <TableCell>Demanda Medida Fora Ponta (kW)</TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.demandaMedidaForaPonta}
+                  onChange={(value) => setFormData({ ...formData, demandaMedidaForaPonta: value })}
+                  required
+                  disabled={isGroupB}
+                />
+              </TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.custoDemandaMedidaForaPonta}
+                  onChange={(value) => setFormData({ ...formData, custoDemandaMedidaForaPonta: value })}
+                  disabled={isGroupB}
+                />
+              </TableCell>
+            </TableRow>
 
-          <TableRow>
-            <TableCell>Demanda Medida Ponta (kW)</TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.demandaMedidaPonta}
-                onChange={(value) => setFormData({ ...formData, demandaMedidaPonta: value })}
-                required
-                disabled={isGroupB || shouldDisablePeakFields}
-              />
-            </TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.custoDemandaMedidaPonta}
-                onChange={(value) => setFormData({ ...formData, custoDemandaMedidaPonta: value })}
-                disabled={isGroupB || shouldDisablePeakFields}
-              />
-            </TableCell>
-          </TableRow>
+            <TableRow>
+              <TableCell>Demanda Medida Ponta (kW)</TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.demandaMedidaPonta}
+                  onChange={(value) => setFormData({ ...formData, demandaMedidaPonta: value })}
+                  required
+                  disabled={isGroupB || shouldDisablePeakFields}
+                />
+              </TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.custoDemandaMedidaPonta}
+                  onChange={(value) => setFormData({ ...formData, custoDemandaMedidaPonta: value })}
+                  disabled={isGroupB || shouldDisablePeakFields}
+                />
+              </TableCell>
+            </TableRow>
 
-          <TableRow>
-            <TableCell>Energia Reativa Fora Ponta (kVArh)</TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.energiaReativaForaPonta}
-                onChange={(value) => setFormData({ ...formData, energiaReativaForaPonta: value })}
-                required
-                disabled={isGroupB}
-              />
-            </TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.custoEnergiaReativaForaPonta}
-                onChange={(value) => setFormData({ ...formData, custoEnergiaReativaForaPonta: value })}
-                disabled={isGroupB}
-              />
-            </TableCell>
-          </TableRow>
+            <TableRow>
+              <TableCell>Energia Reativa Fora Ponta (kVArh)</TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.energiaReativaForaPonta}
+                  onChange={(value) => setFormData({ ...formData, energiaReativaForaPonta: value })}
+                  required
+                  disabled={isGroupB}
+                />
+              </TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.custoEnergiaReativaForaPonta}
+                  onChange={(value) => setFormData({ ...formData, custoEnergiaReativaForaPonta: value })}
+                  disabled={isGroupB}
+                />
+              </TableCell>
+            </TableRow>
 
-          <TableRow>
-            <TableCell>Energia Reativa Ponta (kVArh)</TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.energiaReativaPonta}
-                onChange={(value) => setFormData({ ...formData, energiaReativaPonta: value })}
-                required
-                disabled={isGroupB}
-              />
-            </TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.custoEnergiaReativaPonta}
-                onChange={(value) => setFormData({ ...formData, custoEnergiaReativaPonta: value })}
-                disabled={isGroupB}
-              />
-            </TableCell>
-          </TableRow>
+            <TableRow>
+              <TableCell>Energia Reativa Ponta (kVArh)</TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.energiaReativaPonta}
+                  onChange={(value) => setFormData({ ...formData, energiaReativaPonta: value })}
+                  required
+                  disabled={isGroupB}
+                />
+              </TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.custoEnergiaReativaPonta}
+                  onChange={(value) => setFormData({ ...formData, custoEnergiaReativaPonta: value })}
+                  disabled={isGroupB}
+                />
+              </TableCell>
+            </TableRow>
 
-          <TableRow>
-            <TableCell>Demanda Reativa Fora Ponta (kVAr)</TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.demandaReativaForaPonta}
-                onChange={(value) => setFormData({ ...formData, demandaReativaForaPonta: value })}
-                required
-                disabled={isGroupB}
-              />
-            </TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.custoDemandaReativaForaPonta}
-                onChange={(value) => setFormData({ ...formData, custoDemandaReativaForaPonta: value })}
-                disabled={isGroupB}
-              />
-            </TableCell>
-          </TableRow>
+            <TableRow>
+              <TableCell>Demanda Reativa Fora Ponta (kVAr)</TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.demandaReativaForaPonta}
+                  onChange={(value) => setFormData({ ...formData, demandaReativaForaPonta: value })}
+                  required
+                  disabled={isGroupB}
+                />
+              </TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.custoDemandaReativaForaPonta}
+                  onChange={(value) => setFormData({ ...formData, custoDemandaReativaForaPonta: value })}
+                  disabled={isGroupB}
+                />
+              </TableCell>
+            </TableRow>
 
-          <TableRow>
-            <TableCell>Demanda Reativa Ponta (kVAr)</TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.demandaReativaPonta}
-                onChange={(value) => setFormData({ ...formData, demandaReativaPonta: value })}
-                required
-                disabled={isGroupB || shouldDisablePeakFields}
-              />
-            </TableCell>
-            <TableCell>
-              <NumberInput
-                value={formData.custoDemandaReativaPonta}
-                onChange={(value) => setFormData({ ...formData, custoDemandaReativaPonta: value })}
-                disabled={isGroupB || shouldDisablePeakFields}
-              />
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+            <TableRow>
+              <TableCell>Demanda Reativa Ponta (kVAr)</TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.demandaReativaPonta}
+                  onChange={(value) => setFormData({ ...formData, demandaReativaPonta: value })}
+                  required
+                  disabled={isGroupB || shouldDisablePeakFields}
+                />
+              </TableCell>
+              <TableCell>
+                <NumberInput
+                  value={formData.custoDemandaReativaPonta}
+                  onChange={(value) => setFormData({ ...formData, custoDemandaReativaPonta: value })}
+                  disabled={isGroupB || shouldDisablePeakFields}
+                />
+              </TableCell>
+            </TableRow>
+            
+            <TableRow>
+              <TableCell>Bandeira Tarifária</TableCell>
+              <TableCell colSpan={2}>
+                <Select
+                  value={formData.bandeiraTarifaria || "verde"}
+                  onValueChange={(value) => setFormData({ ...formData, bandeiraTarifaria: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a bandeira" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="verde">Verde</SelectItem>
+                    <SelectItem value="amarela">Amarela</SelectItem>
+                    <SelectItem value="vermelha1">Vermelha Patamar 1</SelectItem>
+                    <SelectItem value="vermelha2">Vermelha Patamar 2</SelectItem>
+                    <SelectItem value="escassez">Escassez Hídrica</SelectItem>
+                  </SelectContent>
+                </Select>
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell>Multas/Juros (R$)</TableCell>
+              <TableCell colSpan={2}>
+                <NumberInput
+                  value={formData.multasJuros}
+                  onChange={(value) => setFormData({ ...formData, multasJuros: value })}
+                  required
+                />
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell>Valor Total da Fatura (R$)</TableCell>
+              <TableCell colSpan={2}>
+                <NumberInput
+                  value={formData.valorFatura}
+                  onChange={(value) => setFormData({ ...formData, valorFatura: value })}
+                  required
+                />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

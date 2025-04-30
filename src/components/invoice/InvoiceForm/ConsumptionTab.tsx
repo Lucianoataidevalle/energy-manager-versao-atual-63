@@ -9,13 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface ConsumptionTabProps {
   formData: any;
@@ -300,26 +293,7 @@ export const ConsumptionTab = ({
               </TableCell>
             </TableRow>
             
-            <TableRow>
-              <TableCell>Bandeira Tarifária</TableCell>
-              <TableCell colSpan={2}>
-                <Select
-                  value={formData.bandeiraTarifaria || "verde"}
-                  onValueChange={(value) => setFormData({ ...formData, bandeiraTarifaria: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione a bandeira" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="verde">Verde</SelectItem>
-                    <SelectItem value="amarela">Amarela</SelectItem>
-                    <SelectItem value="vermelha1">Vermelha Patamar 1</SelectItem>
-                    <SelectItem value="vermelha2">Vermelha Patamar 2</SelectItem>
-                    <SelectItem value="escassez">Escassez Hídrica</SelectItem>
-                  </SelectContent>
-                </Select>
-              </TableCell>
-            </TableRow>
+            {/* Removed the Bandeira Tarifária row as requested */}
 
             <TableRow>
               <TableCell>Multas/Juros (R$)</TableCell>

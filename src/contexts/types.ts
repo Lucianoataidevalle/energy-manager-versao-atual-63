@@ -1,3 +1,4 @@
+
 export interface Company {
   id: string;
   razaoSocial: string;
@@ -86,6 +87,8 @@ export interface Invoice {
   custoDemandaIsentaPonta: number;
   demandaUltrapassagemForaPonta: number;
   demandaUltrapassagemPonta: number;
+  custoDemandaUltrapassagemForaPonta: number;
+  custoDemandaUltrapassagemPonta: number;
   custoEnergiaReativaForaPonta: number;
   custoEnergiaReativaPonta: number;
   custoDemandaReativaForaPonta: number;

@@ -1,3 +1,4 @@
+
 import { ConsumerUnit } from '@/contexts/types';
 
 export type { ConsumerUnit };
@@ -32,6 +33,8 @@ export interface InvoiceFormData {
   custoDemandaIsentaPonta: string;
   demandaUltrapassagemForaPonta: string;
   demandaUltrapassagemPonta: string;
+  custoDemandaUltrapassagemForaPonta: string;
+  custoDemandaUltrapassagemPonta: string;
   custoEnergiaReativaForaPonta: string;
   custoEnergiaReativaPonta: string;
   custoDemandaReativaForaPonta: string;

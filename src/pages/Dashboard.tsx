@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
@@ -21,6 +22,13 @@ const CHART_ORDER = [
   "fines"
 ];
 
+// Define consistent chart dimensions
+const CHART_STYLES = {
+  height: 300,
+  barSize: 40, // Uniform bar width
+  margin: { top: 20, right: 30, left: 20, bottom: 20 }
+};
+
 const Dashboard = () => {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedUnit, setSelectedUnit] = useState("");
@@ -41,6 +49,7 @@ const Dashboard = () => {
       selectedCompany,
       selectedUnit,
       selectedMonth,
+      chartStyles: CHART_STYLES
     };
 
     const charts: Record<string, JSX.Element | null> = {

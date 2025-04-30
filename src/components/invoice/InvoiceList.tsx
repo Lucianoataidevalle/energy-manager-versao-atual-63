@@ -16,13 +16,17 @@ import { TableActions } from "./InvoiceList/TableActions";
 interface InvoiceListProps {
   selectedCompany: string;
   selectedUnit: string;
+  onEditInvoice?: () => void;
 }
 
-const InvoiceList = ({ selectedCompany, selectedUnit }: InvoiceListProps) => {
+const InvoiceList = ({ selectedCompany, selectedUnit, onEditInvoice }: InvoiceListProps) => {
   const { invoices, consumerUnits, deleteInvoice, setEditingInvoice } = useData();
 
   const handleEdit = (invoice: Invoice) => {
     setEditingInvoice(invoice);
+    if (onEditInvoice) {
+      onEditInvoice();
+    }
   };
 
   const handleDelete = (id: string) => {

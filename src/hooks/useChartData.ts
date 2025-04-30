@@ -7,11 +7,23 @@ import { useFinesChart } from "./charts/useFinesChart";
 import { useReactiveEnergyChart } from "./charts/useReactiveEnergyChart";
 import { useReactiveDemandChart } from "./charts/useReactiveDemandChart";
 
+export interface ChartStyles {
+  height: number;
+  barSize: number;
+  margin: {
+    top: number;
+    right: number;
+    left: number;
+    bottom: number;
+  };
+}
+
 interface ChartDataParams {
   chartId: string;
   selectedCompany: string;
   selectedUnit: string;
   selectedMonth: string;
+  chartStyles?: ChartStyles;
 }
 
 export const useChartData = ({
@@ -19,8 +31,9 @@ export const useChartData = ({
   selectedCompany,
   selectedUnit,
   selectedMonth,
+  chartStyles,
 }: ChartDataParams) => {
-  const params = { selectedCompany, selectedUnit, selectedMonth };
+  const params = { selectedCompany, selectedUnit, selectedMonth, chartStyles };
   
   const dataHooks = {
     consumption: () => useConsumptionChart(params),

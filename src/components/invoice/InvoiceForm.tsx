@@ -8,6 +8,7 @@ import { ConsumptionTab } from "./InvoiceForm/ConsumptionTab";
 import { CostsTab } from "./InvoiceForm/CostsTab";
 import { UpdateConfirmDialog } from "./InvoiceForm/UpdateConfirmDialog";
 import { useInvoiceForm } from "./InvoiceForm/useInvoiceForm";
+import { useEffect, useState } from "react";
 
 interface InvoiceFormProps {
   onCompanyChange: (company: string) => void;
@@ -15,8 +16,9 @@ interface InvoiceFormProps {
 }
 
 const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
-  const { consumerUnits } = useData();
+  const { consumerUnits, editingInvoice } = useData();
   const { formData, setFormData, handleSubmit, validateForm } = useInvoiceForm(onCompanyChange, onUnitChange);
+  const [activeTab, setActiveTab] = useState("consumption");
 
   const availableUnits = consumerUnits.filter((unit) => unit.empresa === formData.empresa);
   const selectedUnit = availableUnits.find(unit => unit.nome === formData.unidade);
@@ -24,6 +26,13 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
   const isGreenTariff = selectedUnit?.modalidadeTarifaria === "Verde";
   const isA3aOrA4 = selectedUnit?.grupoSubgrupo === "A3a" || selectedUnit?.grupoSubgrupo === "A4";
   const shouldDisablePeakFields = isA3aOrA4 && isGreenTariff;
+
+  // Switch to the "Fatura" tab when an invoice is being edited
+  useEffect(() => {
+    if (editingInvoice) {
+      setActiveTab("consumption");
+    }
+  }, [editingInvoice]);
 
   const handleFormSubmit = () => {
     const isValid = validateForm();
@@ -49,7 +58,7 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
             availableUnits={availableUnits}
           />
 
-          <Tabs defaultValue="consumption" className="w-full">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="consumption">Fatura</TabsTrigger>
               <TabsTrigger value="costs">Histórico de Faturas</TabsTrigger>
@@ -83,6 +92,7 @@ const InvoiceForm = ({ onCompanyChange, onUnitChange }: InvoiceFormProps) => {
                 shouldDisablePeakFields={shouldDisablePeakFields}
                 selectedCompany={formData.empresa}
                 selectedUnit={formData.unidade}
+                onEditInvoice={() => setActiveTab("consumption")}
               />
             </TabsContent>
           </Tabs>

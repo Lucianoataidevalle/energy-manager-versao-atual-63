@@ -51,8 +51,8 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth, chartStyles
 
   // Set chart dimensions based on provided styles
   const height = chartStyles?.height || 280;
-  const barSize = chartStyles?.barSize || 20;
-  const margin = chartStyles?.margin || { top: 20, right: 30, left: 20, bottom: 5 };
+  const barSize = chartStyles?.barSize || 40;
+  const margin = chartStyles?.margin || { top: 20, right: 30, left: 40, bottom: 20 };
 
   return (
     <Card>
@@ -66,8 +66,16 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth, chartStyles
             margin={margin}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="mes" />
-            <YAxis />
+            <XAxis 
+              dataKey="mes" 
+              interval={0} 
+              tickMargin={10}
+              axisLine={{ strokeWidth: 2 }}
+              padding={{ left: 30, right: 30 }}
+            />
+            <YAxis 
+              axisLine={{ strokeWidth: 2 }}
+            />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             
@@ -78,12 +86,14 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth, chartStyles
                   dataKey="demandaContratadaForaPonta"
                   stroke="#ff7300"
                   name="Contratada Fora Ponta"
+                  strokeWidth={2}
                 />
                 <Line
                   type="monotone"
                   dataKey="demandaContratadaPonta"
                   stroke="#ff0000"
                   name="Contratada Ponta"
+                  strokeWidth={2}
                 />
                 {/* First stack - Demanda Medida Fora Ponta */}
                 <Bar 
@@ -126,6 +136,7 @@ const DemandChart = ({ selectedCompany, selectedUnit, selectedMonth, chartStyles
                   dataKey="demandaContratada"
                   stroke="#ff7300"
                   name="Contratada"
+                  strokeWidth={2}
                 />
                 {/* First stack - Demanda Medida */}
                 <Bar 

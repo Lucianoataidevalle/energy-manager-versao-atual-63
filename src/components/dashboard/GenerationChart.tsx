@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ComposedChart,
@@ -10,47 +11,37 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { useData } from "@/contexts/DataContext";
-import { formatMonthYear, parseMonthString, getMonthsByScreenSize } from "@/utils/dateUtils";
+import { useGenerationChart } from "@/hooks/charts/useGenerationChart";
+import { formatNumber } from "@/utils/formatters";
 
 interface GenerationChartProps {
   selectedCompany: string;
   selectedUnit: string;
   selectedMonth: string;
+  chartStyles?: {
+    height: number;
+    barSize: number;
+    margin: {
+      top: number;
+      right: number;
+      left: number;
+      bottom: number;
+    };
+  };
 }
 
-const GenerationChart = ({ selectedCompany, selectedUnit, selectedMonth }: GenerationChartProps) => {
-  const { invoices, generatorUnits } = useData();
+const GenerationChart = ({ 
+  selectedCompany, 
+  selectedUnit, 
+  selectedMonth,
+  chartStyles
+}: GenerationChartProps) => {
+  const chartData = useGenerationChart({ selectedCompany, selectedUnit, selectedMonth });
 
-  const formatNumber = (value: number) => {
-    return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  };
-
-  const getChartData = () => {
-    const months = getMonthsByScreenSize(selectedMonth);
-    const generatorUnit = generatorUnits.find(
-      unit => unit.empresa === selectedCompany && unit.unidadeConsumidora === selectedUnit
-    );
-
-    return months.map(month => {
-      const invoice = invoices.find(inv => 
-        inv.empresa === selectedCompany && 
-        inv.unidade === selectedUnit &&
-        inv.mes === month
-      );
-
-      const monthIndex = new Date(month).getMonth();
-      const monthNames = ['janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 
-                         'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
-      const estimatedGeneration = Number(generatorUnit?.estimativaGeracao[monthNames[monthIndex]] || 0);
-
-      return {
-        mes: formatMonthYear(parseMonthString(month)),
-        geracaoTotal: Number(invoice?.geracaoTotal || 0),
-        estimativaGeracao: estimatedGeneration
-      };
-    });
-  };
+  // Set chart dimensions based on provided styles
+  const height = chartStyles?.height || 280;
+  const barSize = chartStyles?.barSize || 40;
+  const margin = chartStyles?.margin || { top: 20, right: 30, left: 40, bottom: 20 };
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -68,31 +59,42 @@ const GenerationChart = ({ selectedCompany, selectedUnit, selectedMonth }: Gener
     return null;
   };
 
-  const chartData = getChartData();
-
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-lg">Geração de Energia (kWh)</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={280}>
-          <ComposedChart data={chartData}>
+        <ResponsiveContainer width="100%" height={height}>
+          <ComposedChart 
+            data={chartData}
+            margin={margin}
+          >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="mes" />
-            <YAxis />
+            <XAxis 
+              dataKey="mes" 
+              interval={0} 
+              tickMargin={10}
+              axisLine={{ strokeWidth: 2 }}
+              padding={{ left: 30, right: 30 }}
+            />
+            <YAxis 
+              axisLine={{ strokeWidth: 2 }}
+            />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             <Bar
               dataKey="geracaoTotal"
               fill="#82ca9d"
               name="Geração Total"
+              barSize={barSize}
             />
             <Line
               type="monotone"
               dataKey="estimativaGeracao"
               stroke="#ff7300"
               name="Estimativa de Geração"
+              strokeWidth={2}
             />
           </ComposedChart>
         </ResponsiveContainer>

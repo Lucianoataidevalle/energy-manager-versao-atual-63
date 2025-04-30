@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   BarChart,
@@ -9,46 +10,37 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { useData } from "@/contexts/DataContext";
-import { formatMonthYear, parseMonthString, getMonthsByScreenSize } from "@/utils/dateUtils";
+import { useConsumptionChart } from "@/hooks/charts/useConsumptionChart";
+import { formatNumber } from "@/utils/formatters";
 
 interface ConsumptionChartProps {
   selectedCompany: string;
   selectedUnit: string;
   selectedMonth: string;
+  chartStyles?: {
+    height: number;
+    barSize: number;
+    margin: {
+      top: number;
+      right: number;
+      left: number;
+      bottom: number;
+    };
+  };
 }
 
-const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: ConsumptionChartProps) => {
-  const { invoices } = useData();
+const ConsumptionChart = ({ 
+  selectedCompany, 
+  selectedUnit, 
+  selectedMonth,
+  chartStyles
+}: ConsumptionChartProps) => {
+  const chartData = useConsumptionChart({ selectedCompany, selectedUnit, selectedMonth });
 
-  const formatNumber = (value: number) => {
-    return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  };
-
-  const getChartData = () => {
-    const months = getMonthsByScreenSize(selectedMonth);
-
-    return months.map(month => {
-      const invoice = invoices.find(inv => 
-        inv.empresa === selectedCompany && 
-        inv.unidade === selectedUnit &&
-        inv.mes === month
-      );
-
-      const ponta = Number(invoice?.consumoPonta || 0);
-      const foraPonta = Number(invoice?.consumoForaPonta || 0);
-      const total = ponta + foraPonta;
-
-      return {
-        mes: formatMonthYear(parseMonthString(month)),
-        ponta,
-        foraPonta,
-        total
-      };
-    });
-  };
-
-  const chartData = getChartData();
+  // Set chart dimensions based on provided styles
+  const height = chartStyles?.height || 280;
+  const barSize = chartStyles?.barSize || 40;
+  const margin = chartStyles?.margin || { top: 20, right: 30, left: 40, bottom: 20 };
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -75,11 +67,11 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
         <CardTitle className="text-lg">Consumo (kWh)</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={280}>
+        <ResponsiveContainer width="100%" height={height}>
           <BarChart 
             data={chartData} 
-            barSize={30}
-            margin={{ top: 20, right: 40, left: 40, bottom: 20 }}
+            barSize={barSize}
+            margin={margin}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
@@ -90,7 +82,6 @@ const ConsumptionChart = ({ selectedCompany, selectedUnit, selectedMonth }: Cons
               padding={{ left: 30, right: 30 }}
             />
             <YAxis 
-              tickFormatter={formatNumber}
               axisLine={{ strokeWidth: 2 }}
             />
             <Tooltip content={<CustomTooltip />} />

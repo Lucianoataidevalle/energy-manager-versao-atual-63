@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   BarChart,
@@ -9,63 +10,56 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { useData } from "@/contexts/DataContext";
-import { format, subMonths, parse, isValid } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { useReactiveEnergyChart } from "@/hooks/charts/useReactiveEnergyChart";
+import { formatNumber } from "@/utils/formatters";
 
 interface ReactiveEnergyChartProps {
   selectedCompany: string;
   selectedUnit: string;
   selectedMonth: string;
+  chartStyles?: {
+    height: number;
+    barSize: number;
+    margin: {
+      top: number;
+      right: number;
+      left: number;
+      bottom: number;
+    };
+  };
 }
 
-const ReactiveEnergyChart = ({ selectedCompany, selectedUnit, selectedMonth }: ReactiveEnergyChartProps) => {
-  const { invoices } = useData();
+const ReactiveEnergyChart = ({ 
+  selectedCompany, 
+  selectedUnit, 
+  selectedMonth,
+  chartStyles
+}: ReactiveEnergyChartProps) => {
+  const chartData = useReactiveEnergyChart({ selectedCompany, selectedUnit, selectedMonth });
 
-  const getLast12MonthsData = () => {
-    const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
-    if (!isValid(selectedDate)) {
-      console.error('Invalid date:', selectedMonth);
-      return [];
-    }
+  // Set chart dimensions based on provided styles
+  const height = chartStyles?.height || 280;
+  const barSize = chartStyles?.barSize || 40;
+  const margin = chartStyles?.margin || { top: 20, right: 30, left: 40, bottom: 20 };
 
-    const months = Array.from({ length: 12 }, (_, i) => {
-      const date = subMonths(selectedDate, i);
-      return format(date, 'yyyy-MM');
-    }).reverse();
-
-    return months.map(month => {
-      const invoice = invoices.find(inv => 
-        inv.empresa === selectedCompany && 
-        inv.unidade === selectedUnit &&
-        inv.mes === month
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-2 border border-gray-200 rounded shadow">
+          <p className="text-sm font-semibold">{`${label}`}</p>
+          {payload.map((entry: any, index: number) => (
+            <p key={index} className="text-sm" style={{ color: entry.color }}>
+              {`${entry.name === "foraPonta" ? "Fora Ponta" : "Ponta"}: ${formatNumber(entry.value)}`}
+            </p>
+          ))}
+          <p className="text-sm font-semibold mt-1">
+            {`Total: ${formatNumber(payload[0].payload.total)}`}
+          </p>
+        </div>
       );
-
-      const monthDate = parse(month, 'yyyy-MM', new Date());
-      if (!isValid(monthDate)) {
-        console.error('Invalid month date:', month);
-        return {
-          mes: month,
-          ponta: 0,
-          foraPonta: 0,
-          total: 0
-        };
-      }
-
-      const ponta = Number(invoice?.energiaReativaPonta) || 0;
-      const foraPonta = Number(invoice?.energiaReativaForaPonta) || 0;
-      const total = ponta + foraPonta;
-
-      return {
-        mes: format(monthDate, "MMM/yy", { locale: ptBR }),
-        ponta,
-        foraPonta,
-        total
-      };
-    });
+    }
+    return null;
   };
-
-  const chartData = getLast12MonthsData();
 
   return (
     <Card>
@@ -73,24 +67,40 @@ const ReactiveEnergyChart = ({ selectedCompany, selectedUnit, selectedMonth }: R
         <CardTitle className="text-lg">Energia Reativa (kVArh)</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={189}>
-          <BarChart data={chartData} barSize={30}>
+        <ResponsiveContainer width="100%" height={height}>
+          <BarChart 
+            data={chartData} 
+            barSize={barSize}
+            margin={margin}
+          >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="mes" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
+            <XAxis 
+              dataKey="mes" 
+              interval={0} 
+              tickMargin={10}
+              axisLine={{ strokeWidth: 2 }}
+              padding={{ left: 30, right: 30 }}
+            />
+            <YAxis 
+              axisLine={{ strokeWidth: 2 }}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend formatter={(value) => {
+              if (value === "foraPonta") return "Fora Ponta";
+              if (value === "ponta") return "Ponta";
+              return value;
+            }} />
             <Bar 
               dataKey="ponta" 
               stackId="a" 
               fill="#8884d8" 
-              name="Energia Reativa Ponta"
+              name="ponta"
             />
             <Bar
               dataKey="foraPonta"
               stackId="a"
               fill="#82ca9d"
-              name="Energia Reativa Fora Ponta"
+              name="foraPonta"
             />
           </BarChart>
         </ResponsiveContainer>

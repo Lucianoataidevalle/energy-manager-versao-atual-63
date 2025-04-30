@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   BarChart,
@@ -8,59 +9,35 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useData } from "@/contexts/DataContext";
-import { format, subMonths, parse, isValid } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { useBillingChart } from "@/hooks/charts/useBillingChart";
 
 interface BillingChartProps {
   selectedCompany: string;
   selectedUnit: string;
   selectedMonth: string;
+  chartStyles?: {
+    height: number;
+    barSize: number;
+    margin: {
+      top: number;
+      right: number;
+      left: number;
+      bottom: number;
+    };
+  };
 }
 
-const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingChartProps) => {
-  const { invoices } = useData();
+const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth, chartStyles }: BillingChartProps) => {
+  const chartData = useBillingChart({ selectedCompany, selectedUnit, selectedMonth });
 
   const formatNumber = (value: number) => {
     return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
-  const getLast12MonthsData = () => {
-    const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
-    if (!isValid(selectedDate)) {
-      console.error('Invalid date:', selectedMonth);
-      return [];
-    }
-
-    const months = Array.from({ length: 12 }, (_, i) => {
-      const date = subMonths(selectedDate, i);
-      return format(date, 'yyyy-MM');
-    }).reverse();
-
-    return months.map(month => {
-      const invoice = invoices.find(inv => 
-        inv.empresa === selectedCompany && 
-        inv.unidade === selectedUnit &&
-        inv.mes === month
-      );
-
-      const monthDate = parse(month, 'yyyy-MM', new Date());
-      if (!isValid(monthDate)) {
-        console.error('Invalid month date:', month);
-        return {
-          mes: month,
-          valor: 0
-        };
-      }
-
-      return {
-        mes: format(monthDate, "MMM/yy", { locale: ptBR }),
-        valor: invoice?.valorFatura || 0
-      };
-    });
-  };
-
-  const chartData = getLast12MonthsData();
+  // Set chart dimensions based on provided styles
+  const height = chartStyles?.height || 280;
+  const barSize = chartStyles?.barSize || 40;
+  const margin = chartStyles?.margin || { top: 20, right: 30, left: 40, bottom: 20 };
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -84,11 +61,24 @@ const BillingChart = ({ selectedCompany, selectedUnit, selectedMonth }: BillingC
         <CardTitle className="text-lg">Custo de Faturas</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={189}>
-          <BarChart data={chartData} barSize={30}>
+        <ResponsiveContainer width="100%" height={height}>
+          <BarChart 
+            data={chartData} 
+            barSize={barSize}
+            margin={margin}
+          >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="mes" />
-            <YAxis tickFormatter={(value) => `R$ ${formatNumber(value)}`} />
+            <XAxis 
+              dataKey="mes" 
+              interval={0} 
+              tickMargin={10}
+              axisLine={{ strokeWidth: 2 }}
+              padding={{ left: 30, right: 30 }}
+            />
+            <YAxis 
+              tickFormatter={(value) => `R$ ${formatNumber(value)}`}
+              axisLine={{ strokeWidth: 2 }}
+            />
             <Tooltip content={<CustomTooltip />} />
             <Bar
               dataKey="valor"

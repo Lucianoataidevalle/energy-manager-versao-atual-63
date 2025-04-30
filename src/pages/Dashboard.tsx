@@ -22,11 +22,11 @@ const CHART_ORDER = [
   "fines"
 ];
 
-// Define consistent chart dimensions
+// Define consistent chart dimensions for all charts
 const CHART_STYLES = {
   height: 300,
   barSize: 40, // Uniform bar width
-  margin: { top: 20, right: 30, left: 20, bottom: 20 }
+  margin: { top: 20, right: 30, left: 40, bottom: 20 }
 };
 
 const Dashboard = () => {

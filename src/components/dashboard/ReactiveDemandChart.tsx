@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ComposedChart,
@@ -9,57 +10,53 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { useData } from "@/contexts/DataContext";
-import { format, subMonths, parse, isValid } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { useReactiveDemandChart } from "@/hooks/charts/useReactiveDemandChart";
+import { formatNumber } from "@/utils/formatters";
 
 interface ReactiveDemandChartProps {
   selectedCompany: string;
   selectedUnit: string;
   selectedMonth: string;
+  chartStyles?: {
+    height: number;
+    barSize: number;
+    margin: {
+      top: number;
+      right: number;
+      left: number;
+      bottom: number;
+    };
+  };
 }
 
-const ReactiveDemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: ReactiveDemandChartProps) => {
-  const { invoices } = useData();
+const ReactiveDemandChart = ({ 
+  selectedCompany, 
+  selectedUnit, 
+  selectedMonth,
+  chartStyles
+}: ReactiveDemandChartProps) => {
+  const chartData = useReactiveDemandChart({ selectedCompany, selectedUnit, selectedMonth });
 
-  const getLast12MonthsData = () => {
-    const selectedDate = parse(selectedMonth, 'yyyy-MM', new Date());
-    if (!isValid(selectedDate)) {
-      console.error('Invalid date:', selectedMonth);
-      return [];
-    }
+  // Set chart dimensions based on provided styles
+  const height = chartStyles?.height || 280;
+  const barSize = chartStyles?.barSize || 40;
+  const margin = chartStyles?.margin || { top: 20, right: 30, left: 40, bottom: 20 };
 
-    const months = Array.from({ length: 12 }, (_, i) => {
-      const date = subMonths(selectedDate, i);
-      return format(date, 'yyyy-MM');
-    }).reverse();
-
-    return months.map(month => {
-      const invoice = invoices.find(inv => 
-        inv.empresa === selectedCompany && 
-        inv.unidade === selectedUnit &&
-        inv.mes === month
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-2 border border-gray-200 rounded shadow">
+          <p className="text-sm font-semibold">{`${label}`}</p>
+          {payload.map((entry: any, index: number) => (
+            <p key={index} className="text-sm" style={{ color: entry.color }}>
+              {`${entry.name}: ${formatNumber(entry.value)}`}
+            </p>
+          ))}
+        </div>
       );
-
-      const monthDate = parse(month, 'yyyy-MM', new Date());
-      if (!isValid(monthDate)) {
-        console.error('Invalid month date:', month);
-        return {
-          mes: month,
-          demandaReativaPonta: 0,
-          demandaReativaForaPonta: 0
-        };
-      }
-
-      return {
-        mes: format(monthDate, "MMM/yy", { locale: ptBR }),
-        demandaReativaPonta: Number(invoice?.demandaReativaPonta) || 0,
-        demandaReativaForaPonta: Number(invoice?.demandaReativaForaPonta) || 0
-      };
-    });
+    }
+    return null;
   };
-
-  const chartData = getLast12MonthsData();
 
   return (
     <Card>
@@ -67,24 +64,35 @@ const ReactiveDemandChart = ({ selectedCompany, selectedUnit, selectedMonth }: R
         <CardTitle className="text-lg">Demanda Reativa (kVAr)</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={189}>
-          <ComposedChart data={chartData}>
+        <ResponsiveContainer width="100%" height={height}>
+          <ComposedChart 
+            data={chartData}
+            margin={margin}
+          >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="mes" />
-            <YAxis />
-            <Tooltip />
+            <XAxis 
+              dataKey="mes" 
+              interval={0} 
+              tickMargin={10}
+              axisLine={{ strokeWidth: 2 }}
+              padding={{ left: 30, right: 30 }}
+            />
+            <YAxis 
+              axisLine={{ strokeWidth: 2 }}
+            />
+            <Tooltip content={<CustomTooltip />} />
             <Legend />
             <Bar 
               dataKey="demandaReativaForaPonta" 
               fill="#8884d8" 
               name="Demanda Reativa Fora Ponta"
-              barSize={20}
+              barSize={barSize}
             />
             <Bar
               dataKey="demandaReativaPonta"
               fill="#82ca9d"
               name="Demanda Reativa Ponta"
-              barSize={20}
+              barSize={barSize}
             />
           </ComposedChart>
         </ResponsiveContainer>

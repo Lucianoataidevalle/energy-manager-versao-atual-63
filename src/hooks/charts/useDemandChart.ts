@@ -63,6 +63,9 @@ export const useDemandChart = ({
       demandaMedidaForaPonta: demandaMedidaForaPontaReal,
       demandaUltrapassagemPonta,
       demandaUltrapassagemForaPonta,
+      // Add original values for tooltip
+      demandaMedidaPontaOriginal: demandaMedidaPonta,
+      demandaMedidaForaPontaOriginal: demandaMedidaForaPonta,
       modalidadeTarifaria: modalidadeTarifaria || ""
     };
   });

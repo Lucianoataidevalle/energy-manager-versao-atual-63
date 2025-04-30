@@ -15,7 +15,7 @@ export const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
     return (
       <div className="bg-white p-2 border border-gray-200 rounded shadow">
         {payload.map((entry: any) => {
-          // Special handling for demand values
+          // Special handling for demand values - show original measured values
           if (entry.dataKey === "demandaMedidaPonta" && isAzul) {
             return (
               <div key={entry.name} className="text-sm">
